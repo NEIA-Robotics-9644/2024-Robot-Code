@@ -17,6 +17,8 @@ import frc.robot.subsystems.SwerveSubsystem;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+  @SuppressWarnings("unused")
+  private final Simulation simulation = new Simulation();
   private final Joystick driverJoystick = new Joystick(OIConstants.kDriverControllerPort);
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 

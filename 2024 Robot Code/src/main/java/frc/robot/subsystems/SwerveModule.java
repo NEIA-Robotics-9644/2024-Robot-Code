@@ -7,7 +7,6 @@ import com.ctre.phoenix.sensors.CANCoder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.Constants.SwerveDriveConstants;
@@ -99,11 +98,8 @@ public class SwerveModule {
         turningMotor.set(turningPidController.calculate(getTurningPosition(), state.angle.getRadians()));
         SmartDashboard.putString("Swerve " + name + " state", state.toString());
         
-
-        if (!RobotBase.isReal()) {
-            Simulation.addData(this, "Swerve " + name + " Drive Velocity", state.speedMetersPerSecond);
-            Simulation.addData(this, "Swerve " + name + " Angle", state.angle.getRadians());
-        }    
+        Simulation.Instance.setData("Swerve " + name + " Drive Velocity", state.speedMetersPerSecond);
+        Simulation.Instance.setData("Swerve " + name + " Angle", state.angle.getRadians());
     }
 
     public void stop() {

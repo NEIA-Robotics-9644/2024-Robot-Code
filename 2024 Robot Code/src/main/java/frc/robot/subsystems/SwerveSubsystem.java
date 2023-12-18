@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Simulation;
 import frc.robot.Constants.SwerveDriveConstants;
 
 import java.util.Set;
@@ -85,7 +86,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public double getHeading() {
-        return Math.IEEEremainder(gyro.getAngle(), 360);
+        return Simulation.simulationCompatable(Math.IEEEremainder(gyro.getAngle(), 360.0), "Gyro Angle", 0.0);
     }
 
     public Rotation2d getRotation2d() {
