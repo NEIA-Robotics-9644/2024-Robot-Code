@@ -1,3 +1,7 @@
+// DOCUMENTATION UPDATED: 1/2/2024
+// https://www.notion.so/neiafrc/Constants-be41a1c531fa4419b5bed22d9ec09c8f?pvs=4
+
+
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
