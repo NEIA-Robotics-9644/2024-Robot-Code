@@ -123,7 +123,7 @@ public class SwerveSubsystem extends SubsystemBase {
     /**
      * Periodic method that is called by the scheduler.
      * Updates the gyro angle and the absolute encoder positions of the swerve
-     * modules.
+     * modules in SmartDashboard.
      */
     @Override
     public void periodic() {

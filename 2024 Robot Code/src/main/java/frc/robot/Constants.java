@@ -42,6 +42,9 @@ public final class Constants {
     
     public static final double kPhysicalMaxSpeedMetersPerSecond = 5;
 
+    // Multiplied by raw speed command to limit the maximum speed
+    public static final double kSpeed = 0.5;
+
     public static final double kTeleDriveMaxAccelerationUnitsPerSec = 1.5;
     public static final double kTeleDriveMaxSpeedMetersPerSec = 3;
     public static final double kTeleDriveMaxAngularSpeedRadiansPerSec = 3 * Math.PI;

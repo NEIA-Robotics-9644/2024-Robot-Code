@@ -96,7 +96,7 @@ public class SwerveModule {
             return;
         }
         state = SwerveModuleState.optimize(state, getState().angle);
-        driveMotor.set(state.speedMetersPerSecond / SwerveDriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+        driveMotor.set(state.speedMetersPerSecond / (SwerveDriveConstants.kPhysicalMaxSpeedMetersPerSecond * SwerveDriveConstants.kSpeed));
         turningMotor.set(turningPidController.calculate(getTurningPosition(), state.angle.getRadians()));
         SmartDashboard.putString("Swerve " + name + " state", state.toString());
         
