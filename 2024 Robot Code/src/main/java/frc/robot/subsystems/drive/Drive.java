@@ -35,9 +35,9 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
-  private static final double MAX_LINEAR_SPEED = Units.feetToMeters(14.5);
-  private static final double TRACK_WIDTH_X = Units.inchesToMeters(25.0);
-  private static final double TRACK_WIDTH_Y = Units.inchesToMeters(25.0);
+  private static final double MAX_LINEAR_SPEED = Units.feetToMeters(15);
+  private static final double TRACK_WIDTH_X = Units.inchesToMeters(26);
+  private static final double TRACK_WIDTH_Y = Units.inchesToMeters(26);
   private static final double DRIVE_BASE_RADIUS =
       Math.hypot(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0);
   private static final double MAX_ANGULAR_SPEED = MAX_LINEAR_SPEED / DRIVE_BASE_RADIUS;
@@ -54,13 +54,13 @@ public class Drive extends SubsystemBase {
       GyroIO gyroIO,
       ModuleIO flModuleIO,
       ModuleIO frModuleIO,
-      ModuleIO blModuleIO,
-      ModuleIO brModuleIO) {
+      ModuleIO brModuleIO,
+      ModuleIO blModuleIO) {
     this.gyroIO = gyroIO;
     modules[0] = new Module(flModuleIO, 0);
     modules[1] = new Module(frModuleIO, 1);
-    modules[2] = new Module(blModuleIO, 2);
-    modules[3] = new Module(brModuleIO, 3);
+    modules[2] = new Module(brModuleIO, 2);
+    modules[3] = new Module(blModuleIO, 3);
 
     // Configure AutoBuilder for PathPlanner
     AutoBuilder.configureHolonomic(
