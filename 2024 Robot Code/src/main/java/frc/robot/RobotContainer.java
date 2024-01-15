@@ -13,7 +13,6 @@
 
 package frc.robot;
 
-
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -40,8 +39,6 @@ public class RobotContainer {
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
-
-  
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -84,7 +81,6 @@ public class RobotContainer {
 
     // Set up auto routines
 
-
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -102,9 +98,9 @@ public class RobotContainer {
             () -> -controller.getLeftY(),
             () -> -controller.getLeftX(),
             () -> -controller.getRightX(),
-            () -> !controller.a().getAsBoolean())); 
-  
-  controller.x().onTrue(Commands.runOnce(() -> driveSubsystem.resetHeading()));
+            () -> !controller.a().getAsBoolean()));
+
+    controller.x().onTrue(Commands.runOnce(() -> driveSubsystem.resetHeading()));
   }
 
   /**

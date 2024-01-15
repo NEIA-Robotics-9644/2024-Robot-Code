@@ -43,7 +43,6 @@ public class DriveSubsystem extends SubsystemBase {
 
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(getModuleTranslations());
   private Pose2d pose = new Pose2d();
-  private Pose2d odometryPosition = new Pose2d();
   private Rotation2d lastGyroRotation = new Rotation2d();
 
   public DriveSubsystem(
@@ -57,7 +56,6 @@ public class DriveSubsystem extends SubsystemBase {
     modules[1] = new Module(frModuleIO, 1);
     modules[2] = new Module(brModuleIO, 2);
     modules[3] = new Module(blModuleIO, 3);
-
   }
 
   public void periodic() {
@@ -81,7 +79,6 @@ public class DriveSubsystem extends SubsystemBase {
       Logger.recordOutput("SwerveStates/Setpoints", new SwerveModuleState[] {});
       Logger.recordOutput("SwerveStates/SetpointsOptimized", new SwerveModuleState[] {});
     }
-
 
     // Update odometry:
     SwerveModulePosition[] wheelDeltas = new SwerveModulePosition[4];
@@ -117,7 +114,8 @@ public class DriveSubsystem extends SubsystemBase {
     SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, MAX_LINEAR_SPEED);
 
     // Send setpoints to modules
-    // Optimized setpoints are calculated by the module based on it's current location, so that it turns the minimum amount.
+    // Optimized setpoints are calculated by the module based on it's current location, so that it
+    // turns the minimum amount.
     // This is useful for logging.
     SwerveModuleState[] optimizedSetpointStates = new SwerveModuleState[4];
     for (int i = 0; i < 4; i++) {
@@ -151,13 +149,6 @@ public class DriveSubsystem extends SubsystemBase {
     return pose;
   }
 
-  /** Returns the current odometry position. */
-  @AutoLogOutput(key = "Odometry/Position")
-  public Pose2d getPosition() {
-    System.out.println("Odometry position: " + odometryPosition);
-    return odometryPosition;
-  }
-
   /** Returns the current odometry rotation. */
   public Rotation2d getRotation() {
     return pose.getRotation();
@@ -182,8 +173,10 @@ public class DriveSubsystem extends SubsystemBase {
     return MAX_ANGULAR_SPEED;
   }
 
-  /** Returns an array of the module translations, as calculated from the center of the robot
-   * using the track_width constants. */
+  /**
+   * Returns an array of the module translations, as calculated from the center of the robot using
+   * the track_width constants.
+   */
   public static Translation2d[] getModuleTranslations() {
     return new Translation2d[] {
       new Translation2d(TRACK_WIDTH_X / 2.0, TRACK_WIDTH_Y / 2.0),
