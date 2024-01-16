@@ -45,12 +45,25 @@ public class DriveSubsystem extends SubsystemBase {
   private Pose2d pose = new Pose2d();
   private Rotation2d lastGyroRotation = new Rotation2d();
 
+  public DriveSubsystem() throws Exception {
+    throw new IllegalArgumentException("Subsystems must always be passed valid hardware");
+  }
+
   public DriveSubsystem(
       GyroIO gyroIO,
       ModuleIO flModuleIO,
       ModuleIO frModuleIO,
       ModuleIO brModuleIO,
       ModuleIO blModuleIO) {
+
+    if (gyroIO == null
+        || flModuleIO == null
+        || frModuleIO == null
+        || brModuleIO == null
+        || blModuleIO == null) {
+      throw new IllegalArgumentException("Subsystems must always be passed valid hardware");
+    }
+
     this.gyroIO = gyroIO;
     modules[0] = new Module(flModuleIO, 0);
     modules[1] = new Module(frModuleIO, 1);
