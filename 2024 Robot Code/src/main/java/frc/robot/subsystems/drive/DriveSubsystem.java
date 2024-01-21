@@ -39,6 +39,13 @@ public class DriveSubsystem extends SubsystemBase {
         return gyro.getHeading();
     }
 
+    @Override
+    public void periodic() {
+        for (Module module : modules) {
+            module.periodic();
+        }
+    }
+
     public void drive(ChassisSpeeds chassisSpeeds) {
         // Calculate module states
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(chassisSpeeds);

@@ -31,6 +31,10 @@ public class Module {
         turnFeedback.enableContinuousInput(-Math.PI, Math.PI);
     }
 
+    public void periodic() {
+        io.periodic();
+    }
+
     public void drive(SwerveModuleState moduleState) {
         // Calculate module state
         SwerveModuleState state = SwerveModuleState.optimize(moduleState, io.getAbsoluteRotation());
@@ -38,7 +42,6 @@ public class Module {
         turnFeedback.setSetpoint(state.angle.getRadians());
         double turnVoltage = turnFeedback.calculate(io.getAbsoluteRotation().getRadians());
 
-        io.setDriveVoltage(state.speedMetersPerSecond);
         io.setTurnVoltage(turnVoltage);
 
         // Scale velocity based on turn error

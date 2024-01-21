@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ModuleIOSparkMax implements ModuleIO {
     
@@ -14,11 +15,14 @@ public class ModuleIOSparkMax implements ModuleIO {
     private final CANcoder turnAbsoluteEncoder;
     private final Rotation2d absoluteEncoderOffset;
 
+    private final int index;
+
     public ModuleIOSparkMax() {
         throw new IllegalArgumentException("You must pass in valid hardware");
     }
 
     public ModuleIOSparkMax(int index) {
+        this.index = index;
         switch (index) {
             case 0:
                 driveSparkMax = new CANSparkMax(1, MotorType.kBrushless);
@@ -47,6 +51,13 @@ public class ModuleIOSparkMax implements ModuleIO {
             default:
                 throw new RuntimeException("Invalid module index");
         }
+    }
+
+    @Override
+    public void periodic() {
+        // Log data to SmartDashboard
+        SmartDashboard.putNumber("Module " + index + " Drive Velocity", getDriveVelocity());
+        SmartDashboard.putNumber("Module " + index + " Turn Absolute Position", turnAbsoluteEncoder.getPosition().getValueAsDouble());
     }
 
     @Override
