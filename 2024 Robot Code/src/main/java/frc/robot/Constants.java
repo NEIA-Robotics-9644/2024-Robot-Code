@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -16,4 +19,24 @@ public final class Constants {
   public static final class CANBusIDs {
     public static final int kPigeon2CanID = 14;
   }
+
+  public static final class PhysicalRobotCharacteristics {
+    public static final double kWheelBaseMeters = Units.inchesToMeters(26);
+    public static final double kTrackWidthMeters = Units.inchesToMeters(26);
+
+    public static final Translation2d[] moduleTranslations = new Translation2d[] {
+            new Translation2d(kTrackWidthMeters / 2.0, kWheelBaseMeters / 2.0),
+            new Translation2d(kTrackWidthMeters / 2.0, -kTrackWidthMeters / 2.0),
+            new Translation2d(-kTrackWidthMeters / 2.0, kWheelBaseMeters / 2.0),
+            new Translation2d(-kTrackWidthMeters / 2.0, -kWheelBaseMeters / 2.0)
+        };
+
+    public static final double kWheelRadiusMeters = Math.hypot(kWheelBaseMeters / 2.0, kTrackWidthMeters / 2.0);
+
+    public static final double kMaxLinearSpeedMetersPerSec = Units.feetToMeters(15);
+
+    public static final double kMaxAngularSpeedRadPerSec = kMaxLinearSpeedMetersPerSec / kWheelRadiusMeters;
+  }
+
+    
 }
