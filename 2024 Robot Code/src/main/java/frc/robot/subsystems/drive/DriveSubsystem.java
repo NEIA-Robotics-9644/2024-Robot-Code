@@ -1,5 +1,7 @@
 package frc.robot.subsystems.drive;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -12,6 +14,7 @@ public class DriveSubsystem extends SubsystemBase {
     private final Module[] modules = new Module[4]; // FL, FR, BR, BL
     private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(PhysicalRobotCharacteristics.moduleTranslations);
     private final Gyro gyro;
+    private Pose2d odometryPose = new Pose2d();
 
     // No empty constructor
     public DriveSubsystem() {
@@ -58,6 +61,16 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void drive(ChassisSpeeds chassisSpeeds) {
         SmartDashboard.putNumber("Heading", gyro.getAngleDeg());
+
+        // Update odometry pose based on gyro and module states
+        odometryPose = odometryPose.exp(
+            new Twist2d(
+                chassisSpeeds.vxMetersPerSecond,
+                chassisSpeeds.vyMetersPerSecond,
+                chassisSpeeds.omegaRadiansPerSecond
+            )
+        );
+
         // Calculate module states
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
 

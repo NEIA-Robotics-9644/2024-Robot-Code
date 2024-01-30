@@ -7,9 +7,12 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import static frc.robot.Constants.*;
 import frc.robot.commands.SwerveDriveCmd;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
+import frc.robot.subsystems.drive.GyroIOSim;
+import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSparkMax;
 
 /**
@@ -20,18 +23,40 @@ import frc.robot.subsystems.drive.ModuleIOSparkMax;
  */
 public class RobotContainer {
 
+  public Modes mode = Modes.SIM;
+  
   private final CommandXboxController driverController = new CommandXboxController(0);
 
-  private final DriveSubsystem driveSubsystem = new DriveSubsystem(
-    new ModuleIOSparkMax(0),
-    new ModuleIOSparkMax(1),
-    new ModuleIOSparkMax(2),
-    new ModuleIOSparkMax(3),
-    new GyroIOPigeon2()
-  );
+  private final DriveSubsystem driveSubsystem;
+  
+  
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    switch (mode) {
+      case SIM:
+        driveSubsystem = new DriveSubsystem(
+          new ModuleIOSim(0),
+          new ModuleIOSim(1),
+          new ModuleIOSim(2),
+          new ModuleIOSim(3),
+          new GyroIOSim()
+        );
+        break;
+      case REAL:
+        driveSubsystem = new DriveSubsystem(
+          new ModuleIOSparkMax(0),
+          new ModuleIOSparkMax(1),
+          new ModuleIOSparkMax(2),
+          new ModuleIOSparkMax(3),
+          new GyroIOPigeon2()
+        );
+        break;
+
+      default:
+        throw new IllegalArgumentException("Invalid mode");
+    }
     // Configure the trigger bindings
     configureBindings();
   }

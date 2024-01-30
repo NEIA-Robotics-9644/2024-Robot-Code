@@ -16,6 +16,11 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public enum Modes {
+    SIM,
+    REAL
+  }
+
   public static final class CANBusIDs {
     public static final int kPigeon2CanID = 14;
   }
