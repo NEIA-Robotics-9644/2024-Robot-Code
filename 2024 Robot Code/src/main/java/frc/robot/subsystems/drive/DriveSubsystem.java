@@ -1,9 +1,9 @@
 package frc.robot.subsystems.drive;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PhysicalRobotCharacteristics;
 
@@ -32,11 +32,21 @@ public class DriveSubsystem extends SubsystemBase {
 
         this.gyro = new Gyro(gyro);
 
-        gyro.resetHeading();
+        new java.util.Timer().schedule( 
+        new java.util.TimerTask() {
+            @Override
+            public void run() {
+                gyro.resetHeading();
+            }
+        }, 
+        1000
+);
     }
 
-    public Rotation2d getHeading() {
-        return gyro.getHeading();
+
+
+    public double getAngleDeg() {
+        return gyro.getAngleDeg();
     }
 
     @Override
@@ -47,6 +57,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void drive(ChassisSpeeds chassisSpeeds) {
+        SmartDashboard.putNumber("Heading", gyro.getAngleDeg());
         // Calculate module states
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
 

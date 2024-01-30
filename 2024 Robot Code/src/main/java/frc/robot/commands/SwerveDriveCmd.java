@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -43,6 +44,12 @@ public class SwerveDriveCmd extends Command {
         double omega = omegaSupplier.get();
         boolean fieldOriented = fieldOrientedSupplier.get();
 
+        // Apply a deadband
+        double deadband = 0.1;
+
+        x = -MathUtil.applyDeadband(x, deadband, 1);
+        y = MathUtil.applyDeadband(y, deadband, 1);
+        omega = -MathUtil.applyDeadband(omega, deadband, 1);
 
         // Get chassis speeds
         ChassisSpeeds chassisSpeeds;
@@ -51,7 +58,7 @@ public class SwerveDriveCmd extends Command {
                 x * PhysicalRobotCharacteristics.kMaxLinearSpeedMetersPerSec,
                 y * PhysicalRobotCharacteristics.kMaxLinearSpeedMetersPerSec,
                 omega * PhysicalRobotCharacteristics.kMaxAngularSpeedRadPerSec,
-                driveSubsystem.getHeading());
+                new Rotation2d(-Math.toRadians(driveSubsystem.getAngleDeg())));
         } else {
             chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                 x * PhysicalRobotCharacteristics.kMaxLinearSpeedMetersPerSec,

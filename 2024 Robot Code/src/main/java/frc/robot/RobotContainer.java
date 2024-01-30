@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.SwerveDriveCmd;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
-import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSparkMax;
 
 /**
@@ -24,10 +23,10 @@ public class RobotContainer {
   private final CommandXboxController driverController = new CommandXboxController(0);
 
   private final DriveSubsystem driveSubsystem = new DriveSubsystem(
-    new ModuleIOSim(0),
-    new ModuleIOSim(1),
-    new ModuleIOSim(2),
-    new ModuleIOSim(3),
+    new ModuleIOSparkMax(0),
+    new ModuleIOSparkMax(1),
+    new ModuleIOSparkMax(2),
+    new ModuleIOSparkMax(3),
     new GyroIOPigeon2()
   );
 
@@ -54,7 +53,7 @@ public class RobotContainer {
         () -> driverController.getLeftX(),
         () -> driverController.getLeftY(),
         () -> driverController.getRightX(),
-        () -> driverController.a().getAsBoolean()
+        () -> !driverController.a().getAsBoolean()
       )
     );
   }

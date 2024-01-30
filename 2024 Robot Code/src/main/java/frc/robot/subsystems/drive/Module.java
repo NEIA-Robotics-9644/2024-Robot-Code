@@ -1,17 +1,14 @@
 package frc.robot.subsystems.drive;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import frc.robot.Constants.PhysicalRobotCharacteristics;
+import edu.wpi.first.math.MathUtil;
 
 public class Module {
 
     private final ModuleIO io;
 
-    private final SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(0.1, 0.13);
-    private final PIDController driveFeedback = new PIDController(1, 0, 0);
-    private final PIDController turnFeedback = new PIDController(1, 0, 0);
+    private final PIDController turnFeedback = new PIDController(5, 0, 0);
 
 
     public Module() {
@@ -39,8 +36,8 @@ public class Module {
         // Calculate module state
         SwerveModuleState state = SwerveModuleState.optimize(moduleState, io.getAbsoluteRotation());
 
-        turnFeedback.setSetpoint(state.angle.getRadians());
-        double turnVoltage = turnFeedback.calculate(io.getAbsoluteRotation().getRadians());
+        turnFeedback.setSetpoint(MathUtil.angleModulus(state.angle.getRadians()));
+        double turnVoltage = turnFeedback.calculate(MathUtil.angleModulus(io.getAbsoluteRotation().getRadians()));
 
         io.setTurnVoltage(turnVoltage);
 
@@ -49,12 +46,9 @@ public class Module {
         // When the error is 90°, the velocity setpoint should be 0. As the wheel turns
         // towards the setpoint, its velocity should increase. This is achieved by
         // taking the component of the velocity in the direction of the setpoint.
-        double adjustSpeedSetpoint = moduleState.speedMetersPerSecond * Math.cos(turnFeedback.getPositionError());
+        // double adjustSpeedSetpoint = moduleState.speedMetersPerSecond * Math.cos(turnFeedback.getPositionError());
 
         // Run drive controller
-        double velocityRadPerSec = adjustSpeedSetpoint / PhysicalRobotCharacteristics.kWheelRadiusMeters;
-        io.setDriveVoltage(
-            driveFeedforward.calculate(velocityRadPerSec)
-                + driveFeedback.calculate(io.getDriveVelocity(), velocityRadPerSec));
+        io.setDriveVoltage(state.speedMetersPerSecond);
     }
 }

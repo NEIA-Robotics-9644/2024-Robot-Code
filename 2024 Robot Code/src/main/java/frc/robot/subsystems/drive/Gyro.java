@@ -1,6 +1,5 @@
 package frc.robot.subsystems.drive;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 
 public class Gyro {
     private final GyroIO io;
@@ -20,8 +19,8 @@ public class Gyro {
     /**
      * returns the continuous yaw angle of the gyro     
      */
-    public Rotation2d getHeading() {
-        return io.getHeading();
+    public double getAngleDeg() {
+        return io.getAngleDeg();
     }
 
     /**
