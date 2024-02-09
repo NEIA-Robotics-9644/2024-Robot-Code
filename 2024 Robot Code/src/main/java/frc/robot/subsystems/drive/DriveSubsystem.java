@@ -1,9 +1,9 @@
 package frc.robot.subsystems.drive;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -62,21 +62,29 @@ public class DriveSubsystem extends SubsystemBase {
     public void drive(ChassisSpeeds chassisSpeeds) {
         SmartDashboard.putNumber("Heading", gyro.getAngleDeg());
 
-        // Update odometry pose based on gyro and module states
-        odometryPose = odometryPose.exp(
-            new Twist2d(
-                chassisSpeeds.vxMetersPerSecond,
-                chassisSpeeds.vyMetersPerSecond,
-                chassisSpeeds.omegaRadiansPerSecond
-            )
-        );
-
+        
         // Calculate module states
         SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
 
+        
         // Set module states
+
+        SwerveModulePosition[] calculatedModuleStates = new SwerveModulePosition[4];
+
         for (int i = 0; i < 4; i++) {
             modules[i].drive(moduleStates[i]);
+
+            calculatedModuleStates[i] = modules[i].getModulePosition();
         }
+
+       
+
+        // Get odometry pose from module movements
+        odometryPose = odometryPose.exp(kinematics.toTwist2d(calculatedModuleStates));
+
+        SmartDashboard.putNumber("Odometry X", odometryPose.getTranslation().getX());
+        SmartDashboard.putNumber("Odometry Y", odometryPose.getTranslation().getY());
+        SmartDashboard.putNumber("Odometry Heading", odometryPose.getRotation().getDegrees());
+
     }    
 }
