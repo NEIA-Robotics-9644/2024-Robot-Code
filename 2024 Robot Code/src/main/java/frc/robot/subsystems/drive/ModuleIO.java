@@ -15,7 +15,9 @@ public interface ModuleIO {
 
     public Rotation2d getAbsoluteRotation();
 
-    public void setDriveBrake(boolean brake);
+    public void setDriveBrakeMode(boolean enable);
+
+    public void setTurnBrakeMode(boolean enable);
 
     public void periodic();
 }

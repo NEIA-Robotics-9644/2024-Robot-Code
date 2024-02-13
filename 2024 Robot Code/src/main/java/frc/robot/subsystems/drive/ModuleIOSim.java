@@ -42,8 +42,13 @@ public class ModuleIOSim implements ModuleIO {
     }
 
     @Override
-    public void setDriveBrake(boolean brake) {
-        // Do nothing        
+    public void setDriveBrakeMode(boolean enable) {
+        System.out.println("Module " + index + " Drive Brake Mode: " + enable);
+    }
+
+    @Override
+    public void setTurnBrakeMode(boolean enable) {
+        System.out.println("Module " + index + " Turn Brake Mode: " + enable);
     }
 
     @Override
