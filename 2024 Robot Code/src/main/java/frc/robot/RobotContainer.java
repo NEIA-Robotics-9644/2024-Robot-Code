@@ -14,6 +14,7 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.GyroIOSim;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSparkMax;
+import frc.robot.subsystems.drive.ModuleIOTalonFX;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -46,10 +47,10 @@ public class RobotContainer {
         break;
       case REAL:
         driveSubsystem = new DriveSubsystem(
-          new ModuleIOSparkMax(0),
-          new ModuleIOSparkMax(1),
-          new ModuleIOSparkMax(2),
-          new ModuleIOSparkMax(3),
+          new ModuleIOTalonFX(0),
+          new ModuleIOTalonFX(1),
+          new ModuleIOTalonFX(2),
+          new ModuleIOTalonFX(3),
           new GyroIOPigeon2()
         );
         break;

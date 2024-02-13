@@ -10,16 +10,13 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ModuleIOTalonFX implements ModuleIO {
 
-    // Gear ratios for SDS MK4i L2, adjust as necessary
+    // Gear ratios for SDS MK4i L2
     private final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
     private final double TURN_GEAR_RATIO = 150.0 / 7.0;
     
@@ -175,5 +172,20 @@ public class ModuleIOTalonFX implements ModuleIO {
                 : InvertedValue.CounterClockwise_Positive;
         config.NeutralMode = enable ? NeutralModeValue.Brake : NeutralModeValue.Coast;
         turnTalon.getConfigurator().apply(config);
+    }
+
+    @Override
+    public double getTurnP() {
+        return 5.0;
+    }
+
+    @Override
+    public double getTurnI() {
+        return 0.0;
+    }
+
+    @Override
+    public double getTurnD() {
+        return 0.0;
     }
 }

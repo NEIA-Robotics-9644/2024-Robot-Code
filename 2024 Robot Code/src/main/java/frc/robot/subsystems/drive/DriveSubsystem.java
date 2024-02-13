@@ -11,7 +11,7 @@ import frc.robot.Constants.PhysicalRobotCharacteristics;
 
 public class DriveSubsystem extends SubsystemBase {
     
-    private final Module[] modules = new Module[4]; // FL, FR, BR, BL
+    private final Module[] modules = new Module[4]; // FL, FR, BL, BR
     private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(PhysicalRobotCharacteristics.moduleTranslations);
     private final Gyro gyro;
     private Pose2d odometryPose = new Pose2d();
@@ -30,8 +30,8 @@ public class DriveSubsystem extends SubsystemBase {
         // Initialize modules
         this.modules[0] = new Module(frontLeft);
         this.modules[1] = new Module(frontRight);
-        this.modules[2] = new Module(backRight);
-        this.modules[3] = new Module(backLeft);
+        this.modules[2] = new Module(backLeft);
+        this.modules[3] = new Module(backRight);
 
         this.gyro = new Gyro(gyro);
 
@@ -43,7 +43,7 @@ public class DriveSubsystem extends SubsystemBase {
             }
         }, 
         1000
-);
+    );
     }
 
 

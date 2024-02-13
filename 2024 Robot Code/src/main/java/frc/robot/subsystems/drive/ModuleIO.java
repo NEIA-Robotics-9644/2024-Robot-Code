@@ -9,9 +9,15 @@ public interface ModuleIO {
      */
     public double getDriveVelocity();
 
-    public void setDriveVoltage(double voltage);
+    public double getTurnP();
 
-    public void setTurnVoltage(double voltage);
+    public double getTurnI();
+
+    public double getTurnD();
+
+    public void setDriveVoltage(double volts);
+
+    public void setTurnVoltage(double volts);
 
     public Rotation2d getAbsoluteRotation();
 

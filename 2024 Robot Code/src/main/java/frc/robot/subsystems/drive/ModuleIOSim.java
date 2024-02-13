@@ -1,5 +1,6 @@
 package frc.robot.subsystems.drive;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
@@ -29,17 +30,18 @@ public class ModuleIOSim implements ModuleIO {
         return driveSim.getAngularVelocityRPM();
     }
 
-    @Override
-    public void setDriveVoltage(double voltage) {
-        driveSim.setInputVoltage(voltage);
-        System.out.println("Module " + index + " Drive Voltage: " + voltage);
-    }
+    
+  @Override
+  public void setDriveVoltage(double volts) {
+    var driveAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
+    driveSim.setInputVoltage(driveAppliedVolts);
+  }
 
-    @Override
-    public void setTurnVoltage(double voltage) {
-        turnSim.setInputVoltage(voltage);
-        System.out.println("Module " + index + " Turn Voltage: " + voltage);
-    }
+  @Override
+  public void setTurnVoltage(double volts) {
+    var turnAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
+    turnSim.setInputVoltage(turnAppliedVolts);
+  }
 
     @Override
     public void setDriveBrakeMode(boolean enable) {
@@ -59,5 +61,20 @@ public class ModuleIOSim implements ModuleIO {
         // Log data to SmartDashboard
         SmartDashboard.putNumber("Module " + index + " Drive Velocity (mps)", getDriveVelocity());
         SmartDashboard.putNumber("Module " + index + " Turn Absolute Position (deg)", getAbsoluteRotation().getDegrees());
+    }
+
+    @Override
+    public double getTurnP() {
+        return 0.0;
+    }
+
+    @Override
+    public double getTurnI() {
+        return 0.0;
+    }
+
+    @Override
+    public double getTurnD() {
+        return 0.0;
     }
 }

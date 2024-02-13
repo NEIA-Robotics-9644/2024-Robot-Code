@@ -30,10 +30,10 @@ public final class Constants {
     public static final double kTrackWidthMeters = Units.inchesToMeters(26);
 
     public static final Translation2d[] moduleTranslations = new Translation2d[] {
-            new Translation2d(kTrackWidthMeters / 2.0, kWheelBaseMeters / 2.0),
-            new Translation2d(kTrackWidthMeters / 2.0, -kTrackWidthMeters / 2.0),
-            new Translation2d(-kTrackWidthMeters / 2.0, kWheelBaseMeters / 2.0),
-            new Translation2d(-kTrackWidthMeters / 2.0, -kWheelBaseMeters / 2.0)
+            new Translation2d(-kTrackWidthMeters / 2.0, kWheelBaseMeters / 2.0),    // Front Left
+            new Translation2d(kTrackWidthMeters / 2.0, kTrackWidthMeters / 2.0),    // Front Right
+            new Translation2d(-kTrackWidthMeters / 2.0, -kWheelBaseMeters / 2.0),   // Back Left
+            new Translation2d(kTrackWidthMeters / 2.0, -kWheelBaseMeters / 2.0)     // Back Right
         };
 
     public static final double kWheelRadiusMeters = Math.hypot(kWheelBaseMeters / 2.0, kTrackWidthMeters / 2.0);

@@ -10,8 +10,7 @@ public class Module {
 
     private final ModuleIO io;
 
-    private final PIDController turnFeedback = new PIDController(5, 0, 0);
-
+    private final PIDController turnFeedback;
 
     public Module() {
         throw new IllegalArgumentException("You must pass in valid hardware for a subsystem to work");
@@ -26,8 +25,12 @@ public class Module {
         // Initialize hardware
         this.io = io;
 
+        turnFeedback = new PIDController(io.getTurnP(), io.getTurnI(), io.getTurnD());
+
         // Configure turn PID
         turnFeedback.enableContinuousInput(-Math.PI, Math.PI);
+
+        
     }
 
     public void periodic() {
@@ -55,6 +58,6 @@ public class Module {
     }
 
     public SwerveModulePosition getModulePosition() {
-        return new SwerveModulePosition(io.getDriveVelocity() / 60.0 * Math.PI * 2.0 * PhysicalRobotCharacteristics.kWheelRadiusMeters * 0.02, io.getAbsoluteRotation());
+        return new SwerveModulePosition(io.getDriveVelocity() / 60.0 * (Math.PI * 2.0 * PhysicalRobotCharacteristics.kWheelRadiusMeters) * 0.02, io.getAbsoluteRotation());
     }
 }
