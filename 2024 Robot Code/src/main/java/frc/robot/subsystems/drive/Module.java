@@ -40,15 +40,24 @@ public class Module {
         double turnVoltage = turnFeedback.calculate(MathUtil.angleModulus(io.getAbsoluteRotation().getRadians()));
 
         io.setTurnVoltage(turnVoltage);
-
-        // Scale velocity based on turn error
-        //
-        // When the error is 90°, the velocity setpoint should be 0. As the wheel turns
-        // towards the setpoint, its velocity should increase. This is achieved by
-        // taking the component of the velocity in the direction of the setpoint.
-        // double adjustSpeedSetpoint = moduleState.speedMetersPerSecond * Math.cos(turnFeedback.getPositionError());
-
         // Run drive controller
         io.setDriveVoltage(state.speedMetersPerSecond);
+    }
+
+    public void turn(SwerveModuleState moduleState, double angle, double time) {
+        // Calculate module state
+        SwerveModuleState state = SwerveModuleState.optimize(moduleState, io.getAbsoluteRotation());
+
+        turnFeedback.setSetpoint(angle);
+        double turnVoltage = turnFeedback.calculate(MathUtil.angleModulus(io.getAbsoluteRotation().getRadians()));
+
+        io.setTurnVoltage(turnVoltage);
+        // Run drive controller
+        io.setDriveVoltage(state.speedMetersPerSecond);
+    }
+    public void breakAll()
+    {
+        io.setTurnVoltage(0);
+        io.setDriveVoltage(0);
     }
 }

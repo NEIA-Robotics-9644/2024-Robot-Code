@@ -14,7 +14,7 @@ public class DriveSubsystem extends SubsystemBase {
     private final Module[] modules = new Module[4]; // FL, FR, BR, BL
     private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(PhysicalRobotCharacteristics.moduleTranslations);
     private final Gyro gyro;
-    private Pose2d odometryPose = new Pose2d();
+    public Pose2d odometryPose = new Pose2d();
 
     // No empty constructor
     public DriveSubsystem() {
@@ -78,5 +78,27 @@ public class DriveSubsystem extends SubsystemBase {
         for (int i = 0; i < 4; i++) {
             modules[i].drive(moduleStates[i]);
         }
-    }    
+    }
+    public void turnCenter(ChassisSpeeds speed, double time, boolean direction)
+    {
+        SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(speed);
+        if(direction == true)
+        {
+            for (int i = 0; i < 4; i++) {
+                modules[i].turn(moduleStates[i], 90 * i, time);
+            }
+        }
+        else if(direction == false)
+        {
+            for (int i = 0; i < 4; i++) {
+                modules[i].turn(moduleStates[i], -90 * i, time);
+            }
+        }
+    }
+    public void brakeModules()
+    {
+        for (int i = 0; i < 4; i++) {
+            modules[i].breakAll();
+        }
+    }
 }

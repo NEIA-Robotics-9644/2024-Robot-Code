@@ -6,6 +6,16 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Twist2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.PhysicalRobotCharacteristics;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -42,6 +52,15 @@ public final class Constants {
 
     public static final double kMaxAngularSpeedRadPerSec = kMaxLinearSpeedMetersPerSec / kWheelRadiusMeters;
   }
-
+  public static final class KeyPoints {
+    //index of name matches with index of Pose2d
+    public static final String[] keyPointsName = {"homeSpeaker", "homeAmp", "homeSource", "homeStage"};
+    public static final Pose2d[] positions = new Pose2d[] {
+      new Pose2d(1.0, 1.0, new Rotation2d(0.0)),
+      new Pose2d(2.0, 2.0, new Rotation2d(0.0)),
+      new Pose2d(3.0, 3.0, new Rotation2d(0.0)),
+      new Pose2d(4.0, 4.0, new Rotation2d(0.0))
+    };
+  }
     
 }
