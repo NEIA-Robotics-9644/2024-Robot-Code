@@ -1,7 +1,9 @@
 package frc.robot.subsystems.drive;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.Constants.PhysicalRobotCharacteristics;
 import edu.wpi.first.math.MathUtil;
 
 public class Module {
@@ -59,5 +61,8 @@ public class Module {
     {
         io.setTurnVoltage(0);
         io.setDriveVoltage(0);
+
+    public SwerveModulePosition getModulePosition() {
+        return new SwerveModulePosition(io.getDriveVelocity() / 60.0 * Math.PI * 2.0 * PhysicalRobotCharacteristics.kWheelRadiusMeters * 0.02, io.getAbsoluteRotation());
     }
 }

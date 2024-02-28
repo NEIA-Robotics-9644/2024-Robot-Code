@@ -23,7 +23,7 @@ import frc.robot.subsystems.drive.ModuleIOSparkMax;
  */
 public class RobotContainer {
 
-  public Modes mode = Modes.SIM;
+  public Modes mode = Modes.REAL;
   
   private final CommandXboxController driverController = new CommandXboxController(0);
 
