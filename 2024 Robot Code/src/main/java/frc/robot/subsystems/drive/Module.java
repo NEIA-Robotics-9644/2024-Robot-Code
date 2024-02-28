@@ -8,7 +8,7 @@ import edu.wpi.first.math.MathUtil;
 
 public class Module {
 
-    private final ModuleIO io;
+    public final ModuleIO io;
 
     private final PIDController turnFeedback;
 

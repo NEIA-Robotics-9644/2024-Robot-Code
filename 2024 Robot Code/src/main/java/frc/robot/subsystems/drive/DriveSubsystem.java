@@ -11,7 +11,7 @@ import frc.robot.Constants.PhysicalRobotCharacteristics;
 
 public class DriveSubsystem extends SubsystemBase {
     
-    private final Module[] modules = new Module[4]; // FL, FR, BL, BR
+    public final Module[] modules = new Module[4]; // FL, FR, BL, BR
     private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(PhysicalRobotCharacteristics.moduleTranslations);
     private final Gyro gyro;
     private Pose2d odometryPose = new Pose2d();

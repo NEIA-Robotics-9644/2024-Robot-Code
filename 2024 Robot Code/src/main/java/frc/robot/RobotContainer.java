@@ -8,6 +8,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import static frc.robot.Constants.*;
+
+import com.ctre.phoenix6.Orchestra;
+import com.ctre.phoenix6.hardware.ParentDevice;
+import com.ctre.phoenix6.hardware.TalonFX;
+
 import frc.robot.commands.SwerveDriveCmd;
 import frc.robot.subsystems.drive.DriveSubsystem;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -24,17 +29,20 @@ import frc.robot.subsystems.drive.ModuleIOTalonFX;
  */
 public class RobotContainer {
 
-  public Modes mode = Modes.REAL;
+  public Modes mode = Modes.SIM;
   
   private final CommandXboxController driverController = new CommandXboxController(0);
 
   private final DriveSubsystem driveSubsystem;
   
+  // Orchestra orchestra = new Orchestra();
   
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // driveSubsystem = null;
+    
     switch (mode) {
       case SIM:
         driveSubsystem = new DriveSubsystem(
@@ -60,6 +68,41 @@ public class RobotContainer {
     }
     // Configure the trigger bindings
     configureBindings();
+    
+    /**
+    Command orchestraCmd = new Command() {
+      @Override
+      public void initialize() {
+        System.out.println(orchestra.addInstrument(new TalonFX(1)));
+        System.out.println(orchestra.addInstrument(new TalonFX(2)));
+        System.out.println(orchestra.addInstrument(new TalonFX(3)));
+        System.out.println(orchestra.addInstrument(new TalonFX(4)));
+        System.out.println(orchestra.addInstrument(new TalonFX(5)));
+        System.out.println(orchestra.addInstrument(new TalonFX(6)));
+        System.out.println(orchestra.addInstrument(new TalonFX(7)));
+        System.out.println(orchestra.addInstrument(new TalonFX(8)));
+        System.out.println(orchestra.loadMusic("output.chrp"));
+        System.out.println(orchestra.play());
+      }
+
+      @Override
+      public void execute() {
+        System.out.println(orchestra.getCurrentTime());
+        System.out.println(orchestra.isPlaying());
+        System.out.println(orchestra.play());
+      }
+
+      @Override
+      public void end(boolean interrupted) {
+      }
+
+      @Override
+      public boolean isFinished() {
+        return false;
+      }
+    };
+    driverController.a().onTrue(orchestraCmd);
+    */
   }
 
   /**
