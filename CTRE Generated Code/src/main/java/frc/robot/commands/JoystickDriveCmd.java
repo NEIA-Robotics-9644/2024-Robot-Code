@@ -70,8 +70,6 @@ public class JoystickDriveCmd extends Command {
                 .withVelocityY(sidewaysOutput)
                 .withRotationalRate(rotationOutput)
         );
-
-        driveSubsystem.applyRequest(null)
     }
 
     // Called once the command ends or is interrupted.
