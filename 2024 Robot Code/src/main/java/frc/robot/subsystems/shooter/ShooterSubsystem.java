@@ -48,7 +48,7 @@ public class ShooterSubsystem extends SubsystemBase{
         for (Motor motor : swivel) {
             motor.periodic();
         }
-        feeder.periodic();
+        feeder[0].periodic();
     }
     public void swivel()
     {
