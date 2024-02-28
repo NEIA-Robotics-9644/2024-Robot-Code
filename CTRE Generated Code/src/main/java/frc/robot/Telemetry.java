@@ -16,6 +16,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
+
+/*
+ * This is for displaying info via NetworkTables and SmartDashboard
+ */
 public class Telemetry {
     private final double MaxSpeed;
 
