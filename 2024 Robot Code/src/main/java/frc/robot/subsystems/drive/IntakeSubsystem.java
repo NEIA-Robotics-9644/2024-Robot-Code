@@ -30,5 +30,12 @@ public class IntakeSubsystem extends SubsystemBase{
     public void periodic() {
         
     }
-    
+    public void intake()
+    {
+
+    }
+    public void deploy()
+    {
+        
+    }
 }
