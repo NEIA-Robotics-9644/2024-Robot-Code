@@ -1,15 +1,16 @@
 package frc.robot.commands;
 
+
 import java.util.function.Supplier;
+
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
-
-import frc.robot.subsystems.drive.DriveSubsystem;
-
+import frc.robot.subsystems.drive.SwerveDriveSubsystem;
 import frc.robot.Constants.PhysicalRobotCharacteristics;
 import static frc.robot.Constants.*;
 
@@ -21,15 +22,17 @@ public class MoveToKeyPointCmd extends Command {
     private final Supplier<Double> omegaSupplier;
     private final Supplier<Boolean> fieldOrientedSupplier;
     private final Supplier<String> pointSupplier;
-    private final DriveSubsystem driveSubsystem;
+    private final SwerveDriveSubsystem swerveDriveSubsystem;
+
+    private final SwerveRequest.FieldCentric fieldCentric = new SwerveRequest.FieldCentric();
 
 
     public MoveToKeyPointCmd(
-            DriveSubsystem driveSubsystem, Supplier<Double> xSupplier,
+            SwerveDriveSubsystem driveSubsystem, Supplier<Double> xSupplier,
             Supplier<Double> ySupplier,
             Supplier<Double> omegaSupplier, Supplier<Boolean> fieldOrientedSupplier, Supplier<String> pointSupplier) {
 
-        this.driveSubsystem = driveSubsystem;
+        this.swerveDriveSubsystem = driveSubsystem;
         this.xSupplier = xSupplier;
         this.ySupplier = ySupplier;
         this.omegaSupplier = omegaSupplier;
@@ -62,8 +65,8 @@ public class MoveToKeyPointCmd extends Command {
         }
         Pose2d keyPoint = KeyPoints.positions[index];
 
-        x = -MathUtil.applyDeadband(keyPoint.getX() - driveSubsystem.WhateverIsTheVariableForPosition.getX(), deadband, 1);
-        y = MathUtil.applyDeadband(keyPoint.getY() - driveSubsystem.WhateverIsTheVariableForPosition.getY(), deadband, 1);
+        x = -MathUtil.applyDeadband(keyPoint.getX() - swerveDriveSubsystem.getState().Pose.getX(), deadband, 1);
+        y = MathUtil.applyDeadband(keyPoint.getY() - swerveDriveSubsystem.getState().Pose.getY(), deadband, 1);
         omega = -MathUtil.applyDeadband(omega, deadband, 1);
 
         // Get chassis speeds
@@ -73,7 +76,7 @@ public class MoveToKeyPointCmd extends Command {
                 x * PhysicalRobotCharacteristics.kMaxLinearSpeedMetersPerSec,
                 y * PhysicalRobotCharacteristics.kMaxLinearSpeedMetersPerSec,
                 omega * PhysicalRobotCharacteristics.kMaxAngularSpeedRadPerSec,
-                new Rotation2d(-Math.toRadians(driveSubsystem.getAngleDeg())));
+                new Rotation2d(-Math.toRadians(swerveDriveSubsystem.getState().Pose.getRotation().getDegrees())));
         } else {
             chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                 x * PhysicalRobotCharacteristics.kMaxLinearSpeedMetersPerSec,
@@ -82,6 +85,10 @@ public class MoveToKeyPointCmd extends Command {
                 Rotation2d.fromDegrees(0));
         }
 
-        driveSubsystem.drive(chassisSpeeds);
+        // Apply request
+        swerveDriveSubsystem.setControl(fieldCentric.withVelocityX(chassisSpeeds.vxMetersPerSecond)
+            .withVelocityY(chassisSpeeds.vyMetersPerSecond)
+            .withRotationalRate(chassisSpeeds.omegaRadiansPerSecond)
+        );   
     }
 }

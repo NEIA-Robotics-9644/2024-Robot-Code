@@ -6,15 +6,15 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 
-import frc.robot.subsystems.drive.DriveSubsystem;
+import frc.robot.subsystems.drive.SwerveDriveSubsystem;
 
 public class SetAngleCmd extends Command{
 
-    private final DriveSubsystem driveSubsystem;
+    private final SwerveDriveSubsystem driveSubsystem;
     private final Supplier<Boolean> lOrR;
     private final Supplier<Double> time;
 
-    public SetAngleCmd(DriveSubsystem driveSubsystem, Supplier<Boolean> lOrR, Supplier<Double> time) {
+    public SetAngleCmd(SwerveDriveSubsystem driveSubsystem, Supplier<Boolean> lOrR, Supplier<Double> time) {
         
         this.driveSubsystem = driveSubsystem;
         this.lOrR = lOrR;

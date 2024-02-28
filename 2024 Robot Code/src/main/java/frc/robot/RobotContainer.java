@@ -4,16 +4,19 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import static frc.robot.Constants.*;
-import frc.robot.commands.SwerveDriveCmd;
-import frc.robot.subsystems.drive.DriveSubsystem;
-import frc.robot.subsystems.drive.GyroIOPigeon2;
-import frc.robot.subsystems.drive.GyroIOSim;
-import frc.robot.subsystems.drive.ModuleIOSim;
-import frc.robot.subsystems.drive.ModuleIOSparkMax;
+
+import com.ctre.phoenix6.Utils;
+
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.Modes;
+import frc.robot.commands.JoystickDriveCmd;
+import frc.robot.subsystems.drive.SwerveDriveSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -25,38 +28,20 @@ public class RobotContainer {
 
   public Modes mode = Modes.REAL;
   
-  private final CommandXboxController driverController = new CommandXboxController(0);
+  private double MaxSpeed = DriveConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
+  private double MaxAngularRate = DriveConstants.kMaxAngularSpeedRadPerSec;
 
-  private final DriveSubsystem driveSubsystem;
+  /* Setting up bindings for necessary control of the swerve drive platform */
+  private final CommandXboxController driverJoystick = new CommandXboxController(0); // My joystick
+  private final SwerveDriveSubsystem drivetrain = DriveConstants.DriveTrain; // My drivetrain
   
   
-
+  private final Telemetry logger = new Telemetry(MaxSpeed);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    switch (mode) {
-      case SIM:
-        driveSubsystem = new DriveSubsystem(
-          new ModuleIOSim(0),
-          new ModuleIOSim(1),
-          new ModuleIOSim(2),
-          new ModuleIOSim(3),
-          new GyroIOSim()
-        );
-        break;
-      case REAL:
-        driveSubsystem = new DriveSubsystem(
-          new ModuleIOSparkMax(0),
-          new ModuleIOSparkMax(1),
-          new ModuleIOSparkMax(2),
-          new ModuleIOSparkMax(3),
-          new GyroIOPigeon2()
-        );
-        break;
+    
 
-      default:
-        throw new IllegalArgumentException("Invalid mode");
-    }
     // Configure the trigger bindings
     configureBindings();
   }
@@ -71,16 +56,15 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Drive Command
-    driveSubsystem.setDefaultCommand(
-      new SwerveDriveCmd(
-        driveSubsystem,
-        () -> driverController.getLeftX(),
-        () -> driverController.getLeftY(),
-        () -> driverController.getRightX(),
-        () -> !driverController.a().getAsBoolean()
-      )
-    );
+    drivetrain.setDefaultCommand(new JoystickDriveCmd(drivetrain, driverJoystick::getLeftY, driverJoystick::getLeftX, driverJoystick::getRightX));
+    
+
+    if (Utils.isSimulation()) {
+      drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
+    }
+    drivetrain.registerTelemetry(logger::telemeterize);
+  
+  
   }
 
   /**
