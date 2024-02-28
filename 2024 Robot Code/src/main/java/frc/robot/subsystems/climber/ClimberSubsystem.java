@@ -17,15 +17,6 @@ public class ClimberSubsystem extends SubsystemBase{
 
     public ClimberSubsystem(String test) {
         // Initialize things
-
-        new java.util.Timer().schedule( 
-        new java.util.TimerTask() {
-            @Override
-            public void run() {
-                
-            }
-        }, 1000);
-    }
     @Override
     public void periodic() {
         

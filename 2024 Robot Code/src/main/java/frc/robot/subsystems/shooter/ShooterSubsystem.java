@@ -31,14 +31,6 @@ public class ShooterSubsystem extends SubsystemBase{
         this.swivel[0] = new Motor(swivel1);
         this.swivel[1] = new Motor(swivel2);
         this.feeder[0] = new Motor(feeder);
-
-        new java.util.Timer().schedule( 
-        new java.util.TimerTask() {
-            @Override
-            public void run() {
-                
-            }
-        }, 1000);
     }
     @Override
     public void periodic() {

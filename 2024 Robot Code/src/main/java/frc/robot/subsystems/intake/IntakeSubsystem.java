@@ -10,32 +10,38 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.PhysicalRobotCharacteristics;
 
 public class IntakeSubsystem extends SubsystemBase{
+    private final Motor[] deploy = new Motor[1];
+    private final Motor[] feeder = new Motor[1];
 
     public IntakeSubsystem() {
         throw new IllegalArgumentException("You must pass in valid hardware for a subsystem to work");
     }
 
-    public IntakeSubsystem(String test) {
-        // Initialize things
+    public IntakeSubsystem(MotorIO deploy, MotorIO feeder) {
 
-        new java.util.Timer().schedule( 
-        new java.util.TimerTask() {
-            @Override
-            public void run() {
-                
-            }
-        }, 1000);
+        if (deploy == null || feeder == null) {
+            throw new IllegalArgumentException("You must pass in valid hardware for a subsystem to work");
+        }
+
+        // Initialize things
+        this.deploy[0] = new Motor(deploy);
+        this.feeder[0] = new Motor(feeder);
     }
     @Override
     public void periodic() {
-        
+        deploy[0].periodic();
+        feeder[0].periodic();
     }
-    public void intake()
+    public void deploy(double voltage)
     {
-
+        deploy[0].setActive(voltage);
     }
-    public void deploy()
+    public void unDeploy(double voltage)
     {
-        
+        deploy[0].setActive(-voltage);
+    }
+    public void feeder(double voltage)
+    {
+        feeder[0].setActive(voltage);
     }
 }
