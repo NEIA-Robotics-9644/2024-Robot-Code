@@ -1,4 +1,4 @@
-package frc.robot.subsystems.drive.shooter;
+package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -8,12 +8,12 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.PhysicalRobotCharacteristics;
-import frc.robot.subsystems.drive.shooter.Motor;
+import frc.robot.subsystems.shooter.Motor;
 
 public class ShooterSubsystem extends SubsystemBase{
     private final Motor[] flywheels = new Motor[2];
     private final Motor[] swivel = new Motor[2];
-    private final Motor feeder = new Motor();
+    private final Motor[] feeder = new Motor[1];
 
     public ShooterSubsystem() {
         throw new IllegalArgumentException("You must pass in valid hardware for a subsystem to work");
@@ -30,7 +30,7 @@ public class ShooterSubsystem extends SubsystemBase{
         this.flywheels[1] = new Motor(rightFlywheel);
         this.swivel[0] = new Motor(swivel1);
         this.swivel[1] = new Motor(swivel2);
-        this.feeder = new Motor(feeder);
+        this.feeder[0] = new Motor(feeder);
 
         new java.util.Timer().schedule( 
         new java.util.TimerTask() {
