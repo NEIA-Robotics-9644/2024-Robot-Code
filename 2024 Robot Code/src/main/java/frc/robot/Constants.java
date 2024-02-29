@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -62,7 +61,7 @@ public final class Constants {
     public static final double kMaxAngularSpeedRadPerSec = kMaxLinearSpeedMetersPerSec / kWheelRadiusMeters;
   }
   public static final class KeyPoints {
-    //index of name matches with index of Pose2d
+    //index of name matches with index of Pose2d. coordinates are not final, nor the rotation value
     public static final String[] keyPointsName = {"homeSpeaker", "homeAmp", "homeSource", "homeStage"};
     public static final Pose2d[] positions = new Pose2d[] {
       new Pose2d(1.0, 1.0, new Rotation2d(0.0)),

@@ -42,17 +42,18 @@ public class ShooterSubsystem extends SubsystemBase{
         }
         feeder[0].periodic();
     }
-    public void swivel()
+    public void swivel(double angle)
     {
-
+        swivel[0].setAngle(angle);
+        swivel[1].setAngle(angle);
     }
     public void shoot(double voltage)
     {
-        flywheels[0].setActive(voltage);
-        flywheels[1].setActive(-voltage);
+        flywheels[0].setMotorSpeed(voltage);
+        flywheels[1].setMotorSpeed(-voltage);
     }
-    public void feeder()
+    public void feeder(double voltage)
     {
-
+        feeder[0].setMotorSpeed(voltage);
     }
 }

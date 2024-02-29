@@ -17,6 +17,9 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.Modes;
 import frc.robot.commands.JoystickDriveCmd;
 import frc.robot.subsystems.drive.SwerveDriveSubsystem;
+import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.shooter.MotorIOSparkMax;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -35,13 +38,22 @@ public class RobotContainer {
   private final CommandXboxController driverJoystick = new CommandXboxController(0); // My joystick
   private final SwerveDriveSubsystem drivetrain = DriveConstants.DriveTrain; // My drivetrain
   
+  private final ShooterSubsystem shooter = new ShooterSubsystem(
+    new frc.robot.subsystems.shooter.MotorIOSparkMax(0), 
+    new frc.robot.subsystems.shooter.MotorIOSparkMax(1), 
+    new frc.robot.subsystems.shooter.MotorIOSparkMax(3), 
+    new frc.robot.subsystems.shooter.MotorIOSparkMax(4), 
+    new frc.robot.subsystems.shooter.MotorIOSparkMax(5));
+  
+    private final IntakeSubsystem intake = new IntakeSubsystem(
+      new frc.robot.subsystems.intake.MotorIOSparkMax(0), 
+      new frc.robot.subsystems.intake.MotorIOSparkMax(1));
+  
   
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    
-
     // Configure the trigger bindings
     configureBindings();
   }

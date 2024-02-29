@@ -32,8 +32,14 @@ public class Motor {
         io.periodic();
     }
 
-    public void setActive(double voltage) {
+    public void setMotorSpeed(double voltage) {
         io.setMotorVoltage(voltage);
     }
-    
+    public void setAngle(double angle) {
+
+        turnFeedback.setSetpoint(MathUtil.angleModulus(angle));
+        double voltage = turnFeedback.calculate(MathUtil.angleModulus(io.getAbsoluteRotation().getRadians()));
+
+        io.setMotorVoltage(voltage);
+    }
 }

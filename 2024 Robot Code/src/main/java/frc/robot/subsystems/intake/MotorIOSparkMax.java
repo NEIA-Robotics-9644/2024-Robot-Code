@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class MotorIOSparkMax implements MotorIO {
     
     private final CANSparkMax motorSparkMax;
-    private final CANcoder turnAbsoluteEncoder;
     private final Rotation2d absoluteEncoderOffset;
     private final String motorName;
 
@@ -26,33 +25,13 @@ public class MotorIOSparkMax implements MotorIO {
         switch (index) {
             case 0:
                 motorSparkMax = new CANSparkMax(1, MotorType.kBrushless);
-                turnAbsoluteEncoder = new CANcoder(9);
                 absoluteEncoderOffset = new Rotation2d(0.047607 * 2 * Math.PI); // MUST BE CALIBRATED
-                motorName = "Left Flywheel";
+                motorName = "Feeder";
                 break;
             case 1:
                 motorSparkMax = new CANSparkMax(1, MotorType.kBrushless);
-                turnAbsoluteEncoder = new CANcoder(9);
                 absoluteEncoderOffset = new Rotation2d(0.047607 * 2 * Math.PI); // MUST BE CALIBRATED
-                motorName = "Right Flywheel";
-                break;
-            case 2:
-                motorSparkMax = new CANSparkMax(1, MotorType.kBrushless);
-                turnAbsoluteEncoder = new CANcoder(9);
-                absoluteEncoderOffset = new Rotation2d(0.047607 * 2 * Math.PI); // MUST BE CALIBRATED
-                motorName = "Swivel 1";
-                break;
-            case 3:
-                motorSparkMax = new CANSparkMax(1, MotorType.kBrushless);
-                turnAbsoluteEncoder = new CANcoder(9);
-                absoluteEncoderOffset = new Rotation2d(0.047607 * 2 * Math.PI); // MUST BE CALIBRATED
-                motorName = "Swivel 2";
-                break;
-            case 4:
-                motorSparkMax = new CANSparkMax(1, MotorType.kBrushless);
-                turnAbsoluteEncoder = new CANcoder(9);
-                absoluteEncoderOffset = new Rotation2d(0.047607 * 2 * Math.PI); // MUST BE CALIBRATED
-                motorName = "Feed In";
+                motorName = "Deployer";
                 break;
             default:
                 throw new RuntimeException("Invalid module index");
@@ -67,7 +46,7 @@ public class MotorIOSparkMax implements MotorIO {
     public void periodic() {
         // Log data to SmartDashboard
         SmartDashboard.putNumber(motorName + " Velocity", getMotorVelocity());
-        SmartDashboard.putNumber(motorName + " Turn Absolute Position", turnAbsoluteEncoder.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber(motorName + " Turn Absolute Position", motorSparkMax.getEncoder().getPosition());
     }
 
     @Override
@@ -77,7 +56,7 @@ public class MotorIOSparkMax implements MotorIO {
 
     @Override
     public Rotation2d getAbsoluteRotation() {
-        return new Rotation2d((turnAbsoluteEncoder.getPosition().getValueAsDouble()- Math.floor(turnAbsoluteEncoder.getPosition().getValueAsDouble())) * 2.0 * Math.PI).minus(absoluteEncoderOffset);
+        return new Rotation2d((motorSparkMax.getEncoder().getPosition()- Math.floor(motorSparkMax.getEncoder().getPosition()))* 2.0 * Math.PI).minus(absoluteEncoderOffset);
     }
 
     @Override
