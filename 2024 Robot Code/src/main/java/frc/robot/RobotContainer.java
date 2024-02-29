@@ -45,9 +45,9 @@ public class RobotContainer {
     new frc.robot.subsystems.shooter.MotorIOSparkMax(4), 
     new frc.robot.subsystems.shooter.MotorIOSparkMax(5));
   
-    private final IntakeSubsystem intake = new IntakeSubsystem(
-      new frc.robot.subsystems.intake.MotorIOSparkMax(0), 
-      new frc.robot.subsystems.intake.MotorIOSparkMax(1));
+  private final IntakeSubsystem intake = new IntakeSubsystem(
+    new frc.robot.subsystems.intake.MotorIOSparkMax(0), 
+    new frc.robot.subsystems.intake.MotorIOSparkMax(1));
   
   
   private final Telemetry logger = new Telemetry(MaxSpeed);
