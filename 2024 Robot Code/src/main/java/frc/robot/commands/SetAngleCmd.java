@@ -11,14 +11,12 @@ import frc.robot.subsystems.drive.SwerveDriveSubsystem;
 public class SetAngleCmd extends Command{
 
     private final SwerveDriveSubsystem driveSubsystem;
-    private final Supplier<Boolean> lOrR;
-    private final Supplier<Double> time;
+    private final Supplier<Double> rotationalSupplier;
 
-    public SetAngleCmd(SwerveDriveSubsystem driveSubsystem, Supplier<Boolean> lOrR, Supplier<Double> time) {
+    public SetAngleCmd(SwerveDriveSubsystem driveSubsystem, Supplier<Double> rotationalSupplier) {
         
         this.driveSubsystem = driveSubsystem;
-        this.lOrR = lOrR;
-        this.time = time;
+        this.rotationalSupplier = rotationalSupplier;
 
         addRequirements(driveSubsystem);
     }
@@ -26,8 +24,7 @@ public class SetAngleCmd extends Command{
     @Override
     public void execute() {
 
-        boolean lOrRbool = lOrR.get();
-        double timevar = time.get();
+        
 
         double deadband = 0.1;
         

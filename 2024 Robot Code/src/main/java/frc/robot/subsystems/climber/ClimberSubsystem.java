@@ -17,6 +17,7 @@ public class ClimberSubsystem extends SubsystemBase{
 
     public ClimberSubsystem(String test) {
         // Initialize things
+    }
     @Override
     public void periodic() {
         
