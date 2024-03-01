@@ -11,14 +11,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+
 import com.ctre.phoenix6.Utils;
 
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.Modes;
 import frc.robot.commands.JoystickDriveCmd;
+import frc.robot.commands.ShooterCmd;
 import frc.robot.subsystems.drive.SwerveDriveSubsystem;
-import frc.robot.subsystems.intake.IntakeSubsystem;
-import frc.robot.subsystems.shooter.MotorIOSparkMax;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 
 /**
@@ -35,19 +35,17 @@ public class RobotContainer {
   private double MaxAngularRate = DriveConstants.kMaxAngularSpeedRadPerSec;
 
   /* Setting up bindings for necessary control of the swerve drive platform */
-  private final CommandXboxController driverJoystick = new CommandXboxController(0); // My joystick
+  private final CommandXboxController driverController = new CommandXboxController(0);
+  private final CommandXboxController operatorController = driverController;
   private final SwerveDriveSubsystem drivetrain = DriveConstants.DriveTrain; // My drivetrain
   
   private final ShooterSubsystem shooter = new ShooterSubsystem(
     new frc.robot.subsystems.shooter.MotorIOSparkMax(0), 
     new frc.robot.subsystems.shooter.MotorIOSparkMax(1), 
-    new frc.robot.subsystems.shooter.MotorIOSparkMax(3), 
-    new frc.robot.subsystems.shooter.MotorIOSparkMax(4), 
-    new frc.robot.subsystems.shooter.MotorIOSparkMax(5));
+    new frc.robot.subsystems.shooter.MotorIOSparkMax(2)
+  );
   
-  private final IntakeSubsystem intake = new IntakeSubsystem(
-    new frc.robot.subsystems.intake.MotorIOSparkMax(0), 
-    new frc.robot.subsystems.intake.MotorIOSparkMax(1));
+  // private final IntakeSubsystem intake = new IntakeSubsystem(new frc.robot.subsystems.intake.MotorIOSparkMax(0), new frc.robot.subsystems.intake.MotorIOSparkMax(1));
   
   
   private final Telemetry logger = new Telemetry(MaxSpeed);
@@ -68,13 +66,17 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    drivetrain.setDefaultCommand(new JoystickDriveCmd(drivetrain, driverJoystick::getLeftY, driverJoystick::getLeftX, driverJoystick::getRightX));
+    drivetrain.setDefaultCommand(new JoystickDriveCmd(drivetrain, driverController::getLeftY, driverController::getLeftX, driverController::getRightX));
     
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
     drivetrain.registerTelemetry(logger::telemeterize);
+
+    shooter.setDefaultCommand(new ShooterCmd(shooter, operatorController::getRightTriggerAxis, () -> 1, operatorController::getLeftTriggerAxis));
+
+    
   
   
   }

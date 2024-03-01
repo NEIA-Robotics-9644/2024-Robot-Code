@@ -24,27 +24,17 @@ public class MotorIOSparkMax implements MotorIO {
         this.index = index;
         switch (index) {
             case 0:
-                motorSparkMax = new CANSparkMax(1, MotorType.kBrushless);
+                motorSparkMax = new CANSparkMax(21, MotorType.kBrushless);
                 absoluteEncoderOffset = new Rotation2d(0.047607 * 2 * Math.PI); // MUST BE CALIBRATED
                 motorName = "Left Flywheel";
                 break;
             case 1:
-                motorSparkMax = new CANSparkMax(1, MotorType.kBrushless);
+                motorSparkMax = new CANSparkMax(22, MotorType.kBrushless);
                 absoluteEncoderOffset = new Rotation2d(0.047607 * 2 * Math.PI); // MUST BE CALIBRATED
                 motorName = "Right Flywheel";
                 break;
             case 2:
-                motorSparkMax = new CANSparkMax(1, MotorType.kBrushless);
-                absoluteEncoderOffset = new Rotation2d(0.047607 * 2 * Math.PI); // MUST BE CALIBRATED
-                motorName = "Swivel 1";
-                break;
-            case 3:
-                motorSparkMax = new CANSparkMax(1, MotorType.kBrushless);
-                absoluteEncoderOffset = new Rotation2d(0.047607 * 2 * Math.PI); // MUST BE CALIBRATED
-                motorName = "Swivel 2";
-                break;
-            case 4:
-                motorSparkMax = new CANSparkMax(1, MotorType.kBrushless);
+                motorSparkMax = new CANSparkMax(23, MotorType.kBrushless);
                 absoluteEncoderOffset = new Rotation2d(0.047607 * 2 * Math.PI); // MUST BE CALIBRATED
                 motorName = "Feed In";
                 break;
@@ -67,6 +57,11 @@ public class MotorIOSparkMax implements MotorIO {
     @Override
     public void setMotorVoltage(double voltage) {
         motorSparkMax.setVoltage(voltage);
+    }
+
+    @Override
+    public double getMaxMotorVoltage() {
+        return 12.0;
     }
 
     @Override

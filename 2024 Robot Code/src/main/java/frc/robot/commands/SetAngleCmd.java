@@ -29,6 +29,6 @@ public class SetAngleCmd extends Command{
         double deadband = 0.1;
         
         ChassisSpeeds speed = new ChassisSpeeds(0,0, MathUtil.applyDeadband(1, deadband, 1));
-        driveSubsystem.turnCenter(speed, timevar, lOrRbool);
+        //driveSubsystem.turnCenter(speed, timevar, lOrRbool);
     }
 }
