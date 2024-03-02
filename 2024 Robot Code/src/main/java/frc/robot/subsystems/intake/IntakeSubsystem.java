@@ -32,15 +32,18 @@ public class IntakeSubsystem extends SubsystemBase{
         deploy[0].periodic();
         feeder[0].periodic();
     }
-    public void deploy(double voltage)
+    public void deploy(boolean deployed)
     {
-        deploy[0].setActive(voltage);
+        if (deployed)
+        {
+            deploy[0].setAngle(0);
+        }
+        else
+        {
+            deploy[0].setAngle(40.0);
+        }
     }
-    public void unDeploy(double voltage)
-    {
-        deploy[0].setActive(-voltage);
-    }
-    public void feeder(double voltage)
+    public void runFeeder(double voltage)
     {
         feeder[0].setActive(voltage);
     }
