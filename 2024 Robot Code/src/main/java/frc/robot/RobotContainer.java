@@ -34,7 +34,8 @@ public class RobotContainer {
   private double MaxAngularRate = DriveConstants.kMaxAngularSpeedRadPerSec;
 
   /* Setting up bindings for necessary control of the swerve drive platform */
-  private final CommandXboxController driverJoystick = new CommandXboxController(0); // My joystick
+  private final CommandXboxController driverController = new CommandXboxController(0);
+  private final CommandXboxController operatorController = new CommandXboxController(1);
   private final SwerveDriveSubsystem drivetrain = DriveConstants.DriveTrain; // My drivetrain
   
   private final ShooterSubsystem shooter = new ShooterSubsystem(
@@ -51,6 +52,11 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    
+
+    drivetrain.getPigeon2().reset();
+
+
     // Configure the trigger bindings
     configureBindings();
   }
