@@ -19,6 +19,7 @@ import frc.robot.commands.AccelerateShooterToBottomCmd;
 import frc.robot.commands.JoystickDriveCmd;
 import frc.robot.commands.MoveShooterToSetpointCmd;
 import frc.robot.commands.ShootWhenReadyCmd;
+import frc.robot.commands.SpinIntakeWheelsCmd;
 import frc.robot.commands.SpinShooterWheelsCmd;
 import frc.robot.subsystems.drive.SwerveDriveSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -51,8 +52,9 @@ public class RobotContainer {
   );
   
   private final IntakeSubsystem intake = new IntakeSubsystem(
-    new frc.robot.subsystems.intake.MotorIOSparkMax(0), 
-    new frc.robot.subsystems.intake.MotorIOSparkMax(1));
+    new frc.robot.subsystems.intake.IntakeExtenderMotorIOSparkMax(26), 
+    new frc.robot.subsystems.intake.IntakeWheelMotorIOSparkMax(27)
+  );
   
   
   private final SmartDashboardDisplay display = new SmartDashboardDisplay(drivetrain, shooter, intake);
@@ -102,6 +104,10 @@ public class RobotContainer {
     operatorController.b().onTrue(new MoveShooterToSetpointCmd(shooter, 45.0));
     operatorController.x().onTrue(new MoveShooterToSetpointCmd(shooter, 90.0));
     operatorController.y().onTrue(new MoveShooterToSetpointCmd(shooter, 135.0));
+
+
+    // INTAKE COMMANDS
+    operatorController.rightTrigger().whileTrue(new SpinIntakeWheelsCmd(intake, false));
   
   }
 

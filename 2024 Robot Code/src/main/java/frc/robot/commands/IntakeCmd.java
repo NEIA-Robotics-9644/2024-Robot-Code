@@ -8,6 +8,8 @@ import java.util.function.Supplier;
 /*
  * This is a command that will be used to drive the robot with a joystick
  */
+
+/*
 public class IntakeCmd extends Command {
 
     private final IntakeSubsystem IntakeSubsystem;
@@ -57,3 +59,4 @@ public class IntakeCmd extends Command {
         return false;
     }
 }
+*/

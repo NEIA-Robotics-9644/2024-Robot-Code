@@ -1,41 +1,26 @@
 package frc.robot.subsystems.intake;
 
-import com.ctre.phoenix6.hardware.CANcoder;
+
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class MotorIOSparkMax implements MotorIO {
+public class IntakeExtenderMotorIOSparkMax implements IntakeExtenderMotorIO {
     
     private final CANSparkMax motorSparkMax;
     private final Rotation2d absoluteEncoderOffset;
-    private final String motorName;
 
-    private final int index;
-
-    public MotorIOSparkMax() {
+    public IntakeExtenderMotorIOSparkMax() {
         throw new IllegalArgumentException("You must pass in valid hardware");
     }
 
-    public MotorIOSparkMax(int index) {
-        this.index = index;
-        switch (index) {
-            case 0:
-                motorSparkMax = new CANSparkMax(26, MotorType.kBrushless);
-                absoluteEncoderOffset = new Rotation2d(0.047607 * 2 * Math.PI); // MUST BE CALIBRATED
-                motorName = "Feeder";
-                break;
-            case 1:
-                motorSparkMax = new CANSparkMax(27, MotorType.kBrushless);
-                absoluteEncoderOffset = new Rotation2d(0.047607 * 2 * Math.PI); // MUST BE CALIBRATED
-                motorName = "Deployer";
-                break;
-            default:
-                throw new RuntimeException("Invalid module index");
-        }
+    public IntakeExtenderMotorIOSparkMax(int canID) {
+        motorSparkMax = new CANSparkMax(canID, MotorType.kBrushless);
+        motorSparkMax.restoreFactoryDefaults();
+        motorSparkMax.setIdleMode(IdleMode.kBrake);
+        absoluteEncoderOffset = new Rotation2d(0);
     }
     @Override
     public double getMotorVelocity() {
