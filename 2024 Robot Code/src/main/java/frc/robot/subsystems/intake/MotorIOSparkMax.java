@@ -24,12 +24,12 @@ public class MotorIOSparkMax implements MotorIO {
         this.index = index;
         switch (index) {
             case 0:
-                motorSparkMax = new CANSparkMax(1, MotorType.kBrushless);
+                motorSparkMax = new CANSparkMax(26, MotorType.kBrushless);
                 absoluteEncoderOffset = new Rotation2d(0.047607 * 2 * Math.PI); // MUST BE CALIBRATED
                 motorName = "Feeder";
                 break;
             case 1:
-                motorSparkMax = new CANSparkMax(1, MotorType.kBrushless);
+                motorSparkMax = new CANSparkMax(27, MotorType.kBrushless);
                 absoluteEncoderOffset = new Rotation2d(0.047607 * 2 * Math.PI); // MUST BE CALIBRATED
                 motorName = "Deployer";
                 break;
@@ -45,8 +45,8 @@ public class MotorIOSparkMax implements MotorIO {
     @Override
     public void periodic() {
         // Log data to SmartDashboard
-        SmartDashboard.putNumber(motorName + " Velocity", getMotorVelocity());
-        SmartDashboard.putNumber(motorName + " Turn Absolute Position", motorSparkMax.getEncoder().getPosition());
+        // SmartDashboard.putNumber(motorName + " Velocity", getMotorVelocity());
+        // SmartDashboard.putNumber(motorName + " Turn Absolute Position", motorSparkMax.getEncoder().getPosition());
     }
 
     @Override

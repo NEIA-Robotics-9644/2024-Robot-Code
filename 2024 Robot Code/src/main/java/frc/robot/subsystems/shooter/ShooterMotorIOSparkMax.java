@@ -1,41 +1,49 @@
 package frc.robot.subsystems.shooter;
 
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class MotorIOSparkMax implements MotorIO {
+public class ShooterMotorIOSparkMax implements ShooterMotorIO {
     
     private final CANSparkMax motorSparkMax;
     private final Rotation2d absoluteEncoderOffset;
     private final String motorName;
 
-    private final int index;
+    private final ShooterMotorType type;
 
-    public MotorIOSparkMax() {
+    private final double maxSpeedRPM;
+
+
+    public enum ShooterMotorType {
+        LEFT_FLYWHEEL, RIGHT_FLYWHEEL, FEEDER
+    }
+
+    public ShooterMotorIOSparkMax() {
         throw new IllegalArgumentException("You must pass in valid hardware");
     }
 
-    public MotorIOSparkMax(int index) {
-        this.index = index;
-        switch (index) {
-            case 0:
+    public ShooterMotorIOSparkMax(ShooterMotorType type) {
+        this.type = type;
+        switch (type) {
+            case LEFT_FLYWHEEL:
                 motorSparkMax = new CANSparkMax(21, MotorType.kBrushless);
-                absoluteEncoderOffset = new Rotation2d(0.047607 * 2 * Math.PI); // MUST BE CALIBRATED
+                absoluteEncoderOffset = new Rotation2d(0.0 * 2 * Math.PI); // MUST BE CALIBRATED
+                maxSpeedRPM = 5000; // MUST BE CALIBRATED
                 motorName = "Left Flywheel";
                 break;
-            case 1:
+            case RIGHT_FLYWHEEL:
                 motorSparkMax = new CANSparkMax(22, MotorType.kBrushless);
-                absoluteEncoderOffset = new Rotation2d(0.047607 * 2 * Math.PI); // MUST BE CALIBRATED
+                absoluteEncoderOffset = new Rotation2d(0.0 * 2 * Math.PI); // MUST BE CALIBRATED
+                maxSpeedRPM = 5000; // MUST BE CALIBRATED
                 motorName = "Right Flywheel";
                 break;
-            case 2:
+            case FEEDER:
                 motorSparkMax = new CANSparkMax(23, MotorType.kBrushless);
-                absoluteEncoderOffset = new Rotation2d(0.047607 * 2 * Math.PI); // MUST BE CALIBRATED
+                absoluteEncoderOffset = new Rotation2d(0.0 * 2 * Math.PI); // MUST BE CALIBRATED
+                maxSpeedRPM = 5000; // MUST BE CALIBRATED
                 motorName = "Feed In";
                 break;
             default:
@@ -43,25 +51,48 @@ public class MotorIOSparkMax implements MotorIO {
         }
     }
     @Override
-    public double getMotorVelocity() {
+    public double getMotorVelocityRPM() {
         return motorSparkMax.getEncoder().getVelocity();
     }
+
+
+    @Override
+    public double getMotorPercentSpeed() {
+        return getMotorVelocityRPM() / maxSpeedRPM;
+    }
+
 
     @Override
     public void periodic() {
         // Log data to SmartDashboard
-        SmartDashboard.putNumber(motorName + " Velocity", getMotorVelocity());
-        SmartDashboard.putNumber(motorName + " Turn Absolute Position", motorSparkMax.getEncoder().getPosition());
+        
     }
 
+    /*
+     * Use setMotorVelocity instead
+     */
     @Override
     public void setMotorVoltage(double voltage) {
         motorSparkMax.setVoltage(voltage);
     }
 
+    /*
+     * Get the maximum voltage the motor can be set to
+     * Remember that setMotorVelocity() exists
+     */
     @Override
     public double getMaxMotorVoltage() {
         return 12.0;
+    }
+
+
+    /*
+     * Set the velocity of the motor
+     * Normalized value between -1 and 1
+     */
+    @Override
+    public void setMotorVelocity(double normalizedVelocity) {
+        motorSparkMax.set(normalizedVelocity);
     }
 
     @Override

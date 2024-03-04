@@ -4,18 +4,18 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.MathUtil;
 
-public class Motor {
+public class ShooterMotor {
 
-    private final MotorIO io;
+    private final ShooterMotorIO io;
 
     private final PIDController turnFeedback = new PIDController(5, 0, 0);
 
 
-    public Motor() {
+    public ShooterMotor() {
         throw new IllegalArgumentException("You must pass in valid hardware for a subsystem to work");
     }
 
-    public Motor(MotorIO io) {
+    public ShooterMotor(ShooterMotorIO io) {
         // Check for null hardware
         if (io == null) {
             throw new IllegalArgumentException("You must pass in valid hardware for a subsystem to work");
@@ -28,18 +28,47 @@ public class Motor {
         turnFeedback.enableContinuousInput(-Math.PI, Math.PI);
     }
 
+
+    /*
+     * Periodic function to be called in the robot's periodic function
+     * SHOULD BE CALLED ONCE PER CYCLE
+     */
     public void periodic() {
         io.periodic();
     }
 
-    public void setMotorSpeed(double voltage) {
-        io.setMotorVoltage(voltage);
+    /*
+     * Set the velocity of the motor
+     * Normalized value between -1 and 1
+     */
+    public void setMotorVelocity(double normalizedVelocity) {
+        io.setMotorVelocity(normalizedVelocity);
     }
 
+    /*
+     * Get the velocity of the motor
+     * In RPM
+     */
+    public double getMotorVelocityRPM() {
+        return io.getMotorVelocityRPM();
+    }
+
+    
+    /*
+     * Get the percent speed of the motor
+     * Normalized value between 0 and 1
+     * Based on the motor IO's internal max speed
+     */
+    public double getMotorPercentSpeed() {
+        return io.getMotorPercentSpeed();
+    }
+
+    
     public void setBrake(boolean braking) {
         io.setBrake(braking);
     }
 
+    /*
     public void setAngle(double angle) {
 
         turnFeedback.setSetpoint(MathUtil.angleModulus(angle));
@@ -47,8 +76,5 @@ public class Motor {
 
         io.setMotorVoltage(voltage);
     }
-
-    public double getMaxMotorVoltage() {
-        return io.getMaxMotorVoltage();
-    }
+    */
 }

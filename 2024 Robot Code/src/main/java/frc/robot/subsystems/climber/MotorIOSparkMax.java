@@ -66,8 +66,8 @@ public class MotorIOSparkMax implements MotorIO {
     @Override
     public void periodic() {
         // Log data to SmartDashboard
-        SmartDashboard.putNumber(motorName + " Velocity", getMotorVelocity());
-        SmartDashboard.putNumber(motorName + " Turn Absolute Position", turnAbsoluteEncoder.getPosition().getValueAsDouble());
+        // SmartDashboard.putNumber(motorName + " Velocity", getMotorVelocity());
+        // SmartDashboard.putNumber(motorName + " Turn Absolute Position", turnAbsoluteEncoder.getPosition().getValueAsDouble());
     }
 
     @Override
