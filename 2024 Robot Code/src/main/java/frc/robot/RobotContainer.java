@@ -8,7 +8,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -19,7 +18,6 @@ import frc.robot.Constants.Modes;
 import frc.robot.commands.AccelerateShooterToBottomCmd;
 import frc.robot.commands.JoystickDriveCmd;
 import frc.robot.commands.MoveShooterToSetpointCmd;
-import frc.robot.commands.ShooterCmd;
 import frc.robot.commands.ShootWhenReadyCmd;
 import frc.robot.commands.SpinShooterWheelsCmd;
 import frc.robot.subsystems.drive.SwerveDriveSubsystem;
@@ -37,8 +35,8 @@ public class RobotContainer {
 
   public Modes mode = Modes.REAL;
   
-  private double MaxSpeed = DriveConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
-  private double MaxAngularRate = DriveConstants.kMaxAngularSpeedRadPerSec;
+  // private double MaxSpeed = DriveConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
+  // private double MaxAngularRate = DriveConstants.kMaxAngularSpeedRadPerSec;
 
   /* Setting up bindings for necessary control of the swerve drive platform */
   private final CommandXboxController driverController = new CommandXboxController(0);

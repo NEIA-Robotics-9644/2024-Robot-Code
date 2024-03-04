@@ -1,8 +1,6 @@
 package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.MathUtil;
 
 public class ShooterMotor {
 
