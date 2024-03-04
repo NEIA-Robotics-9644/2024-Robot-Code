@@ -24,7 +24,11 @@ import frc.robot.commands.SpinShooterWheelsCmd;
 import frc.robot.subsystems.drive.SwerveDriveSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
+<<<<<<< Updated upstream
 import frc.robot.subsystems.shooter.ShooterMotorIOSparkMax.ShooterMotorType;
+=======
+import frc.robot.subsystems.climber.ClimberSubsystem;
+>>>>>>> Stashed changes
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -53,9 +57,18 @@ public class RobotContainer {
   );
   
   private final IntakeSubsystem intake = new IntakeSubsystem(
+<<<<<<< Updated upstream
     new frc.robot.subsystems.intake.IntakeExtenderMechanismIOSparkMax(26), 
     new frc.robot.subsystems.intake.IntakeWheelMotorIOSparkMax(27)
   );
+=======
+    new frc.robot.subsystems.intake.MotorIOSparkMax(0), 
+    new frc.robot.subsystems.intake.MotorIOSparkMax(1));
+
+  private final ClimberSubsystem climber = new ClimberSubsystem(
+    new frc.robot.subsystems.climber.MotorIOSparkMax(0), 
+    new frc.robot.subsystems.climber.MotorIOSparkMax(1));
+>>>>>>> Stashed changes
   
   
   private final SmartDashboardDisplay display = new SmartDashboardDisplay(drivetrain, shooter, intake);

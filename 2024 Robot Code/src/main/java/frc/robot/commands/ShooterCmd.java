@@ -5,9 +5,6 @@ import frc.robot.subsystems.shooter.ShooterSubsystem;
 
 import java.util.function.Supplier;
 
-/*
- * This is a command that will be used to drive the robot with a joystick
- */
 public class ShooterCmd extends Command {
     public static final boolean FORWARD_DIRECTION_REVERSED = true;
 
