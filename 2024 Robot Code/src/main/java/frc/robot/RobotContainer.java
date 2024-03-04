@@ -15,7 +15,6 @@ import com.ctre.phoenix6.Utils;
 
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.Modes;
-import frc.robot.commands.AccelerateShooterToBottomCmd;
 import frc.robot.commands.JoystickDriveCmd;
 import frc.robot.commands.MoveShooterToSetpointCmd;
 import frc.robot.commands.ShootWhenReadyCmd;
@@ -23,8 +22,11 @@ import frc.robot.commands.IntakeCmd;
 import frc.robot.commands.SpinShooterWheelsCmd;
 import frc.robot.subsystems.drive.SwerveDriveSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.shooter.FeederWheelIOSparkMax;
+import frc.robot.subsystems.shooter.NoteSensorIOSim;
+import frc.robot.subsystems.shooter.ShooterAngleIOSparkMax;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
-import frc.robot.subsystems.shooter.ShooterMotorIOSparkMax.ShooterMotorType;
+import frc.robot.subsystems.shooter.ShooterWheelIOSparkMax;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -42,27 +44,57 @@ public class RobotContainer {
   /* Setting up bindings for necessary control of the swerve drive platform */
   private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController operatorController = driverController;
+
+
   private final SwerveDriveSubsystem drivetrain = DriveConstants.DriveTrain; // My drivetrain
   
-  private final ShooterSubsystem shooter = new ShooterSubsystem(
-    new frc.robot.subsystems.shooter.ShooterMotorIOSparkMax(ShooterMotorType.LEFT_FLYWHEEL), 
-    new frc.robot.subsystems.shooter.ShooterMotorIOSparkMax(ShooterMotorType.RIGHT_FLYWHEEL), 
-    new frc.robot.subsystems.shooter.ShooterMotorIOSparkMax(ShooterMotorType.FEEDER),
-    new frc.robot.subsystems.shooter.ShooterAngleIOSparkMax(24, 25),
-    new frc.robot.subsystems.shooter.NoteSensorIOSim()
-  );
+  private final ShooterSubsystem shooter;
   
-  private final IntakeSubsystem intake = new IntakeSubsystem(
-    new frc.robot.subsystems.intake.IntakeExtenderMechanismIOSparkMax(26), 
-    new frc.robot.subsystems.intake.IntakeWheelMotorIOSparkMax(27)
-  );
+  private final IntakeSubsystem intake;
   
   
-  private final SmartDashboardDisplay display = new SmartDashboardDisplay(drivetrain, shooter, intake);
+  private final SmartDashboardDisplay display;
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    if (mode == Modes.REAL) {
+      shooter = new ShooterSubsystem(
+          new ShooterWheelIOSparkMax(21),
+          new ShooterWheelIOSparkMax(22),
+          new FeederWheelIOSparkMax(23),
+          new ShooterAngleIOSparkMax(24, 25),
+          new NoteSensorIOSim()
+
+      );
+
+
+      intake = new IntakeSubsystem(
+        new frc.robot.subsystems.intake.IntakeExtenderMechanismIOSparkMax(26), 
+        new frc.robot.subsystems.intake.IntakeWheelMotorIOSparkMax(27)
+      );
+
+
+    } else {
+      shooter = new ShooterSubsystem(
+          new frc.robot.subsystems.shooter.ShooterWheelIOSim(),
+          new frc.robot.subsystems.shooter.ShooterWheelIOSim(),
+          new frc.robot.subsystems.shooter.FeederWheelIOSim(),
+          new frc.robot.subsystems.shooter.ShooterAngleIOSim(),
+          new frc.robot.subsystems.shooter.NoteSensorIOSim()
+          
+        );
+        
+        intake = new IntakeSubsystem(
+          new frc.robot.subsystems.intake.IntakeExtenderMechanismIOSim(), 
+          new frc.robot.subsystems.intake.IntakeWheelMotorIOSim()
+        );
+    }
+    
+
+    
+    display = new SmartDashboardDisplay(drivetrain, shooter, intake);
     
 
     drivetrain.getPigeon2().reset();
@@ -101,10 +133,10 @@ public class RobotContainer {
 
     operatorController.leftBumper().whileTrue(new ShootWhenReadyCmd(shooter, 0.9, 0.8));
 
-    operatorController.a().onTrue(new AccelerateShooterToBottomCmd(shooter, 20));  
-    operatorController.b().onTrue(new MoveShooterToSetpointCmd(shooter, 45.0));
-    operatorController.x().onTrue(new MoveShooterToSetpointCmd(shooter, 90.0));
-    operatorController.y().onTrue(new MoveShooterToSetpointCmd(shooter, 135.0));
+    operatorController.a().onTrue(new MoveShooterToSetpointCmd(shooter, 0.0));
+    operatorController.b().onTrue(new MoveShooterToSetpointCmd(shooter, 20.0));
+    operatorController.x().onTrue(new MoveShooterToSetpointCmd(shooter, 30.0));
+    operatorController.y().onTrue(new MoveShooterToSetpointCmd(shooter, 40.0));
 
 
     // INTAKE COMMANDS

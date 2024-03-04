@@ -10,22 +10,25 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
 
     // IMPORTANT: THE SOFT LIMITS ARE NOT SET HERE.  THEY SHOULD BE FOUND IN REV HARDWARE CLIENT AND THEN COPIED HERE
     private final double bottomLimitDeg = 0.0;
-    private final double topLimitDeg = 90.0;
+    private final double topLimitDeg = 50.0;
     
     private final double encoderOffsetDeg = 0.0;
 
+    private final boolean encoderReversed = false;
 
-    // This is accounting for the gear ratio (Run at full speed and then measure the angle)
-    private final double rotationMaxSpeedDegPerSec = 180.0;
 
     
     private final CANSparkMax leftAngleMotor;
     private final CANSparkMax rightAngleMotor;
 
     private final boolean leftReversed = false;
-    private final boolean rightReversed = false;
+    private final boolean rightReversed = true;
 
     private double setpointDeg = 0.0;
+
+    private double encoderReadingRotationsToAngleDeg = 360.0 / 80.0;
+
+    private double maxSpeedDegPerSec = 5.0;
 
 
     private boolean manualControl = false;
@@ -33,7 +36,7 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
     
 
     private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.0, 0.0, 0.0);  // TODO: Tune these
-    private PIDController feedback = new PIDController(0.1, 0.0, 0.0);  // TODO: Tune these
+    private PIDController feedback = new PIDController(0.01, 0.0, 0.0);  // TODO: Tune these
 
 
     public ShooterAngleIOSparkMax() {
@@ -51,13 +54,18 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
         // Set the right motor to follow the left motor, but keep in mind that they might be reversed
         this.rightAngleMotor.follow(this.leftAngleMotor, leftReversed != rightReversed);
 
-        this.leftAngleMotor.setSmartCurrentLimit(40);
-        this.rightAngleMotor.setSmartCurrentLimit(40);
+        this.leftAngleMotor.setSmartCurrentLimit(30);
+        this.rightAngleMotor.setSmartCurrentLimit(30);
         this.leftAngleMotor.setOpenLoopRampRate(0.5);
         this.rightAngleMotor.setOpenLoopRampRate(0.5);
 
         this.leftAngleMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         this.rightAngleMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+
+        // NOTE: We assume that the intake starts down
+        this.leftAngleMotor.getEncoder().setPosition(0.0);
+        this.rightAngleMotor.getEncoder().setPosition(0.0);
+        
 
         
 
@@ -65,15 +73,17 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
         this.rightAngleMotor.burnFlash();
 
         this.feedback.setTolerance(0.5);
+        
     }
 
 
 
     @Override
     public void setAngleDeg(double setpoint) {
-        // Update the setpoint
-        setpointDeg = setpoint;
-        feedback.setSetpoint(setpointDeg);
+
+        // Clamp the setpoint between the higher and lower limits
+        double setpointClamped = Math.max(bottomLimitDeg, Math.min(topLimitDeg, setpoint));
+        feedback.setSetpoint(setpointClamped);
     }
 
     @Override
@@ -86,15 +96,26 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
             // Calculate the feedback
             double feedbackOutput = feedback.calculate(getAngleDeg());
 
+            double output = feedforwardOutput + feedbackOutput;
+
+            // Clamp so it is under the max speed
+            if (output > maxSpeedDegPerSec) {
+                output = maxSpeedDegPerSec;
+            } else if (output < -maxSpeedDegPerSec) {
+                output = -maxSpeedDegPerSec;
+            }
+
             // Set the motor output
-            leftAngleMotor.set(feedforwardOutput + feedbackOutput);
+            leftAngleMotor.set(output);
         }
     }
 
 
     @Override
     public double getAngleDeg() {
-        return (leftAngleMotor.getEncoder().getPosition() * 360.0) + encoderOffsetDeg;
+        
+        double angle = leftAngleMotor.getEncoder().getPosition() * encoderReadingRotationsToAngleDeg * (encoderReversed ? -1 : 1);
+        return angle + encoderOffsetDeg;
     }
 
     @Override
@@ -115,7 +136,7 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
     @Override
     public void setManualVelocityDegPerSec(double velocity) {
         if (manualControl) {
-            leftAngleMotor.set(velocity / rotationMaxSpeedDegPerSec);
+            leftAngleMotor.set(velocity / maxSpeedDegPerSec);
         }
     }
 

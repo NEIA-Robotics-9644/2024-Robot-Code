@@ -4,8 +4,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ShooterSubsystem extends SubsystemBase {
 
-    private final ShooterMotor rightShooterWheel;
-    private final ShooterMotor leftShooterWheel;
+    private final ShooterWheelIO rightShooterWheel;
+    private final ShooterWheelIO leftShooterWheel;
 
     private final boolean rightShooterWheelReversed = false;
     private final boolean leftShooterWheelReversed = false;
@@ -13,44 +13,46 @@ public class ShooterSubsystem extends SubsystemBase {
     private final ShooterAngleMechanism angleMechanism;
     
     
-    private final ShooterMotor feeder;
+    private final FeederWheelIO feeder;
 
     private final boolean feederReversed = true;
 
     private final NoteSensorIO noteSensor;
 
+
     public ShooterSubsystem() {
         throw new IllegalArgumentException("You must pass in valid hardware for a subsystem to work");
     }
 
-    public ShooterSubsystem(ShooterMotorIO leftShooter, ShooterMotorIO rightShooter, ShooterMotorIO feeder, ShooterAngleIO angleMechanism, NoteSensorIO noteSensor) {
+    public ShooterSubsystem(ShooterWheelIO leftShooter, ShooterWheelIO rightShooter, FeederWheelIO feeder, ShooterAngleIO angleMechanism, NoteSensorIO noteSensor) {
 
         if (leftShooter == null || rightShooter == null || feeder == null || angleMechanism == null) {
             throw new IllegalArgumentException("You must pass in valid hardware for a subsystem to work");
         }
 
         // Initialize things
-        this.leftShooterWheel = new ShooterMotor(leftShooter);
-        this.rightShooterWheel = new ShooterMotor(rightShooter);
-        this.feeder = new ShooterMotor(feeder);
+        this.leftShooterWheel = leftShooter;
+        this.rightShooterWheel = rightShooter;
+        this.feeder = feeder;
         this.angleMechanism = new ShooterAngleMechanism(angleMechanism);
         this.noteSensor = noteSensor;
 
         // Turn on brake mode for the feeder
-        this.feeder.setBrake(true);
+        this.feeder.setBrakeMode(true);
     }
+
     @Override
     public void periodic() {
-        rightShooterWheel.periodic();
-        leftShooterWheel.periodic();
-        feeder.periodic();
+        
 
         angleMechanism.periodic();
+        leftShooterWheel.periodic();
+        rightShooterWheel.periodic();
+        feeder.periodic();
+        
+
         
     }
-    
-
-    
 
 
     /*
@@ -58,11 +60,11 @@ public class ShooterSubsystem extends SubsystemBase {
      */
     public void spinShooterWheels(boolean reversed) {
         if (reversed) {
-            leftShooterWheel.setMotorVelocity(leftShooterWheelReversed ? -1.0 : 1.0);
-            rightShooterWheel.setMotorVelocity(rightShooterWheelReversed ? 1.0 : -1.0);
+            leftShooterWheel.spinWheel(leftShooterWheelReversed ? -1.0 : 1.0);
+            rightShooterWheel.spinWheel(rightShooterWheelReversed ? 1.0 : -1.0);
         } else {
-            leftShooterWheel.setMotorVelocity(leftShooterWheelReversed ? 1.0 : -1.0);
-            rightShooterWheel.setMotorVelocity(rightShooterWheelReversed ? -1.0 : 1.0);
+            leftShooterWheel.spinWheel(leftShooterWheelReversed ? 1.0 : -1.0);
+            rightShooterWheel.spinWheel(rightShooterWheelReversed ? -1.0 : 1.0);
         }
     }
 
@@ -70,17 +72,25 @@ public class ShooterSubsystem extends SubsystemBase {
      * Get the percent at which the shooter wheels are spinning
      */
     public double getShooterWheelsSpeedPercent() {
-        return (leftShooterWheel.getMotorPercentSpeed() + rightShooterWheel.getMotorPercentSpeed()) / 2.0;
+        return (leftShooterWheel.getSpeedPercent() + rightShooterWheel.getSpeedPercent()) / 2.0;
     }
+
+    /*
+     * Set the speed of the shooter wheel
+     */
+    public double getFeederSpeedPercent() {
+        return feeder.getSpeedPercent();
+    }   
+
 
     /*
      * Spin the feeder wheel
      */
     public void spinFeederWheel(boolean reversed) {
         if (reversed) {
-            feeder.setMotorVelocity(feederReversed ? -1.0 : 1.0);
+            feeder.spinWheel(feederReversed ? -1.0 : 1.0);
         } else {
-            feeder.setMotorVelocity( feederReversed ? 1.0 : -1.0);
+            feeder.spinWheel( feederReversed ? 1.0 : -1.0);
         }
     }
 
