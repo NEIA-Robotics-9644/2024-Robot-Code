@@ -40,8 +40,8 @@ public class ShooterCmd extends Command {
         double speed = speedSupplier.get();
         double dir = direction.get();
         double feederSpeed = feederSupplier.get();
-        shooterSubsystem.shoot(speed * dir * (FORWARD_DIRECTION_REVERSED ? -1 : 1));
-        shooterSubsystem.setFeederSpeed(feederSpeed);
+        //shooterSubsystem.shoot(speed * dir * (FORWARD_DIRECTION_REVERSED ? -1 : 1));
+        //shooterSubsystem.setFeederSpeed(feederSpeed);
     }
 
     // Called once the command ends or is interrupted.

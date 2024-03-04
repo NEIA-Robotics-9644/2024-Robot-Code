@@ -1,59 +1,46 @@
 package frc.robot.commands;
 
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 
-import java.util.function.Supplier;
-
-/*
- * This is a command that will be used to drive the robot with a joystick
- */
 public class IntakeCmd extends Command {
 
-    private final IntakeSubsystem IntakeSubsystem;
-    private final Supplier<Boolean> deploySupplier;
-    private final Supplier<Double> feederSupplier;
-    
-    public IntakeCmd(IntakeSubsystem IntakeSubsystem, Supplier<Double> feederSupplier, Supplier<Boolean> deploySupplier) {
-        
-        this.IntakeSubsystem = IntakeSubsystem;
-        this.feederSupplier = feederSupplier;
-        this.deploySupplier = deploySupplier;
 
-        addRequirements(IntakeSubsystem);
+    private final IntakeSubsystem intakeSubsystem;
+    private final ShooterSubsystem shooterSubsystem;
+
+
+    public IntakeCmd(IntakeSubsystem intakeSubsystem, ShooterSubsystem shooterSubsystem){
+        this.intakeSubsystem = intakeSubsystem;
+        this.shooterSubsystem = shooterSubsystem;
     }
 
-    // Called when the command is initially scheduled.
+
     @Override
     public void initialize() {
-        double feederValue = feederSupplier.get();
-        boolean deployValue = deploySupplier.get();
-        IntakeSubsystem.deploy(deployValue);
-        IntakeSubsystem.runFeeder(feederValue);
+        System.out.println("Spin Intake Wheels Cmd Initialized");
     }
 
-    // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        double feederValue = feederSupplier.get();
-        boolean deployValue = deploySupplier.get();
-        IntakeSubsystem.deploy(deployValue);
-        IntakeSubsystem.runFeeder(feederValue);
+        intakeSubsystem.runFeeder(false);
+        intakeSubsystem.setExtended(true);
+        shooterSubsystem.spinFeederWheel(false);
+        System.out.println("Spin Intake Wheels Cmd Executed");
     }
 
-    // Called once the command ends or is interrupted.
+
     @Override
     public void end(boolean interrupted) {
-        double feederValue = 0;
-        boolean deployValue = false;
-
-        IntakeSubsystem.deploy(deployValue);
-        IntakeSubsystem.runFeeder(feederValue);
+        System.out.println("Spin Intake Wheels Cmd " + (interrupted ? "Interrupted" : "Ended"));
+        intakeSubsystem.setExtended(false);
     }
 
-    // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return false;
+        return shooterSubsystem.noteDetected();
     }
+    
 }

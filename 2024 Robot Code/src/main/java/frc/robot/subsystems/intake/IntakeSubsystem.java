@@ -1,50 +1,64 @@
 package frc.robot.subsystems.intake;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Twist2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.PhysicalRobotCharacteristics;
 
 public class IntakeSubsystem extends SubsystemBase{
-    private final Motor[] deploy = new Motor[1];
-    private final Motor[] feeder = new Motor[1];
+    private final IntakeExtenderMechanism extender;
+    private final IntakeWheelMotor intakeWheel;
+
+    private final boolean extenderInverted = false;
+    private final boolean intakeWheelInverted = false;
+
 
     public IntakeSubsystem() {
         throw new IllegalArgumentException("You must pass in valid hardware for a subsystem to work");
     }
 
-    public IntakeSubsystem(MotorIO deploy, MotorIO feeder) {
-
-        if (deploy == null || feeder == null) {
+    public IntakeSubsystem(IntakeExtenderMechanismIO extender, IntakeWheelMotorIO intakeWheel) {
+        if (extender == null || intakeWheel == null) {
             throw new IllegalArgumentException("You must pass in valid hardware for a subsystem to work");
         }
+        this.extender = new IntakeExtenderMechanism(extender);
+        this.intakeWheel = new IntakeWheelMotor(intakeWheel);
 
-        // Initialize things
-        this.deploy[0] = new Motor(deploy);
-        this.feeder[0] = new Motor(feeder);
+        this.intakeWheel.setInverted(intakeWheelInverted);
+        // this.extender.setInverted(extenderInverted);
     }
+
+
     @Override
     public void periodic() {
-        deploy[0].periodic();
-        feeder[0].periodic();
+        extender.periodic();
+        intakeWheel.periodic();
     }
-    public void deploy(boolean deployed)
-    {
-        if (deployed)
-        {
-            deploy[0].setAngle(0);
-        }
-        else
-        {
-            deploy[0].setAngle(40.0);
-        }
+
+
+    public void deploy(boolean deployed) {
+        
     }
-    public void runFeeder(double voltage)
-    {
-        feeder[0].setActive(voltage);
+
+    public void setExtended(boolean extended) {
+        extender.setExtended(extended);
+    }
+
+
+    public void runFeeder(boolean reversed) {
+        intakeWheel.runMotorAtPercentVelocity(reversed ? -1.0 : 1.0);
+    }
+
+    public double getIntakeWheelsPercentVelocity() {
+        return intakeWheel.getMotorVelocityPercent();
+    }
+
+    public void setIntakeWheelsBrake(boolean brake) {
+        intakeWheel.setBrake(brake);
+    }
+
+    public boolean getExtended() {
+        return extender.getExtended();
+    }
+
+    public double getExtendAngleDeg() {
+        return extender.getAngleDeg();
     }
 }

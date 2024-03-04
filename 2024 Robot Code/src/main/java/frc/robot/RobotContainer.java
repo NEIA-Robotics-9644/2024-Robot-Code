@@ -15,10 +15,16 @@ import com.ctre.phoenix6.Utils;
 
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.Modes;
+import frc.robot.commands.AccelerateShooterToBottomCmd;
 import frc.robot.commands.JoystickDriveCmd;
+import frc.robot.commands.MoveShooterToSetpointCmd;
+import frc.robot.commands.ShootWhenReadyCmd;
+import frc.robot.commands.IntakeCmd;
+import frc.robot.commands.SpinShooterWheelsCmd;
 import frc.robot.subsystems.drive.SwerveDriveSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.subsystems.shooter.ShooterMotorIOSparkMax.ShooterMotorType;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -30,27 +36,38 @@ public class RobotContainer {
 
   public Modes mode = Modes.REAL;
   
-  private double MaxSpeed = DriveConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
-  private double MaxAngularRate = DriveConstants.kMaxAngularSpeedRadPerSec;
+  // private double MaxSpeed = DriveConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
+  // private double MaxAngularRate = DriveConstants.kMaxAngularSpeedRadPerSec;
 
   /* Setting up bindings for necessary control of the swerve drive platform */
-  private final CommandXboxController driverJoystick = new CommandXboxController(0); // My joystick
+  private final CommandXboxController driverController = new CommandXboxController(0);
+  private final CommandXboxController operatorController = driverController;
   private final SwerveDriveSubsystem drivetrain = DriveConstants.DriveTrain; // My drivetrain
   
   private final ShooterSubsystem shooter = new ShooterSubsystem(
-    new frc.robot.subsystems.shooter.MotorIOSparkMax(0), 
-    new frc.robot.subsystems.shooter.MotorIOSparkMax(1), 
-    new frc.robot.subsystems.shooter.MotorIOSparkMax(3));
+    new frc.robot.subsystems.shooter.ShooterMotorIOSparkMax(ShooterMotorType.LEFT_FLYWHEEL), 
+    new frc.robot.subsystems.shooter.ShooterMotorIOSparkMax(ShooterMotorType.RIGHT_FLYWHEEL), 
+    new frc.robot.subsystems.shooter.ShooterMotorIOSparkMax(ShooterMotorType.FEEDER),
+    new frc.robot.subsystems.shooter.ShooterAngleIOSparkMax(24, 25),
+    new frc.robot.subsystems.shooter.NoteSensorIOSim()
+  );
   
   private final IntakeSubsystem intake = new IntakeSubsystem(
-    new frc.robot.subsystems.intake.MotorIOSparkMax(0), 
-    new frc.robot.subsystems.intake.MotorIOSparkMax(1));
+    new frc.robot.subsystems.intake.IntakeExtenderMechanismIOSparkMax(26), 
+    new frc.robot.subsystems.intake.IntakeWheelMotorIOSparkMax(27)
+  );
   
   
-  private final Telemetry logger = new Telemetry(MaxSpeed);
+  private final SmartDashboardDisplay display = new SmartDashboardDisplay(drivetrain, shooter, intake);
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    
+
+    drivetrain.getPigeon2().reset();
+
+
     // Configure the trigger bindings
     configureBindings();
   }
@@ -65,14 +82,33 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    drivetrain.setDefaultCommand(new JoystickDriveCmd(drivetrain, driverJoystick::getLeftY, driverJoystick::getLeftX, driverJoystick::getRightX));
+    drivetrain.setDefaultCommand(new JoystickDriveCmd(drivetrain, driverController::getLeftY, driverController::getLeftX, driverController::getRightX));
     
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
-    drivetrain.registerTelemetry(logger::telemeterize);
-  
+    // drivetrain.registerTelemetry(logger::telemeterize);
+
+    
+    
+
+    // SHOOTER COMMANDS
+
+    
+
+    operatorController.leftTrigger().whileTrue(new SpinShooterWheelsCmd(shooter));
+
+    operatorController.leftBumper().whileTrue(new ShootWhenReadyCmd(shooter, 0.9, 0.8));
+
+    operatorController.a().onTrue(new AccelerateShooterToBottomCmd(shooter, 20));  
+    operatorController.b().onTrue(new MoveShooterToSetpointCmd(shooter, 45.0));
+    operatorController.x().onTrue(new MoveShooterToSetpointCmd(shooter, 90.0));
+    operatorController.y().onTrue(new MoveShooterToSetpointCmd(shooter, 135.0));
+
+
+    // INTAKE COMMANDS
+    operatorController.rightTrigger().whileTrue(new IntakeCmd(intake, shooter));
   
   }
 
