@@ -12,7 +12,7 @@ public class IntakeCmd extends Command {
 
     private final IntakeSubsystem IntakeSubsystem;
     private final Supplier<Boolean> deploySupplier;
-    private final Supplier<Double> feederSupplier; //what does this do
+    private final Supplier<Double> feederSupplier;
     
     public IntakeCmd(IntakeSubsystem IntakeSubsystem, Supplier<Double> feederSupplier, Supplier<Boolean> deploySupplier) {
         
