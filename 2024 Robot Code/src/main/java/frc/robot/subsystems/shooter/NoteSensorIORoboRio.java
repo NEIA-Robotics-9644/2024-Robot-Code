@@ -8,7 +8,9 @@ public class NoteSensorIORoboRio implements NoteSensorIO{
 
     public boolean noteDetected() {
         // Returns the value of the DigitalInput
-        System.out.println("Note Detected");
+        if (input.get()) {
+            System.out.println("Note Detected");
+        }
         return input.get();
     }
 }
