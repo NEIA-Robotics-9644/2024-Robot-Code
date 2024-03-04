@@ -17,11 +17,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private final boolean feederReversed = true;
 
+    private final NoteSensorIO noteSensor;
+
     public ShooterSubsystem() {
         throw new IllegalArgumentException("You must pass in valid hardware for a subsystem to work");
     }
 
-    public ShooterSubsystem(ShooterMotorIO leftShooter, ShooterMotorIO rightShooter, ShooterMotorIO feeder, ShooterAngleIO angleMechanism) {
+    public ShooterSubsystem(ShooterMotorIO leftShooter, ShooterMotorIO rightShooter, ShooterMotorIO feeder, ShooterAngleIO angleMechanism, NoteSensorIO noteSensor) {
 
         if (leftShooter == null || rightShooter == null || feeder == null || angleMechanism == null) {
             throw new IllegalArgumentException("You must pass in valid hardware for a subsystem to work");
@@ -32,6 +34,7 @@ public class ShooterSubsystem extends SubsystemBase {
         this.rightShooterWheel = new ShooterMotor(rightShooter);
         this.feeder = new ShooterMotor(feeder);
         this.angleMechanism = new ShooterAngleMechanism(angleMechanism);
+        this.noteSensor = noteSensor;
 
         // Turn on brake mode for the feeder
         this.feeder.setBrake(true);
@@ -165,5 +168,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public double getShooterBottomAngleDeg() {
         return angleMechanism.getBottomAngleDeg();
+    }
+
+
+    public boolean noteDetected() {
+        return noteSensor.noteDetected();
     }
 }

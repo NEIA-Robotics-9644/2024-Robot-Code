@@ -29,6 +29,7 @@ public class SmartDashboardDisplay extends SubsystemBase {
 
 
         SmartDashboard.putString("Intake Wheels", Math.round(intake.getIntakeWheelsPercentVelocity() * 100.0) + "% Speed");
+        SmartDashboard.putString("Intake Extender", Math.round(intake.getExtendAngleDeg()) + "°");
         
     }
     
