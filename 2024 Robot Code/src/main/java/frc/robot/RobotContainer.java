@@ -105,6 +105,11 @@ public class RobotContainer {
           new frc.robot.subsystems.intake.IntakeExtenderMechanismIOSim(), 
           new frc.robot.subsystems.intake.IntakeWheelMotorIOSim()
         );
+
+        climber = new ClimberSubsystem(
+        new frc.robot.subsystems.climber.MotorIOSparkMax(28),
+        new frc.robot.subsystems.climber.MotorIOSparkMax(29)
+        );
     }
     
 
