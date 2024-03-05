@@ -23,6 +23,7 @@ import frc.robot.commands.SpinShooterWheelsCmd;
 import frc.robot.subsystems.drive.SwerveDriveSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.FeederWheelIOSparkMax;
+import frc.robot.subsystems.shooter.NoteSensorIORoboRio;
 import frc.robot.subsystems.shooter.NoteSensorIOSim;
 import frc.robot.subsystems.shooter.ShooterAngleIOSparkMax;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -65,7 +66,7 @@ public class RobotContainer {
           new ShooterWheelIOSparkMax(22),
           new FeederWheelIOSparkMax(23),
           new ShooterAngleIOSparkMax(24, 25),
-          new NoteSensorIOSim()
+          new NoteSensorIORoboRio()
 
       );
 
