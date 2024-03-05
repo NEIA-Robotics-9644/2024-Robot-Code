@@ -13,7 +13,7 @@ public class NoteSensorIORoboRio implements NoteSensorIO{
         if (input.get()) {
             System.out.println("Note Detected");
         }
-        return input.get();
+        return !input.get();
     }
 }
 

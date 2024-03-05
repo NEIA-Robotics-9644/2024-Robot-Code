@@ -26,7 +26,7 @@ public class FeederWheelIOSparkMax implements FeederWheelIO {
     }
 
     @Override
-    public double getSpeedPercent() {
+    public double getVelocityPercent() {
         return feederMotor.getEncoder().getVelocity() / maxSpeedRPM;
     }
 

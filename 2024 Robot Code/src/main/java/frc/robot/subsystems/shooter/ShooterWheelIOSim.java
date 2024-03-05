@@ -15,8 +15,8 @@ public class ShooterWheelIOSim implements ShooterWheelIO {
         newInput = true;
     }
 
-    public double getSpeedPercent() {
-        return Math.abs(velocityRPM) / maxSpeedRPM;
+    public double getVelocityPercent() {
+        return velocityRPM / maxSpeedRPM;
     }
 
     public void periodic() {

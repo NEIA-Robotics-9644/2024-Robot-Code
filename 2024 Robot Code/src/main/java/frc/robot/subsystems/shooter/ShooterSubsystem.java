@@ -1,5 +1,7 @@
 package frc.robot.subsystems.shooter;
 
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -11,6 +13,9 @@ public class ShooterSubsystem extends SubsystemBase {
     private final boolean leftShooterWheelReversed = false;
 
     private final ShooterAngleMechanism angleMechanism;
+
+
+    private final PowerDistribution pdh;
     
     
     private final FeederWheelIO feeder;
@@ -39,18 +44,20 @@ public class ShooterSubsystem extends SubsystemBase {
 
         // Turn on brake mode for the feeder
         this.feeder.setBrakeMode(true);
+
+        // Initialize the Power Distribution Hub
+        pdh = new PowerDistribution(1, ModuleType.kRev);
     }
 
     @Override
     public void periodic() {
-        
 
         angleMechanism.periodic();
         leftShooterWheel.periodic();
         rightShooterWheel.periodic();
         feeder.periodic();
         
-
+        pdh.setSwitchableChannel(noteDetected());
         
     }
 
@@ -72,14 +79,19 @@ public class ShooterSubsystem extends SubsystemBase {
      * Get the percent at which the shooter wheels are spinning
      */
     public double getShooterWheelsSpeedPercent() {
-        return (leftShooterWheel.getSpeedPercent() + rightShooterWheel.getSpeedPercent()) / 2.0;
+        return (Math.abs(leftShooterWheel.getVelocityPercent()) + Math.abs(rightShooterWheel.getVelocityPercent())) / 2.0;
     }
 
-    /*
-     * Set the speed of the shooter wheel
-     */
-    public double getFeederSpeedPercent() {
-        return feeder.getSpeedPercent();
+    public double getRightShooterWheelVelocityPercent() {
+        return rightShooterWheel.getVelocityPercent();
+    }
+
+    public double getLeftShooterWheelVelocityPercent() {
+        return leftShooterWheel.getVelocityPercent();
+    }
+
+    public double getFeederVelocityPercent() {
+        return feeder.getVelocityPercent();
     }   
 
 

@@ -16,8 +16,8 @@ public class FeederWheelIOSim implements FeederWheelIO {
     }
 
     @Override
-    public double getSpeedPercent() {
-        return Math.abs(velocityRPM) / maxSpeedRPM;
+    public double getVelocityPercent() {
+        return velocityRPM / maxSpeedRPM;
     }
 
     @Override

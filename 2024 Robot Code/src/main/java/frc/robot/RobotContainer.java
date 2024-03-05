@@ -17,6 +17,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.Modes;
 import frc.robot.commands.JoystickDriveCmd;
 import frc.robot.commands.MoveShooterToSetpointCmd;
+import frc.robot.commands.RunSourceIntakeCmd;
 import frc.robot.commands.ShootWhenReadyCmd;
 import frc.robot.commands.IntakeCmd;
 import frc.robot.commands.SpinShooterWheelsCmd;
@@ -37,7 +38,7 @@ import frc.robot.subsystems.shooter.ShooterWheelIOSparkMax;
  */
 public class RobotContainer {
 
-  public Modes mode = Modes.REAL;
+  public Modes mode = Modes.SIM;
   
   // private double MaxSpeed = DriveConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
   // private double MaxAngularRate = DriveConstants.kMaxAngularSpeedRadPerSec;
@@ -141,7 +142,7 @@ public class RobotContainer {
 
 
     // INTAKE COMMANDS
-    operatorController.rightTrigger().whileTrue(new IntakeCmd(intake, shooter));
+    operatorController.rightTrigger().whileTrue(new RunSourceIntakeCmd(shooter));
   
   }
 

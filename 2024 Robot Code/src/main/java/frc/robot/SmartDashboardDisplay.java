@@ -26,11 +26,13 @@ public class SmartDashboardDisplay extends SubsystemBase {
         SmartDashboard.putString("Shooter Wheels", Math.round(shooter.getShooterWheelsSpeedPercent() * 100.0) + "% Speed");
         SmartDashboard.putString("Shooter Angle", shooter.getShooterAngleDeg() + "°");
         SmartDashboard.putString("Shooter Setpoint", shooter.getShooterAngleSetpointDeg() + "°");
-        SmartDashboard.putString("Feeder Wheels", Math.round(shooter.getFeederSpeedPercent() * 100.0) + "% Speed");
+        SmartDashboard.putString("Feeder Wheels", Math.round(shooter.getFeederVelocityPercent() * 100.0) + "% Velocity");
+
+        SmartDashboard.putBoolean("Note Detected", shooter.noteDetected());
 
 
-        SmartDashboard.putString("Intake Wheels", Math.round(intake.getIntakeWheelsPercentVelocity() * 100.0) + "% Speed");
-        SmartDashboard.putString("Intake Extender", Math.round(intake.getExtendAngleDeg()) + "°");
+        // SmartDashboard.putString("Intake Wheels", Math.round(intake.getIntakeWheelsPercentVelocity() * 100.0) + "% Velocity");
+        // SmartDashboard.putString("Intake Extender", Math.round(intake.getExtendAngleDeg()) + "°");
 
 
         

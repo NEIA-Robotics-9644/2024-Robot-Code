@@ -32,8 +32,8 @@ public class ShooterWheelIOSparkMax implements ShooterWheelIO {
 
 
     @Override
-    public double getSpeedPercent() {
-        return Math.abs(motor.getEncoder().getVelocity() / maxSpeedRPM);
+    public double getVelocityPercent() {
+        return motor.getEncoder().getVelocity() / maxSpeedRPM;
     }
 
     @Override

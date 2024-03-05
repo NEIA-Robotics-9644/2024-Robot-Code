@@ -4,7 +4,7 @@ public interface ShooterWheelIO {
 
     public void spinWheel(double normalizedVelocity);
 
-    public double getSpeedPercent();
+    public double getVelocityPercent();
 
     public void periodic();
 
