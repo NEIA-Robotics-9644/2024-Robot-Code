@@ -28,7 +28,11 @@ import frc.robot.subsystems.shooter.NoteSensorIORoboRio;
 import frc.robot.subsystems.shooter.NoteSensorIOSim;
 import frc.robot.subsystems.shooter.ShooterAngleIOSparkMax;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
+
 import frc.robot.subsystems.shooter.ShooterWheelIOSparkMax;
+
+import frc.robot.subsystems.shooter.ShooterMotorIOSparkMax.ShooterMotorType;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -52,7 +56,9 @@ public class RobotContainer {
   
   private final ShooterSubsystem shooter;
   
+
   private final IntakeSubsystem intake;
+
   
   
   private final SmartDashboardDisplay display;

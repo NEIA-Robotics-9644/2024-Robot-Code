@@ -28,31 +28,13 @@ public class MotorIOSparkMax implements MotorIO {
                 motorSparkMax = new CANSparkMax(1, MotorType.kBrushless);
                 turnAbsoluteEncoder = new CANcoder(9);
                 absoluteEncoderOffset = new Rotation2d(0.047607 * 2 * Math.PI); // MUST BE CALIBRATED
-                motorName = "Left Flywheel";
+                motorName = "Left Climber";
                 break;
             case 1:
                 motorSparkMax = new CANSparkMax(1, MotorType.kBrushless);
                 turnAbsoluteEncoder = new CANcoder(9);
                 absoluteEncoderOffset = new Rotation2d(0.047607 * 2 * Math.PI); // MUST BE CALIBRATED
-                motorName = "Right Flywheel";
-                break;
-            case 2:
-                motorSparkMax = new CANSparkMax(1, MotorType.kBrushless);
-                turnAbsoluteEncoder = new CANcoder(9);
-                absoluteEncoderOffset = new Rotation2d(0.047607 * 2 * Math.PI); // MUST BE CALIBRATED
-                motorName = "Swivel 1";
-                break;
-            case 3:
-                motorSparkMax = new CANSparkMax(1, MotorType.kBrushless);
-                turnAbsoluteEncoder = new CANcoder(9);
-                absoluteEncoderOffset = new Rotation2d(0.047607 * 2 * Math.PI); // MUST BE CALIBRATED
-                motorName = "Swivel 2";
-                break;
-            case 4:
-                motorSparkMax = new CANSparkMax(1, MotorType.kBrushless);
-                turnAbsoluteEncoder = new CANcoder(9);
-                absoluteEncoderOffset = new Rotation2d(0.047607 * 2 * Math.PI); // MUST BE CALIBRATED
-                motorName = "Feed In";
+                motorName = "Right Climber";
                 break;
             default:
                 throw new RuntimeException("Invalid module index");
