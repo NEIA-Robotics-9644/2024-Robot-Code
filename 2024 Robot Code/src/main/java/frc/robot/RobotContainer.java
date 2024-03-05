@@ -31,8 +31,6 @@ import frc.robot.subsystems.shooter.ShooterSubsystem;
 
 import frc.robot.subsystems.shooter.ShooterWheelIOSparkMax;
 
-import frc.robot.subsystems.shooter.ShooterMotorIOSparkMax.ShooterMotorType;
-
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -42,7 +40,7 @@ import frc.robot.subsystems.shooter.ShooterMotorIOSparkMax.ShooterMotorType;
  */
 public class RobotContainer {
 
-  public Modes mode = Modes.SIM;
+  public Modes mode = Modes.REAL;
   
   // private double MaxSpeed = DriveConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
   // private double MaxAngularRate = DriveConstants.kMaxAngularSpeedRadPerSec;

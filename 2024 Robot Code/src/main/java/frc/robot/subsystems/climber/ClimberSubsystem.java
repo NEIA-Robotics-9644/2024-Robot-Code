@@ -1,48 +1,41 @@
 package frc.robot.subsystems.climber;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Twist2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.PhysicalRobotCharacteristics;
 
 public class ClimberSubsystem extends SubsystemBase{
 
-    private final Motor[] Climbers = new Motor[2];
+    private final ClimberMotorIO[] Climbers = new ClimberMotorIO[2];
 
     public ClimberSubsystem() {
         throw new IllegalArgumentException("You must pass in valid hardware for a subsystem to work");
     }
 
-    public ClimberSubsystem(MotorIO LClimber, MotorIO RClimber) {
+    public ClimberSubsystem(ClimberMotorIO LClimber, ClimberMotorIO RClimber) {
 
         if (LClimber == null || RClimber == null) {
             throw new IllegalArgumentException("You must pass in valid hardware for a subsystem to work");
         }
 
         // Initialize things
-        this.Climbers[0] = new Motor(LClimber);
-        this.Climbers[1] = new Motor(RClimber);
+        this.Climbers[0] = LClimber;
+        this.Climbers[1] = RClimber;
     }
     @Override
     public void periodic() {
-        Climbers[0].periodic();
-        Climbers[1].periodic();
-    }
-    public void move(double voltage, boolean direction)
-    {
-        if(direction)
-        {
-            Climbers[0].setActive(voltage);
-            Climbers[1].setActive(voltage);
+        
+        for (ClimberMotorIO climber : Climbers) {
+            climber.periodic();
         }
-        else if(direction == false)
-        {
-            Climbers[0].setActive(-voltage);
-            Climbers[1].setActive(-voltage);
+    }
+
+    
+    public void moveClimber(boolean up) {
+        if(up) {
+            Climbers[0].spinMotor(1);
+            Climbers[1].spinMotor(1);
+        } else {
+            Climbers[0].spinMotor(-1);
+            Climbers[1].spinMotor(-1);
         }
     }
 }
