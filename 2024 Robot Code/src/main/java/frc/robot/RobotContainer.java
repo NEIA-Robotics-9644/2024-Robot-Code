@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -19,8 +20,10 @@ import frc.robot.commands.JoystickDriveCmd;
 import frc.robot.commands.MoveShooterToSetpointCmd;
 import frc.robot.commands.RunSourceIntakeCmd;
 import frc.robot.commands.ShootWhenReadyCmd;
+import frc.robot.commands.ClimberCmd;
 import frc.robot.commands.IntakeCmd;
 import frc.robot.commands.SpinShooterWheelsCmd;
+import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.drive.SwerveDriveSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.FeederWheelIOSparkMax;
@@ -54,6 +57,7 @@ public class RobotContainer {
   
   private final ShooterSubsystem shooter;
   
+  private final ClimberSubsystem climber;
 
   private final IntakeSubsystem intake;
 
@@ -81,6 +85,11 @@ public class RobotContainer {
         new frc.robot.subsystems.intake.IntakeWheelMotorIOSparkMax(27)
       );
 
+      climber = new ClimberSubsystem(
+        new frc.robot.subsystems.climber.MotorIOSparkMax(28),
+        new frc.robot.subsystems.climber.MotorIOSparkMax(29)
+      );
+
 
     } else {
       shooter = new ShooterSubsystem(
@@ -95,6 +104,11 @@ public class RobotContainer {
         intake = new IntakeSubsystem(
           new frc.robot.subsystems.intake.IntakeExtenderMechanismIOSim(), 
           new frc.robot.subsystems.intake.IntakeWheelMotorIOSim()
+        );
+
+        climber = new ClimberSubsystem(
+        new frc.robot.subsystems.climber.MotorIOSparkMax(28),
+        new frc.robot.subsystems.climber.MotorIOSparkMax(29)
         );
     }
     
@@ -122,7 +136,11 @@ public class RobotContainer {
   private void configureBindings() {
     drivetrain.setDefaultCommand(new JoystickDriveCmd(drivetrain, driverController::getLeftY, driverController::getLeftX, driverController::getRightX));
     
+    Command resetGyro = Commands.sequence(
+      Commands.startEnd(() -> drivetrain.getPigeon2().reset(), () -> drivetrain.getPigeon2().reset())
+    );
 
+    driverController.povLeft().onTrue(resetGyro);
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
@@ -147,6 +165,10 @@ public class RobotContainer {
 
     // INTAKE COMMANDS
     operatorController.rightTrigger().whileTrue(new RunSourceIntakeCmd(shooter));
+
+    // CLIMBER COMMANDS
+    operatorController.povUp().onTrue(new ClimberCmd(climber, 12, true));
+    operatorController.povDown().onTrue(new ClimberCmd(climber, 12, false));
   
   }
 
