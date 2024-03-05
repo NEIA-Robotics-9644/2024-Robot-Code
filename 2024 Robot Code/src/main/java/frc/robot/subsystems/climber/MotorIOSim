@@ -1,0 +1,64 @@
+package frc.robot.subsystems.drive;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+public class MotorIOSim implements MotorIO {
+
+    private final double maxSpeed = 6000; // RPM
+
+    private double velocity = 0.0;
+
+    private boolean brake = false;
+
+    private final int index;
+
+    public void periodic() {
+        if (!newSetpoint) {
+            if (brake) {
+                velocity = 0.0;
+            } else {
+                velocity *= 0.99;
+            }
+        }
+        
+        newSetpoint = false;        
+    }
+
+    public MotorIOSim(int index) {
+        this.index = index;
+    }
+
+    @Override
+    public Rotation2d getAbsoluteRotation() {
+        return new Rotation2d(LclimberSim.getAngularPositionRad()).plus(turnAbsoluteInitPosition);
+    }
+
+    @Override
+    public double getMotorVelocity() {
+        return motorSparkMax.getAngularVelocityRPM();
+    }
+
+    @Override
+    public void setMotorVoltage(double voltage) {
+        driveSim.setInputVoltage(voltage);
+        System.out.println("Module " + index + " Drive Voltage: " + voltage);
+    }
+
+    @Override
+    public void setBrake(boolean brake) {
+        // Do nothing        
+    }
+
+    @Override
+    public void periodic() {
+        driveSim.update(0.02);
+        turnSim.update(0.02);
+
+        // Log data to SmartDashboard
+        SmartDashboard.putNumber("Module " + index + " Drive Velocity (mps)", getDriveVelocity());
+        SmartDashboard.putNumber("Module " + index + " Turn Absolute Position (deg)", getAbsoluteRotation().getDegrees());
+    }
+}
