@@ -12,6 +12,8 @@ public class SpinShooterWheelsCmd extends Command {
         this.shooterSubsystem = shooterSubsystem;
     }
 
+    
+
     @Override
     public void initialize() {
         System.out.println("Spin Shooter Wheels Cmd Initialized");
