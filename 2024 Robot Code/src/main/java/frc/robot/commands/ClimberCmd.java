@@ -38,6 +38,6 @@ public class ClimberCmd extends Command {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        
+        climberSubsystem.move(0, false);
     }
 }
