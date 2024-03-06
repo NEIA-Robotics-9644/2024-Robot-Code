@@ -43,7 +43,9 @@ import frc.robot.subsystems.shooter.ShooterWheelIOSparkMax;
  */
 public class RobotContainer {
 
-  public Modes mode = Modes.SIM;
+  public Modes mode = Modes.REAL;
+
+  
   
   // private double MaxSpeed = DriveConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
   // private double MaxAngularRate = DriveConstants.kMaxAngularSpeedRadPerSec;
@@ -69,6 +71,8 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
+    // Constants.DriveConstants.putValues();
+
     if (mode == Modes.REAL) {
       shooter = new ShooterSubsystem(
           new ShooterWheelIOSparkMax(21),
@@ -86,8 +90,8 @@ public class RobotContainer {
       );
 
       climber = new ClimberSubsystem(
-        new frc.robot.subsystems.climber.MotorIOSparkMax(28),
-        new frc.robot.subsystems.climber.MotorIOSparkMax(29)
+        new frc.robot.subsystems.climber.ClimberMotorIOSparkMax(28),
+        new frc.robot.subsystems.climber.ClimberMotorIOSparkMax(29)
       );
 
 
@@ -107,8 +111,8 @@ public class RobotContainer {
         );
 
         climber = new ClimberSubsystem(
-        new frc.robot.subsystems.climber.MotorIOSparkMax(28),
-        new frc.robot.subsystems.climber.MotorIOSparkMax(29)
+        new frc.robot.subsystems.climber.ClimberMotorIOSim(),
+        new frc.robot.subsystems.climber.ClimberMotorIOSim()
         );
     }
     
@@ -136,9 +140,7 @@ public class RobotContainer {
   private void configureBindings() {
     drivetrain.setDefaultCommand(new JoystickDriveCmd(drivetrain, driverController::getLeftY, driverController::getLeftX, driverController::getRightX));
     
-    Command resetGyro = Commands.sequence(
-      Commands.startEnd(() -> drivetrain.getPigeon2().reset(), () -> drivetrain.getPigeon2().reset())
-    );
+    Command resetGyro = Commands.runOnce(drivetrain.getPigeon2()::reset);
 
     driverController.povLeft().onTrue(resetGyro);
     if (Utils.isSimulation()) {
@@ -167,8 +169,8 @@ public class RobotContainer {
     operatorController.rightTrigger().whileTrue(new RunSourceIntakeCmd(shooter));
 
     // CLIMBER COMMANDS
-    operatorController.povUp().onTrue(new ClimberCmd(climber, 12, true));
-    operatorController.povDown().onTrue(new ClimberCmd(climber, 12, false));
+    operatorController.povUp().onTrue(new ClimberCmd(climber, () -> true));
+    operatorController.povDown().onTrue(new ClimberCmd(climber, () -> false));
   
   }
 

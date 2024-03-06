@@ -28,13 +28,12 @@ public class ClimberCmd extends Command {
     @Override
     public void execute() {
 
-        boolean dir = direction.get();
-        climberSubsystem.move(dir);
+        climberSubsystem.moveClimber(direction.get());
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        climberSubsystem.move(false);
+        
     }
 }
