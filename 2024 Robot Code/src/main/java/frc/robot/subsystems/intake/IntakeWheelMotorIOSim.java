@@ -16,13 +16,7 @@ public class IntakeWheelMotorIOSim implements IntakeWheelMotorIO {
 
     private final PIDController motorModel = new PIDController(0.1, 0.0, 0.0);
 
-    
-    
-
-
     public void periodic() {
-        
-
         if (!newSetpoint) {
             if (brake) {
                 velocity = 0.0;
