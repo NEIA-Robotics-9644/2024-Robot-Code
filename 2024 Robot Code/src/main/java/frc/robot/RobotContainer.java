@@ -140,9 +140,7 @@ public class RobotContainer {
   private void configureBindings() {
     drivetrain.setDefaultCommand(new JoystickDriveCmd(drivetrain, driverController::getLeftY, driverController::getLeftX, driverController::getRightX));
     
-    Command resetGyro = Commands.sequence(
-      Commands.startEnd(() -> drivetrain.getPigeon2().reset(), () -> drivetrain.getPigeon2().reset())
-    );
+    Command resetGyro = Commands.runOnce(drivetrain.getPigeon2()::reset);
 
     driverController.povLeft().onTrue(resetGyro);
     if (Utils.isSimulation()) {
