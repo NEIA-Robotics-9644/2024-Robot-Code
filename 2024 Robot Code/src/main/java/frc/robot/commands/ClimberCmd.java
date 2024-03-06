@@ -9,12 +9,10 @@ public class ClimberCmd extends Command {
     private final ClimberSubsystem climberSubsystem;
 
     private final Supplier<Boolean> direction; //false for -, true for +
-    private final Supplier<Double> speedSupplier;
     
-    public ClimberCmd(ClimberSubsystem climberSubsystem, Supplier<Double> speedSupplier, Supplier<Boolean> direction) {
+    public ClimberCmd(ClimberSubsystem climberSubsystem, Supplier<Boolean> direction) {
         
         this.climberSubsystem = climberSubsystem;
-        this.speedSupplier = speedSupplier;
         this.direction = direction;
 
         addRequirements(climberSubsystem);
@@ -30,14 +28,13 @@ public class ClimberCmd extends Command {
     @Override
     public void execute() {
 
-        double speed = speedSupplier.get();
         boolean dir = direction.get();
-        climberSubsystem.move(speed, dir);
+        climberSubsystem.move(dir);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        climberSubsystem.move(0, false);
+        climberSubsystem.move(false);
     }
 }
