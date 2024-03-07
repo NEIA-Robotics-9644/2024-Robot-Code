@@ -26,11 +26,15 @@ public class MoveToKeyPointCmd extends Command {
 
     private final SwerveRequest.FieldCentric fieldCentric = new SwerveRequest.FieldCentric();
 
+    long startTime = System.nanoTime(); 
+    private final Supplier<Double> targetTime; 
+    double elapsedTime = 0;
+
 
     public MoveToKeyPointCmd(
             SwerveDriveSubsystem driveSubsystem, Supplier<Double> xSupplier,
             Supplier<Double> ySupplier,
-            Supplier<Double> omegaSupplier, Supplier<Boolean> fieldOrientedSupplier, Supplier<String> pointSupplier) {
+            Supplier<Double> omegaSupplier, Supplier<Boolean> fieldOrientedSupplier, Supplier<String> pointSupplier, Supplier<Double> time) {
 
         this.swerveDriveSubsystem = driveSubsystem;
         this.xSupplier = xSupplier;
@@ -38,6 +42,7 @@ public class MoveToKeyPointCmd extends Command {
         this.omegaSupplier = omegaSupplier;
         this.fieldOrientedSupplier = fieldOrientedSupplier;
         this.pointSupplier = pointSupplier;
+        this.targetTime = time;
 
         addRequirements(driveSubsystem);
     }
@@ -90,5 +95,29 @@ public class MoveToKeyPointCmd extends Command {
             .withVelocityY(chassisSpeeds.vyMetersPerSecond)
             .withRotationalRate(chassisSpeeds.omegaRadiansPerSecond)
         );   
+    }
+    @Override
+    public boolean isFinished() {
+        double time = targetTime.get();
+        boolean runLoop = true;
+
+        while(runLoop) {
+            long currentTime = System.nanoTime();
+            double deltaTime = (currentTime - startTime) / 1e9; // Convert nanoseconds to seconds
+            elapsedTime = deltaTime;
+
+            if(elapsedTime >= time)
+            {
+                runLoop = false;
+            }
+        }
+        if(runLoop == false)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

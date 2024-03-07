@@ -8,7 +8,8 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.drive.SwerveDriveSubsystem;
 
 import java.util.function.Supplier;
-public class MoveAutoCmd extends Command {
+
+public class SwerveAutoCmd extends Command {
 
     private final double MaxSpeed = DriveConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
     private final double MaxAngularRate = DriveConstants.kMaxAngularSpeedRadPerSec;
@@ -19,6 +20,9 @@ public class MoveAutoCmd extends Command {
     private final Supplier<Double> forwardSupplier;
     private final Supplier<Double> sidwaysSupplier;
     private final Supplier<Double> rotationalSupplier;
+    long startTime = System.nanoTime(); 
+    private final Supplier<Double> targetTime; 
+    double elapsedTime = 0;
 
 
     private final SwerveRequest.FieldCentric driveRequest = new SwerveRequest.FieldCentric()
@@ -26,12 +30,13 @@ public class MoveAutoCmd extends Command {
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
                                                                // driving in open loop
     
-    public MoveAutoCmd(SwerveDriveSubsystem SwerveDriveSubsystem, Supplier<Double> forward, Supplier<Double> sideways, Supplier<Double> rotation) {
+    public SwerveAutoCmd(SwerveDriveSubsystem SwerveDriveSubsystem, Supplier<Double> forward, Supplier<Double> sideways, Supplier<Double> rotation, Supplier<Double> time) {
         
         driveSubsystem = SwerveDriveSubsystem;
         forwardSupplier = forward;
         sidwaysSupplier = sideways;
         rotationalSupplier = rotation;
+        targetTime = time;
 
 
         // Use addRequirements() here to declare subsystem dependencies.
@@ -69,6 +74,26 @@ public class MoveAutoCmd extends Command {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return false;
+        double time = targetTime.get();
+        boolean runLoop = true;
+
+        while(runLoop) {
+            long currentTime = System.nanoTime();
+            double deltaTime = (currentTime - startTime) / 1e9; // Convert nanoseconds to seconds
+            elapsedTime = deltaTime;
+
+            if(elapsedTime >= time)
+            {
+                runLoop = false;
+            }
+        }
+        if(runLoop == false)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

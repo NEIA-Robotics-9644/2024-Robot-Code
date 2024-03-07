@@ -28,7 +28,7 @@ public class ClimberCmd extends Command {
     @Override
     public void execute() {
 
-        climberSubsystem.moveClimber(direction.get());
+        climberSubsystem.move(direction.get());
     }
 
     // Called once the command ends or is interrupted.
