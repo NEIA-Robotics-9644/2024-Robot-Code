@@ -9,4 +9,6 @@ public interface ClimberMotorIO {
     public double getMotorVelocityRPM();
 
     public void periodic();
+
+    public void setInverted(boolean inverted);
 }

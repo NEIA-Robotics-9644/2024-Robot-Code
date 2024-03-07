@@ -3,6 +3,7 @@ package frc.robot.commands;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.drive.SwerveDriveSubsystem;
@@ -23,20 +24,41 @@ public class JoystickDriveCmd extends Command {
     private final Supplier<Double> forwardSupplier;
     private final Supplier<Double> sidwaysSupplier;
     private final Supplier<Double> rotationalSupplier;
+    private final Supplier<Boolean> speedIncreaseSupplier;
+    private final Supplier<Boolean> speedDecreaseSupplier;
+    private final Supplier<Boolean> fieldOrientedSupplier;
+    private boolean lastSpeedIncrease = false;
+    private boolean lastSpeedDecrease = false;
+
+
+    private final double[] speeds = {0.2, 0.6, 1.0};
+
+    private int speedStepIndex = 0;
+
+    private int speedsLength = speeds.length;
 
 
     private final SwerveRequest.FieldCentric driveRequest = new SwerveRequest.FieldCentric()
-      .withDeadband(MaxSpeed * 0.005).withRotationalDeadband(MaxAngularRate * 0.005) // Add a 5% deadband
+      .withDeadband(MaxSpeed * 0.005).withRotationalDeadband(MaxAngularRate * 0.005) // Add a 0.5% deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
                                                                // driving in open loop
+
+    private final SwerveRequest.RobotCentric robotCentricDriveRequest = new SwerveRequest.RobotCentric()
+        .withDeadband(MaxSpeed * 0.005).withRotationalDeadband(MaxAngularRate * 0.005)
+        .withDriveRequestType(DriveRequestType.OpenLoopVoltage);                   
     
-    public JoystickDriveCmd(SwerveDriveSubsystem SwerveDriveSubsystem, Supplier<Double> forward, Supplier<Double> sideways, Supplier<Double> rotation) {
+    public JoystickDriveCmd(SwerveDriveSubsystem SwerveDriveSubsystem, Supplier<Double> forward, Supplier<Double> sideways, Supplier<Double> rotation, Supplier<Boolean> speedIncrease, Supplier<Boolean> speedDecrease, Supplier<Boolean> fieldOriented) {
         
         driveSubsystem = SwerveDriveSubsystem;
         forwardSupplier = forward;
         sidwaysSupplier = sideways;
         rotationalSupplier = rotation;
+        speedIncreaseSupplier = speedIncrease;
+        speedDecreaseSupplier = speedDecrease;
+        fieldOrientedSupplier = fieldOriented;
 
+
+        
 
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(SwerveDriveSubsystem);
@@ -60,16 +82,45 @@ public class JoystickDriveCmd extends Command {
         double sideways = sidwaysSupplier.get();
         double rotation = rotationalSupplier.get();
 
+        boolean speedIncrease = speedIncreaseSupplier.get() && !lastSpeedIncrease;
+        boolean speedDecrease = speedDecreaseSupplier.get() && !lastSpeedDecrease;
+
+        boolean fieldOriented = fieldOrientedSupplier.get();
+
+        lastSpeedIncrease = speedIncreaseSupplier.get();
+        lastSpeedDecrease = speedDecreaseSupplier.get();
+
+        if (speedIncrease && (speedStepIndex < speedsLength - 1)) {
+            speedStepIndex++;            
+        }
+
+        if (speedDecrease && (speedStepIndex > 0)) {
+            speedStepIndex--;
+        }
+
+
+        double speedMultiplier = speeds[speedStepIndex];
+
+        SmartDashboard.putString("Drive", speedMultiplier * 100 + "%");
+
         // Adapt the values to the robot
-        double forwardOutput = -Math.abs(forward) * forward * MaxSpeed;
-        double sidewaysOutput = -Math.abs(sideways) * sideways * MaxSpeed;
-        double rotationOutput = -Math.abs(rotation) * rotation * MaxAngularRate;
+        double forwardOutput = -Math.abs(forward) * forward * MaxSpeed * speedMultiplier;
+        double sidewaysOutput = -Math.abs(sideways) * sideways * MaxSpeed * speedMultiplier;
+        double rotationOutput = -Math.abs(rotation) * rotation * MaxAngularRate * speedMultiplier;
         
-        driveSubsystem.setControl(
-                driveRequest.withVelocityX(forwardOutput)
-                .withVelocityY(sidewaysOutput)
-                .withRotationalRate(rotationOutput)
-        );
+        if (fieldOriented) {
+            driveSubsystem.setControl(
+                    driveRequest.withVelocityX(forwardOutput)
+                    .withVelocityY(sidewaysOutput)
+                    .withRotationalRate(rotationOutput)
+            );
+        } else {
+            driveSubsystem.setControl(
+                    robotCentricDriveRequest.withVelocityX(forwardOutput)
+                    .withVelocityY(sidewaysOutput)
+                    .withRotationalRate(rotationOutput)
+            );
+        }
     }
 
     // Called once the command ends or is interrupted.

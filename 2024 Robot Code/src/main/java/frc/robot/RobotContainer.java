@@ -16,12 +16,12 @@ import com.ctre.phoenix6.Utils;
 
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.Modes;
+import frc.robot.commands.ClimberCmd;
 import frc.robot.commands.JoystickDriveCmd;
 import frc.robot.commands.MoveShooterToSetpointCmd;
 import frc.robot.commands.RunSourceIntakeCmd;
 import frc.robot.commands.ShootWhenReadyCmd;
-import frc.robot.commands.ClimberCmd;
-import frc.robot.commands.IntakeCmd;
+import frc.robot.commands.ShooterAngleManagerCmd;
 import frc.robot.commands.SpinShooterWheelsCmd;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.drive.SwerveDriveSubsystem;
@@ -52,7 +52,7 @@ public class RobotContainer {
 
   /* Setting up bindings for necessary control of the swerve drive platform */
   private final CommandXboxController driverController = new CommandXboxController(0);
-  private final CommandXboxController operatorController = driverController;
+  private final CommandXboxController operatorController = new CommandXboxController(1);
 
 
   private final SwerveDriveSubsystem drivetrain = DriveConstants.DriveTrain; // My drivetrain
@@ -118,7 +118,7 @@ public class RobotContainer {
     
 
     
-    display = new SmartDashboardDisplay(drivetrain, shooter, intake);
+    display = new SmartDashboardDisplay(drivetrain, shooter, intake, climber);
     
 
     drivetrain.getPigeon2().reset();
@@ -138,39 +138,42 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    drivetrain.setDefaultCommand(new JoystickDriveCmd(drivetrain, driverController::getLeftY, driverController::getLeftX, driverController::getRightX));
+    drivetrain.setDefaultCommand(new JoystickDriveCmd(drivetrain, driverController::getLeftY, driverController::getLeftX, 
+        driverController::getRightX, driverController.rightBumper()::getAsBoolean, driverController.leftBumper()::getAsBoolean, 
+        () -> !driverController.leftTrigger().getAsBoolean()));
     
     Command resetGyro = Commands.runOnce(drivetrain.getPigeon2()::reset);
 
+    
+    // drivetrain.registerTelemetry(logger::telemeterize);
+
+    // DRIVER COMMANDS
     driverController.povLeft().onTrue(resetGyro);
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
-    // drivetrain.registerTelemetry(logger::telemeterize);
 
-    
+
     
 
     // SHOOTER COMMANDS
-
-    
 
     operatorController.leftTrigger().whileTrue(new SpinShooterWheelsCmd(shooter));
 
     operatorController.leftBumper().whileTrue(new ShootWhenReadyCmd(shooter, 0.9, 0.8));
 
-    operatorController.a().onTrue(new MoveShooterToSetpointCmd(shooter, 0.0));
-    operatorController.b().onTrue(new MoveShooterToSetpointCmd(shooter, 20.0));
-    operatorController.x().onTrue(new MoveShooterToSetpointCmd(shooter, 30.0));
-    operatorController.y().onTrue(new MoveShooterToSetpointCmd(shooter, 40.0));
-
+    
+    operatorController.a().whileTrue(new MoveShooterToSetpointCmd(shooter, 0));
+    operatorController.b().whileTrue(new MoveShooterToSetpointCmd(shooter, 40));
+    operatorController.x().whileTrue(new MoveShooterToSetpointCmd(shooter, 55));
+    operatorController.y().whileTrue(new MoveShooterToSetpointCmd(shooter, 70));
 
     // INTAKE COMMANDS
     operatorController.rightTrigger().whileTrue(new RunSourceIntakeCmd(shooter));
 
     // CLIMBER COMMANDS
-    operatorController.povUp().onTrue(new ClimberCmd(climber, () -> true));
-    operatorController.povDown().onTrue(new ClimberCmd(climber, () -> false));
+    operatorController.povUp().whileTrue(new ClimberCmd(climber, true));
+    operatorController.povDown().whileTrue(new ClimberCmd(climber, false));
   
   }
 
