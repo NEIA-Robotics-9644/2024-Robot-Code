@@ -1,9 +1,12 @@
 package frc.robot.subsystems.shooter;
 
+import java.util.ArrayList;
+
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ShooterAngleIOSparkMax implements ShooterAngleIO {
 
@@ -30,13 +33,18 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
 
     private double maxSpeedDegPerSec = 5.0;
 
+    private ArrayList<Double> accelerationDatapoints = new ArrayList<Double>();
+    private int maxDatapoints = 20;
+
+    private double lastVelocity = 0;
+
 
     private boolean manualControl = false;
 
     
 
-    private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.0, 0.0, 0.0);  // TODO: Tune these
-    private PIDController feedback = new PIDController(0.01, 0.0, 0.0);  // TODO: Tune these
+    private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.0, 0.1, 0.0);  // TODO: Tune these
+    private PIDController feedback = new PIDController(0.008, 0.0, 0.0);  // TODO: Tune these
 
 
     public ShooterAngleIOSparkMax() {
@@ -54,25 +62,21 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
         // Set the right motor to follow the left motor, but keep in mind that they might be reversed
         this.rightAngleMotor.follow(this.leftAngleMotor, leftReversed != rightReversed);
 
-        this.leftAngleMotor.setSmartCurrentLimit(30);
-        this.rightAngleMotor.setSmartCurrentLimit(30);
+        this.leftAngleMotor.setSmartCurrentLimit(10);
+        this.rightAngleMotor.setSmartCurrentLimit(10);
         this.leftAngleMotor.setOpenLoopRampRate(0.5);
         this.rightAngleMotor.setOpenLoopRampRate(0.5);
 
         this.leftAngleMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         this.rightAngleMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
-        // NOTE: We assume that the intake starts down
-        this.leftAngleMotor.getEncoder().setPosition(0.0);
-        this.rightAngleMotor.getEncoder().setPosition(0.0);
         
-
         
 
         this.leftAngleMotor.burnFlash();
         this.rightAngleMotor.burnFlash();
 
-        this.feedback.setTolerance(0.5);
+        this.feedback.setTolerance(0.1);
         
     }
 
@@ -107,7 +111,32 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
 
             // Set the motor output
             leftAngleMotor.set(output);
+
+            SmartDashboard.putNumber("Left Angle Amps", this.leftAngleMotor.getOutputCurrent());
+            SmartDashboard.putNumber("Right Angle Amps", this.rightAngleMotor.getOutputCurrent());
         }
+        
+        double acceleration = getVelocityPercent() - lastVelocity;
+
+        lastVelocity = getVelocityPercent();
+        
+        accelerationDatapoints.add(acceleration);
+
+        while (accelerationDatapoints.size() > maxDatapoints) {
+            accelerationDatapoints.remove(0);
+        }
+
+        
+
+        SmartDashboard.putString("Velocity Datapoints", accelerationDatapoints.toString());
+
+        
+    }
+
+    @Override
+    public double getVelocityPercent() {
+        System.out.println("Velocity Conversion" + leftAngleMotor.getEncoder().getVelocityConversionFactor());
+        return (leftAngleMotor.getEncoder().getVelocity() * (1/80.0) * (encoderReversed ? -1 : 1) * 360.0 * (1/60.0)) / maxSpeedDegPerSec;
     }
 
 
@@ -169,6 +198,20 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
     @Override
     public double getBottomAngleDeg() {
         return bottomLimitDeg;
+    }
+
+    @Override
+    public double averageAcceleration() {
+        return getAverage(accelerationDatapoints);
+    }
+
+    public static double getAverage(ArrayList<Double> data) {
+        double total = 0;
+        for (Double datapoint : data) {
+            total += datapoint;
+        }
+
+        return total / (double)data.size();
     }
 
 }

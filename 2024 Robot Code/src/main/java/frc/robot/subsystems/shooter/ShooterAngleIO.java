@@ -46,4 +46,8 @@ public interface ShooterAngleIO {
     public double getTopAngleDeg();
 
     public double getBottomAngleDeg();
+
+    public double getVelocityPercent();
+
+    public double averageAcceleration();
 }

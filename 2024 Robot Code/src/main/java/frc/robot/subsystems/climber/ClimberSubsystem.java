@@ -41,15 +41,9 @@ public class ClimberSubsystem extends SubsystemBase{
     }
 
     
-    public void moveClimber(boolean up) {
-        if(up) {
-            for (ClimberMotorIO climber : Climbers) {
-                climber.spinMotor(1);
-            }
-        } else {
-            for (ClimberMotorIO climber : Climbers) {
-                climber.spinMotor(-1);
-            }
+    public void moveClimber(double normalizedVelocity) {
+        for (ClimberMotorIO climber : Climbers) {
+            climber.spinMotor(normalizedVelocity);
         }
     }
 

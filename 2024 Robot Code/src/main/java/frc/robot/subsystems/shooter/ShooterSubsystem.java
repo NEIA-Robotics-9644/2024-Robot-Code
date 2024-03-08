@@ -14,6 +14,14 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private final ShooterAngleMechanism angleMechanism;
 
+    private final double[] angleSetpoints;
+
+    private final double[] wheelSpeedSetpoints;
+
+    private final double[] feederSpeedSetpoints;
+
+    private int setpointIndex = 0;
+
 
     private final PowerDistribution pdh;
     
@@ -29,10 +37,26 @@ public class ShooterSubsystem extends SubsystemBase {
         throw new IllegalArgumentException("You must pass in valid hardware for a subsystem to work");
     }
 
-    public ShooterSubsystem(ShooterWheelIO leftShooter, ShooterWheelIO rightShooter, FeederWheelIO feeder, ShooterAngleIO angleMechanism, NoteSensorIO noteSensor) {
+    /*
+     * Create a new shooter subsystem
+     * @param leftShooter The left shooter wheel
+     * @param rightShooter The right shooter wheel
+     * @param feeder The feeder wheel
+     * @param angleMechanism The angle mechanism
+     * @param noteSensor The note sensor
+     * @param angleSetpoints in degrees
+     * @param wheelSpeedSetpoints normalized
+     * @param feederSpeedSetpoints normalized
+     */
+    public ShooterSubsystem(ShooterWheelIO leftShooter, ShooterWheelIO rightShooter, FeederWheelIO feeder, ShooterAngleIO angleMechanism, NoteSensorIO noteSensor, double[] angleSetpoints
+    , double[] wheelSpeedSetpoints, double[] feederSpeedSetpoints) {
 
-        if (leftShooter == null || rightShooter == null || feeder == null || angleMechanism == null) {
+        if (leftShooter == null || rightShooter == null || feeder == null || angleMechanism == null || noteSensor == null || angleSetpoints == null || wheelSpeedSetpoints == null || feederSpeedSetpoints == null) {
             throw new IllegalArgumentException("You must pass in valid hardware for a subsystem to work");
+        }
+
+        if (angleSetpoints.length != wheelSpeedSetpoints.length || angleSetpoints.length != feederSpeedSetpoints.length) {
+            throw new IllegalArgumentException("The length of the angle setpoints, wheel speed setpoints, and feeder speed setpoints must be the same");
         }
 
         // Initialize things
@@ -41,6 +65,13 @@ public class ShooterSubsystem extends SubsystemBase {
         this.feeder = feeder;
         this.angleMechanism = new ShooterAngleMechanism(angleMechanism);
         this.noteSensor = noteSensor;
+
+
+        this.wheelSpeedSetpoints = wheelSpeedSetpoints;
+
+        this.angleSetpoints = angleSetpoints;
+        this.feederSpeedSetpoints = feederSpeedSetpoints;
+    
 
         // Turn on brake mode for the feeder
         this.feeder.setBrakeMode(true);
@@ -52,6 +83,8 @@ public class ShooterSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
 
+        angleMechanism.setAngleDeg(angleSetpoints[setpointIndex]);
+        
         angleMechanism.periodic();
         leftShooterWheel.periodic();
         rightShooterWheel.periodic();
@@ -66,12 +99,13 @@ public class ShooterSubsystem extends SubsystemBase {
      * Spin the shooter wheels
      */
     public void spinShooterWheels(boolean reversed) {
+        double speed = wheelSpeedSetpoints[setpointIndex];
         if (reversed) {
-            leftShooterWheel.spinWheel(leftShooterWheelReversed ? -1.0 : 1.0);
-            rightShooterWheel.spinWheel(rightShooterWheelReversed ? 1.0 : -1.0);
+            leftShooterWheel.spinWheel(leftShooterWheelReversed ? -speed : speed);
+            rightShooterWheel.spinWheel(rightShooterWheelReversed ? speed : -speed);
         } else {
-            leftShooterWheel.spinWheel(leftShooterWheelReversed ? 1.0 : -1.0);
-            rightShooterWheel.spinWheel(rightShooterWheelReversed ? -1.0 : 1.0);
+            leftShooterWheel.spinWheel(leftShooterWheelReversed ? speed : -speed);
+            rightShooterWheel.spinWheel(rightShooterWheelReversed ? -speed : speed);
         }
     }
 
@@ -100,19 +134,13 @@ public class ShooterSubsystem extends SubsystemBase {
      */
     public void spinFeederWheel(boolean reversed) {
         if (reversed) {
-            feeder.spinWheel(feederReversed ? -1.0 : 1.0);
+            feeder.spinWheel(feederReversed ? -feederSpeedSetpoints[setpointIndex] : feederSpeedSetpoints[setpointIndex]);
         } else {
-            feeder.spinWheel( feederReversed ? 1.0 : -1.0);
+            feeder.spinWheel( feederReversed ? feederSpeedSetpoints[setpointIndex] : -feederSpeedSetpoints[setpointIndex]);
         }
     }
 
 
-    /*
-     * Set the desired angle of the shooter in degrees
-     */
-    public void setShooterAngleDeg(double angle) {
-        angleMechanism.setAngleDeg(angle);
-    }
 
 
     /*
@@ -130,9 +158,8 @@ public class ShooterSubsystem extends SubsystemBase {
         return angleMechanism.atSetpoint();
     }
 
-    public double getShooterAngleSetpointDeg() {
-        return angleMechanism.getSetpoint();
-    }
+
+    
 
 
     /*
@@ -142,6 +169,7 @@ public class ShooterSubsystem extends SubsystemBase {
      */
     public void setManualAngleControl(boolean enabled) {
         angleMechanism.setManualControl(enabled);
+        System.out.println("DON'T USE THIS");
     }
 
 
@@ -149,7 +177,9 @@ public class ShooterSubsystem extends SubsystemBase {
      * Get whether manual control of the angle mechanism is enabled
      */
     public boolean manualAngleControlEnabled() {
+        System.out.println("DON'T USE THIS");
         return angleMechanism.manualControlEnabled();
+        
     }
 
 
@@ -158,6 +188,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * This is only used when manual control is enabled
      */
     public void setManualAngleVelocityDegPerSec(double velocity) {
+        System.out.println("DON'T USE THIS");
         angleMechanism.setManualVelocityDegPerSec(velocity);
     }    
 
@@ -166,6 +197,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * Get whether the shooter is at the bottom of its travel
      */
     public boolean atBottom() {
+        System.out.println("DON'T USE THIS");
         return angleMechanism.atBottom();
     }
 
@@ -173,6 +205,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * Get whether the shooter is at the top of its travel
      */
     public boolean atTop() {
+        System.out.println("DON'T USE THIS");
         return angleMechanism.atTop();
     }
 
@@ -185,15 +218,78 @@ public class ShooterSubsystem extends SubsystemBase {
 
 
     public double getShooterTopAngleDeg() {
+        System.out.println("DON'T USE THIS");
         return angleMechanism.getTopAngleDeg();
     }
 
     public double getShooterBottomAngleDeg() {
+        System.out.println("DON'T USE THIS");
         return angleMechanism.getBottomAngleDeg();
     }
+    
 
 
     public boolean noteDetected() {
         return noteSensor.noteDetected();
+    }
+
+
+    /*
+     * Move to a specific setpoint
+     * This is used to change the shooter angle, wheel speed, and feeder speed
+     */
+    public void goToSetpoint(int setpointIndex) {
+        if (setpointIndex < 0 || setpointIndex >= angleSetpoints.length) {
+            throw new IllegalArgumentException("Invalid setpoint.  Setpoint must be between 0 and " + (angleSetpoints.length - 1) + " inclusive.");
+        }
+        this.setpointIndex = setpointIndex;
+    }
+
+
+    /*
+     * Modify the current setpoint
+     */
+    public void modifyAngleSetpoint(double delta) {
+        angleSetpoints[setpointIndex] += delta;
+    }
+    
+
+    public void modifyFeederSetpoint(double delta) {
+        feederSpeedSetpoints[setpointIndex] += delta;
+    }
+
+    public void modifyShooterSpeedSetpoint(double delta) {
+        wheelSpeedSetpoints[setpointIndex] += delta;
+    }
+
+    public int getSetpointIndex() {
+        return setpointIndex;
+    }
+
+    /*
+     * Degrees
+     */
+    public double getAngleSetpoint() {
+        return angleSetpoints[setpointIndex];
+    }
+
+    /*
+     * Normalized wheel speed setpoint
+     
+     */
+    public double getWheelSpeedSetpoint() {
+        return wheelSpeedSetpoints[setpointIndex];
+    }
+
+    /*
+     * Normalized feeder speed setpoint
+     */
+    public double getFeederSpeedSetpoint() {
+        return feederSpeedSetpoints[setpointIndex];
+    }
+
+
+    public double angleAverageAcceleration() {
+        return angleMechanism.averageAcceleration();
     }
 }

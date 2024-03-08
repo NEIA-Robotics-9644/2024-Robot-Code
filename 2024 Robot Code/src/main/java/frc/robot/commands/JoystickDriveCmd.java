@@ -3,6 +3,7 @@ package frc.robot.commands;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DriveConstants;
@@ -27,6 +28,8 @@ public class JoystickDriveCmd extends Command {
     private final Supplier<Boolean> speedIncreaseSupplier;
     private final Supplier<Boolean> speedDecreaseSupplier;
     private final Supplier<Boolean> fieldOrientedSupplier;
+    private final Supplier<Boolean> xLockSupplier;
+
     private boolean lastSpeedIncrease = false;
     private boolean lastSpeedDecrease = false;
 
@@ -45,9 +48,14 @@ public class JoystickDriveCmd extends Command {
 
     private final SwerveRequest.RobotCentric robotCentricDriveRequest = new SwerveRequest.RobotCentric()
         .withDeadband(MaxSpeed * 0.005).withRotationalDeadband(MaxAngularRate * 0.005)
-        .withDriveRequestType(DriveRequestType.OpenLoopVoltage);                   
+        .withDriveRequestType(DriveRequestType.OpenLoopVoltage);  
+        
+    private final SwerveRequest.PointWheelsAt pointWheelsAtRequest = new SwerveRequest.PointWheelsAt().withModuleDirection(new Rotation2d(Math.PI / 4)).withDriveRequestType(DriveRequestType.OpenLoopVoltage); // X wheel formation lock request
     
-    public JoystickDriveCmd(SwerveDriveSubsystem SwerveDriveSubsystem, Supplier<Double> forward, Supplier<Double> sideways, Supplier<Double> rotation, Supplier<Boolean> speedIncrease, Supplier<Boolean> speedDecrease, Supplier<Boolean> fieldOriented) {
+    // X wheel formation lock request
+    
+    
+    public JoystickDriveCmd(SwerveDriveSubsystem SwerveDriveSubsystem, Supplier<Double> forward, Supplier<Double> sideways, Supplier<Double> rotation, Supplier<Boolean> speedIncrease, Supplier<Boolean> speedDecrease, Supplier<Boolean> fieldOriented, Supplier<Boolean> xLock) {
         
         driveSubsystem = SwerveDriveSubsystem;
         forwardSupplier = forward;
@@ -56,7 +64,7 @@ public class JoystickDriveCmd extends Command {
         speedIncreaseSupplier = speedIncrease;
         speedDecreaseSupplier = speedDecrease;
         fieldOrientedSupplier = fieldOriented;
-
+        xLockSupplier = xLock;
 
         
 
@@ -98,6 +106,7 @@ public class JoystickDriveCmd extends Command {
             speedStepIndex--;
         }
 
+        
 
         double speedMultiplier = speeds[speedStepIndex];
 
@@ -108,7 +117,11 @@ public class JoystickDriveCmd extends Command {
         double sidewaysOutput = -Math.abs(sideways) * sideways * MaxSpeed * speedMultiplier;
         double rotationOutput = -Math.abs(rotation) * rotation * MaxAngularRate * speedMultiplier;
         
-        if (fieldOriented) {
+
+        if (xLockSupplier.get()) {
+            driveSubsystem.xLock();
+        }
+        else if (fieldOriented) {
             driveSubsystem.setControl(
                     driveRequest.withVelocityX(forwardOutput)
                     .withVelocityY(sidewaysOutput)

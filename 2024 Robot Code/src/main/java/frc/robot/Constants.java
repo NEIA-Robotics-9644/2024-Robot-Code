@@ -34,6 +34,8 @@ public final class Constants {
 
   public static final class CANBusIDs {
     public static final int kPigeon2CanID = 14;
+
+    public static final String kMechanismCANBusName = "Mechanism";
   }
 
   public static final class PhysicalRobotCharacteristics {
