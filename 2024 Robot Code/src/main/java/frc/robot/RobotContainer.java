@@ -82,9 +82,9 @@ public class RobotContainer {
           new FeederWheelIOSparkMax(23),
           new ShooterAngleIOSparkMax(24, 25),
           new NoteSensorIORoboRio(),
-          new double[] { 0, 30, 42, 55},
-          new double[] { 1, 0.4, 1, 1},
-          new double[] { 1, 0.4, 1, 1}
+          new double[] { 0, 30, 48, 80},
+          new double[] { 1, 0.4, 1, 0.4},
+          new double[] { 1, 0.4, 1, 0.4}
       );
 
       /*
@@ -107,7 +107,7 @@ public class RobotContainer {
           new frc.robot.subsystems.shooter.FeederWheelIOSim(),
           new frc.robot.subsystems.shooter.ShooterAngleIOSim(),
           new frc.robot.subsystems.shooter.NoteSensorIOSim(),
-          new double[] { 0, 30, 42, 55},
+          new double[] { 0, 30, 48, 55},
           new double[] { 1, 1, 1, 1},
           new double[] { 1, 1, 1, 1}
       );
@@ -207,6 +207,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new JoystickDriveCmd(drivetrain, () -> 1.0, () -> 0.0, () -> 0.0, () -> false, () -> false, () -> true, () -> false).withTimeout(1.5);
+    return new JoystickDriveCmd(drivetrain, () -> -1.0, () -> 0.0, () -> 0.0, () -> false, () -> false, () -> true, () -> false).withTimeout(1.5);
   }
 }
