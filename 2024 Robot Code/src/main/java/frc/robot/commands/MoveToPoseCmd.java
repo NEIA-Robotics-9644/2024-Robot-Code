@@ -22,8 +22,9 @@ public class MoveToPoseCmd extends Command {
     private final Supplier<Double> yCord;
     private final Supplier<Double> rotationSupplier;
     private final Supplier<Double> speedPercentage;
-    private final Supplier<Boolean> fieldOrientedSupplier;
     private final SwerveDriveSubsystem swerveDriveSubsystem;
+    private final Supplier<Boolean> sideSupplier;
+    private final Supplier<Integer> indexSupplier;
 
     private final SwerveRequest.FieldCentric fieldCentric = new SwerveRequest.FieldCentric();
     private final PIDController xPID = new PIDController(0.1, 0.0, 0.0);
@@ -33,15 +34,16 @@ public class MoveToPoseCmd extends Command {
 
     public MoveToPoseCmd(
             SwerveDriveSubsystem driveSubsystem,
-            Supplier<Double> x, Supplier<Double> y, Supplier<Double> speed, Supplier<Double> rotation, 
-            Supplier<Boolean> fieldOrientedSupplier) {
+            Supplier<Double> x, Supplier<Double> y, Supplier<Double> speed, Supplier<Double> rotation,
+            Supplier<Boolean> red, Supplier<Integer> index) {
 
         this.swerveDriveSubsystem = driveSubsystem;
         this.xCord = x;
         this.yCord = y;
         this.rotationSupplier = rotation;
         this.speedPercentage = speed;
-        this.fieldOrientedSupplier = fieldOrientedSupplier;
+        this.sideSupplier = red;
+        this.indexSupplier = index;
 
         addRequirements(driveSubsystem);
     }

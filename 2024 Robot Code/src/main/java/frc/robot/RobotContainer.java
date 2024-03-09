@@ -9,27 +9,30 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
+import static org.mockito.Mockito.atMost;
 
 import com.ctre.phoenix6.Utils;
 
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.Modes;
-import frc.robot.commands.AutoSetShooterSetpointCmd;
 import frc.robot.commands.ClimberCmd;
 import frc.robot.commands.JoystickDriveCmd;
 import frc.robot.commands.MoveShooterToBottomAndResetCmd;
+import frc.robot.commands.MoveToPoseCmd;
 import frc.robot.commands.RunSourceIntakeCmd;
 import frc.robot.commands.ShootWhenReadyCmd;
 import frc.robot.commands.SpinShooterWheelsCmd;
-import frc.robot.commands.AutoSetShooterSetpointCmd;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.drive.SwerveDriveSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.FeederWheelIOSparkMax;
 import frc.robot.subsystems.shooter.NoteSensorIORoboRio;
 import frc.robot.subsystems.shooter.ShooterAngleIOSparkMax;
+import frc.robot.subsystems.shooter.ShooterAngleMechanism;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 
 import frc.robot.subsystems.shooter.ShooterWheelIOSparkMax;
@@ -56,6 +59,7 @@ public class RobotContainer {
   private final SwerveDriveSubsystem drivetrain = DriveConstants.DriveTrain; // My drivetrain
   
   private final ShooterSubsystem shooter;
+  private final String auto;
   
   //private final ClimberSubsystem climber;
 
@@ -125,13 +129,6 @@ public class RobotContainer {
           new frc.robot.subsystems.climber.ClimberMotorIOSim()
       );
       */
-
-      Command Auto1 = Commands.sequence(
-        new AutoSetShooterSetpointCmd(shooter, 3),
-        new SpinShooterWheelsCmd(shooter),
-        new ShootWhenReadyCmd(shooter, 0.9, 0.8),
-        Commands.waitSeconds(2.0),
-        new JoystickDriveCmd(drivetrain, () -> 1.0, () -> 0.0, () -> 0.0, () -> false, () -> false, () -> true, () -> false));
     }
     
 
@@ -144,8 +141,6 @@ public class RobotContainer {
 
     // Configure the trigger bindings
     configureBindings();
-
-
   }
 
   /**
@@ -219,5 +214,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return new JoystickDriveCmd(drivetrain, () -> -1.0, () -> 0.0, () -> 0.0, () -> false, () -> false, () -> true, () -> false).withTimeout(1.5);
+    return new MoveToPoseCmd(drivetrain, 13.74, 17.08, 100.0, 30.0, true, 1);
   }
 }
