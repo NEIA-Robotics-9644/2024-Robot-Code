@@ -63,6 +63,8 @@ public final class Constants {
       new Pose2d(3.0, 3.0, new Rotation2d(0.0)),
       new Pose2d(4.0, 4.0, new Rotation2d(0.0))
     };
+    //length of field is 16.592 meters
+    
   }
 
   public static class DriveConstants {

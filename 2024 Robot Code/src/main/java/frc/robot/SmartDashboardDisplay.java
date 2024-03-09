@@ -36,6 +36,10 @@ public class SmartDashboardDisplay extends SubsystemBase {
         SmartDashboard.putString("Feeder Wheel Setpoint", Math.round(shooter.getFeederSpeedSetpoint() * 100.0) + " % Speed");
 
         SmartDashboard.putBoolean("Note Detected", shooter.noteDetected());
+        
+        SmartDashboard.putNumber("XCordinate", drive.getState().Pose.getX());
+        SmartDashboard.putNumber("YCordinate", drive.getState().Pose.getY());
+        SmartDashboard.putNumber("Rotation", drive.getState().Pose.getRotation().getDegrees());
 
 
         SmartDashboard.putString("Climber Position", climber.getClimberRotations() + " Rotations");

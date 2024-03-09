@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+import static org.mockito.Mockito.atMost;
+
 import com.ctre.phoenix6.Utils;
 
 import frc.robot.Constants.DriveConstants;
@@ -30,6 +32,7 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.FeederWheelIOSparkMax;
 import frc.robot.subsystems.shooter.NoteSensorIORoboRio;
 import frc.robot.subsystems.shooter.ShooterAngleIOSparkMax;
+import frc.robot.subsystems.shooter.ShooterAngleMechanism;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 
 import frc.robot.subsystems.shooter.ShooterWheelIOSparkMax;
@@ -56,6 +59,7 @@ public class RobotContainer {
   private final SwerveDriveSubsystem drivetrain = DriveConstants.DriveTrain; // My drivetrain
   
   private final ShooterSubsystem shooter;
+  private final String auto;
   
   private final ClimberSubsystem climber;
 
