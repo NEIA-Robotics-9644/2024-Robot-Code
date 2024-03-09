@@ -207,6 +207,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return null;
+    return new JoystickDriveCmd(drivetrain, () -> 1.0, () -> 0.0, () -> 0.0, () -> false, () -> false, () -> true, () -> false).withTimeout(1.5);
   }
 }
