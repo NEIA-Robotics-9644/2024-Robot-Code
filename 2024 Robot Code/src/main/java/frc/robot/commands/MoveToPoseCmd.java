@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.SwerveDriveSubsystem;
 import frc.robot.Constants.PhysicalRobotCharacteristics;
 import static frc.robot.Constants.*;
+import edu.wpi.first.math.controller.PIDController;
 
 
 public class MoveToPoseCmd extends Command {
@@ -25,6 +26,9 @@ public class MoveToPoseCmd extends Command {
     private final SwerveDriveSubsystem swerveDriveSubsystem;
 
     private final SwerveRequest.FieldCentric fieldCentric = new SwerveRequest.FieldCentric();
+    private final PIDController xPID = new PIDController(0.1, 0.0, 0.0);
+    private final PIDController yPID = new PIDController(0.1, 0.0, 0.0);
+    private final PIDController rotationPID = new PIDController(0.1, 0.0, 0.0);
 
 
     public MoveToPoseCmd(
@@ -44,16 +48,13 @@ public class MoveToPoseCmd extends Command {
 
     @Override
     public void execute() {
-        // Get values
-        double speed = speedPercentage.get();
-        boolean fieldOriented = fieldOrientedSupplier.get();
 
-        // Apply a deadband
-        double deadband = 0.1;
-
-        double x = xCord.get() - swerveDriveSubsystem.getState().Pose.getX();
-        double y = yCord.get() -swerveDriveSubsystem.getState().Pose.getY();
-        double rotation = rotationSupplier.get();
+        xPID.setSetpoint(xCord.get());
+        yPID.setSetpoint(yCord.get());
+        rotationPID.setSetpoint(rotationSupplier.get());
+        double x = xPID.calculate(swerveDriveSubsystem.getState().Pose.getX(), xCord.get());
+        double y = yPID.calculate(swerveDriveSubsystem.getState().Pose.getY(), yCord.get());
+        double rotation = rotationPID.calculate(swerveDriveSubsystem.getState().Pose.getRotation().getDegrees(), rotationSupplier.get());
 
         // Apply request
         swerveDriveSubsystem.setControl(fieldCentric.withVelocityX(x * speedPercentage.get())
@@ -63,10 +64,15 @@ public class MoveToPoseCmd extends Command {
     }
     @Override
     public boolean isFinished() {
-        Pose2d = new Pose2d(xCord.get(), yCord.get(), rotation)
-        if(swerveDriveSubsystem.getState().Pose.getX())
+        if(swerveDriveSubsystem.getState().Pose.getX() == xCord.get()
+         && swerveDriveSubsystem.getState().Pose.getY() == yCord.get()
+         && swerveDriveSubsystem.getState().Pose.getRotation().getDegrees() == rotationSupplier.get())
         {
-
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
-}
+}           
