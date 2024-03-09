@@ -16,12 +16,14 @@ import com.ctre.phoenix6.Utils;
 
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.Modes;
+import frc.robot.commands.AutoSetShooterSetpointCmd;
 import frc.robot.commands.ClimberCmd;
 import frc.robot.commands.JoystickDriveCmd;
 import frc.robot.commands.MoveShooterToBottomAndResetCmd;
 import frc.robot.commands.RunSourceIntakeCmd;
 import frc.robot.commands.ShootWhenReadyCmd;
 import frc.robot.commands.SpinShooterWheelsCmd;
+import frc.robot.commands.AutoSetShooterSetpointCmd;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.drive.SwerveDriveSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -123,6 +125,13 @@ public class RobotContainer {
           new frc.robot.subsystems.climber.ClimberMotorIOSim()
       );
       */
+
+      Command Auto1 = Commands.sequence(
+        new AutoSetShooterSetpointCmd(shooter, 3),
+        new SpinShooterWheelsCmd(shooter),
+        new ShootWhenReadyCmd(shooter, 0.9, 0.8),
+        Commands.waitSeconds(2.0),
+        new JoystickDriveCmd(drivetrain, () -> 1.0, () -> 0.0, () -> 0.0, () -> false, () -> false, () -> true, () -> false));
     }
     
 
@@ -135,6 +144,8 @@ public class RobotContainer {
 
     // Configure the trigger bindings
     configureBindings();
+
+
   }
 
   /**
