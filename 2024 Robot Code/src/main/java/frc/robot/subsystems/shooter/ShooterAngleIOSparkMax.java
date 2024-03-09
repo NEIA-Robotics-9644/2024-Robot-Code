@@ -13,7 +13,7 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
 
     // IMPORTANT: THE SOFT LIMITS ARE NOT SET HERE.  THEY SHOULD BE FOUND IN REV HARDWARE CLIENT AND THEN COPIED HERE
     private final double bottomLimitDeg = 0.0;
-    private final double topLimitDeg = 50.0;
+    private final double topLimitDeg = 80.0;
     
     private final double encoderOffsetDeg = 0.0;
 
@@ -33,10 +33,6 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
 
     private double maxSpeedDegPerSec = 5.0;
 
-    private ArrayList<Double> accelerationDatapoints = new ArrayList<Double>();
-    private int maxDatapoints = 20;
-
-    private double lastVelocity = 0;
 
 
     private boolean manualControl = false;
@@ -112,30 +108,15 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
             // Set the motor output
             leftAngleMotor.set(output);
 
-            SmartDashboard.putNumber("Left Angle Amps", this.leftAngleMotor.getOutputCurrent());
-            SmartDashboard.putNumber("Right Angle Amps", this.rightAngleMotor.getOutputCurrent());
         }
         
-        double acceleration = getVelocityPercent() - lastVelocity;
 
-        lastVelocity = getVelocityPercent();
-        
-        accelerationDatapoints.add(acceleration);
-
-        while (accelerationDatapoints.size() > maxDatapoints) {
-            accelerationDatapoints.remove(0);
-        }
-
-        
-
-        SmartDashboard.putString("Velocity Datapoints", accelerationDatapoints.toString());
 
         
     }
 
     @Override
     public double getVelocityPercent() {
-        System.out.println("Velocity Conversion" + leftAngleMotor.getEncoder().getVelocityConversionFactor());
         return (leftAngleMotor.getEncoder().getVelocity() * (1/80.0) * (encoderReversed ? -1 : 1) * 360.0 * (1/60.0)) / maxSpeedDegPerSec;
     }
 
@@ -198,20 +179,6 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
     @Override
     public double getBottomAngleDeg() {
         return bottomLimitDeg;
-    }
-
-    @Override
-    public double averageAcceleration() {
-        return getAverage(accelerationDatapoints);
-    }
-
-    public static double getAverage(ArrayList<Double> data) {
-        double total = 0;
-        for (Double datapoint : data) {
-            total += datapoint;
-        }
-
-        return total / (double)data.size();
     }
 
 }

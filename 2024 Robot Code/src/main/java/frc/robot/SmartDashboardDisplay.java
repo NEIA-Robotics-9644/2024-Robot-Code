@@ -38,8 +38,8 @@ public class SmartDashboardDisplay extends SubsystemBase {
         SmartDashboard.putBoolean("Note Detected", shooter.noteDetected());
 
 
-        SmartDashboard.putString("Climber Position", climber.getClimberRotations() + " Rotations");
-        SmartDashboard.putString("Climber Speed", climber.getClimberSpeed() + " RPM");
+        //SmartDashboard.putString("Climber Position", climber.getClimberRotations() + " Rotations");
+        //SmartDashboard.putString("Climber Speed", climber.getClimberSpeed() + " RPM");
 
 
 

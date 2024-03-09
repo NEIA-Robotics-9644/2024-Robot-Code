@@ -21,13 +21,13 @@ public class MoveShooterToBottomAndResetCmd extends Command {
 
     @Override
     public void execute() {
-        System.out.println("Shooter being moved" + -speed);
+        
         shooter.setManualAngleVelocityDegPerSec(-speed);
     }
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("Shooter reset");
+        
         shooter.setManualAngleControl(false);
         shooter.resetAngleToBottom();
         shooter.goToSetpoint(0);

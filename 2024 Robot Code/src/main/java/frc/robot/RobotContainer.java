@@ -32,9 +32,6 @@ import frc.robot.subsystems.shooter.ShooterSubsystem;
 
 import frc.robot.subsystems.shooter.ShooterWheelIOSparkMax;
 
-import static frc.robot.Constants.CANBusIDs.kMechanismCANBusName;
-
-
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -58,13 +55,13 @@ public class RobotContainer {
   
   private final ShooterSubsystem shooter;
   
-  private final ClimberSubsystem climber;
+  //private final ClimberSubsystem climber;
 
-  private final IntakeSubsystem intake;
+  //private final IntakeSubsystem intake;
 
   
   
-  private final SmartDashboardDisplay display;
+  //private final SmartDashboardDisplay display;
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -85,12 +82,12 @@ public class RobotContainer {
           new FeederWheelIOSparkMax(23),
           new ShooterAngleIOSparkMax(24, 25),
           new NoteSensorIORoboRio(),
-          new double[] { 0, 40, 55, 70},
-          new double[] { 1, 1, 1, 1},
-          new double[] { 1, 1, 1, 1}
+          new double[] { 0, 30, 42, 55},
+          new double[] { 1, 0.4, 1, 1},
+          new double[] { 1, 0.4, 1, 1}
       );
 
-
+      /*
       intake = new IntakeSubsystem(
           new frc.robot.subsystems.intake.IntakeExtenderMechanismIOSparkMax(26), 
           new frc.robot.subsystems.intake.IntakeWheelMotorIOSparkMax(27)
@@ -100,6 +97,7 @@ public class RobotContainer {
           new frc.robot.subsystems.climber.ClimberMotorIOSparkMax(28),
           new frc.robot.subsystems.climber.ClimberMotorIOSparkMax(29)
       );
+      */
 
 
     } else {
@@ -109,11 +107,12 @@ public class RobotContainer {
           new frc.robot.subsystems.shooter.FeederWheelIOSim(),
           new frc.robot.subsystems.shooter.ShooterAngleIOSim(),
           new frc.robot.subsystems.shooter.NoteSensorIOSim(),
-          new double[] { 0, 40, 55, 70},
+          new double[] { 0, 30, 42, 55},
           new double[] { 1, 1, 1, 1},
           new double[] { 1, 1, 1, 1}
       );
         
+      /*
       intake = new IntakeSubsystem(
           new frc.robot.subsystems.intake.IntakeExtenderMechanismIOSim(), 
           new frc.robot.subsystems.intake.IntakeWheelMotorIOSim()
@@ -123,11 +122,12 @@ public class RobotContainer {
           new frc.robot.subsystems.climber.ClimberMotorIOSim(),
           new frc.robot.subsystems.climber.ClimberMotorIOSim()
       );
+      */
     }
     
 
     
-    display = new SmartDashboardDisplay(drivetrain, shooter, intake, climber);
+    // display = new SmartDashboardDisplay(drivetrain, shooter, null, null);
     
 
     drivetrain.getPigeon2().reset();
@@ -149,15 +149,10 @@ public class RobotContainer {
   private void configureBindings() {
     drivetrain.setDefaultCommand(new JoystickDriveCmd(drivetrain, driverController::getLeftY, driverController::getLeftX, 
         driverController::getRightX, driverController.rightBumper()::getAsBoolean, driverController.leftBumper()::getAsBoolean, 
-        () -> !driverController.leftTrigger().getAsBoolean(), driverController.x()::getAsBoolean));
+        () -> !driverController.leftTrigger().getAsBoolean(), driverController.povLeft()::getAsBoolean));
     
-    Command resetGyro = Commands.runOnce(drivetrain.getPigeon2()::reset);
-
     
-    // drivetrain.registerTelemetry(logger::telemeterize);
 
-    // DRIVER COMMANDS
-    driverController.povLeft().onTrue(resetGyro);
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
@@ -171,19 +166,25 @@ public class RobotContainer {
 
     operatorController.leftBumper().whileTrue(new ShootWhenReadyCmd(shooter, 0.9, 0.8));
 
+    // Bottom
     operatorController.a().onTrue(Commands.runOnce(() -> shooter.goToSetpoint(0)));
+    
+    // Protected Shot
     operatorController.b().onTrue(Commands.runOnce(() -> shooter.goToSetpoint(1)));
+    
+    // Source Intake
     operatorController.x().onTrue(Commands.runOnce(() -> shooter.goToSetpoint(2)));
+    
+    // Speaker
     operatorController.y().onTrue(Commands.runOnce(() -> shooter.goToSetpoint(3)));
 
     // Find the actual value
-    operatorController.axisGreaterThan(10, 0).whileTrue(new MoveShooterToBottomAndResetCmd(shooter, 1));
+    operatorController.start().whileTrue(new MoveShooterToBottomAndResetCmd(shooter, 1));
 
     // Adjust the shooter angle of this setpoint
     operatorController.povUp().onTrue(Commands.runOnce(() -> shooter.modifyAngleSetpoint(1)));
     operatorController.povDown().onTrue(Commands.runOnce(() -> shooter.modifyAngleSetpoint(-1)));
 
-    // If all d pad buttons are pressed, reset all the setpoints
 
     // Adjust the shooter wheel speed of this setpoint
     operatorController.povRight().onTrue(Commands.runOnce(() -> shooter.modifyShooterSpeedSetpoint(0.05)));
@@ -193,8 +194,8 @@ public class RobotContainer {
     operatorController.rightTrigger().whileTrue(new RunSourceIntakeCmd(shooter));
 
     // CLIMBER COMMANDS
-    operatorController.axisGreaterThan(1, 0.05).whileTrue(new ClimberCmd(climber, operatorController::getLeftY));
-    operatorController.axisLessThan(1, -0.05).whileTrue(new ClimberCmd(climber, operatorController::getLeftY));
+    //operatorController.axisGreaterThan(1, 0.05).whileTrue(new ClimberCmd(climber, operatorController::getLeftY));
+    //operatorController.axisLessThan(1, -0.05).whileTrue(new ClimberCmd(climber, operatorController::getLeftY));
   
 
 

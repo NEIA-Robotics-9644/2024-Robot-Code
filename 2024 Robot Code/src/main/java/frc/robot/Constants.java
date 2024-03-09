@@ -35,7 +35,6 @@ public final class Constants {
   public static final class CANBusIDs {
     public static final int kPigeon2CanID = 14;
 
-    public static final String kMechanismCANBusName = "Mechanism";
   }
 
   public static final class PhysicalRobotCharacteristics {
@@ -108,7 +107,7 @@ public final class Constants {
                 private static final boolean kInvertLeftSide = false;
                 private static final boolean kInvertRightSide = true;
 
-                private static final String kCANbusName = "";
+                private static final String kCANbusName = "Drive";
                 private static final int kPigeonId = 14;
 
 

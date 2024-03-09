@@ -28,7 +28,7 @@ public class JoystickDriveCmd extends Command {
     private final Supplier<Boolean> speedIncreaseSupplier;
     private final Supplier<Boolean> speedDecreaseSupplier;
     private final Supplier<Boolean> fieldOrientedSupplier;
-    private final Supplier<Boolean> xLockSupplier;
+    private final Supplier<Boolean> resetGyroSupplier;
 
     private boolean lastSpeedIncrease = false;
     private boolean lastSpeedDecrease = false;
@@ -50,12 +50,12 @@ public class JoystickDriveCmd extends Command {
         .withDeadband(MaxSpeed * 0.005).withRotationalDeadband(MaxAngularRate * 0.005)
         .withDriveRequestType(DriveRequestType.OpenLoopVoltage);  
         
-    private final SwerveRequest.PointWheelsAt pointWheelsAtRequest = new SwerveRequest.PointWheelsAt().withModuleDirection(new Rotation2d(Math.PI / 4)).withDriveRequestType(DriveRequestType.OpenLoopVoltage); // X wheel formation lock request
+    
     
     // X wheel formation lock request
     
     
-    public JoystickDriveCmd(SwerveDriveSubsystem SwerveDriveSubsystem, Supplier<Double> forward, Supplier<Double> sideways, Supplier<Double> rotation, Supplier<Boolean> speedIncrease, Supplier<Boolean> speedDecrease, Supplier<Boolean> fieldOriented, Supplier<Boolean> xLock) {
+    public JoystickDriveCmd(SwerveDriveSubsystem SwerveDriveSubsystem, Supplier<Double> forward, Supplier<Double> sideways, Supplier<Double> rotation, Supplier<Boolean> speedIncrease, Supplier<Boolean> speedDecrease, Supplier<Boolean> fieldOriented, Supplier<Boolean> resetGyro) {
         
         driveSubsystem = SwerveDriveSubsystem;
         forwardSupplier = forward;
@@ -64,7 +64,7 @@ public class JoystickDriveCmd extends Command {
         speedIncreaseSupplier = speedIncrease;
         speedDecreaseSupplier = speedDecrease;
         fieldOrientedSupplier = fieldOriented;
-        xLockSupplier = xLock;
+        resetGyroSupplier = resetGyro;
 
         
 
@@ -95,6 +95,8 @@ public class JoystickDriveCmd extends Command {
 
         boolean fieldOriented = fieldOrientedSupplier.get();
 
+        boolean resetGyro = resetGyroSupplier.get();
+
         lastSpeedIncrease = speedIncreaseSupplier.get();
         lastSpeedDecrease = speedDecreaseSupplier.get();
 
@@ -106,11 +108,15 @@ public class JoystickDriveCmd extends Command {
             speedStepIndex--;
         }
 
+        if (resetGyro) {
+            driveSubsystem.tareEverything();
+        }
+
         
 
         double speedMultiplier = speeds[speedStepIndex];
 
-        SmartDashboard.putString("Drive", speedMultiplier * 100 + "%");
+        
 
         // Adapt the values to the robot
         double forwardOutput = -Math.abs(forward) * forward * MaxSpeed * speedMultiplier;
@@ -118,10 +124,8 @@ public class JoystickDriveCmd extends Command {
         double rotationOutput = -Math.abs(rotation) * rotation * MaxAngularRate * speedMultiplier;
         
 
-        if (xLockSupplier.get()) {
-            driveSubsystem.xLock();
-        }
-        else if (fieldOriented) {
+        
+        if (fieldOriented) {
             driveSubsystem.setControl(
                     driveRequest.withVelocityX(forwardOutput)
                     .withVelocityY(sidewaysOutput)

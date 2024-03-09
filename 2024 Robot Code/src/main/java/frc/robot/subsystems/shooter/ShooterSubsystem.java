@@ -169,7 +169,7 @@ public class ShooterSubsystem extends SubsystemBase {
      */
     public void setManualAngleControl(boolean enabled) {
         angleMechanism.setManualControl(enabled);
-        System.out.println("DON'T USE THIS");
+        
     }
 
 
@@ -177,7 +177,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * Get whether manual control of the angle mechanism is enabled
      */
     public boolean manualAngleControlEnabled() {
-        System.out.println("DON'T USE THIS");
+        
         return angleMechanism.manualControlEnabled();
         
     }
@@ -188,7 +188,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * This is only used when manual control is enabled
      */
     public void setManualAngleVelocityDegPerSec(double velocity) {
-        System.out.println("DON'T USE THIS");
+        
         angleMechanism.setManualVelocityDegPerSec(velocity);
     }    
 
@@ -197,7 +197,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * Get whether the shooter is at the bottom of its travel
      */
     public boolean atBottom() {
-        System.out.println("DON'T USE THIS");
+        
         return angleMechanism.atBottom();
     }
 
@@ -205,7 +205,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * Get whether the shooter is at the top of its travel
      */
     public boolean atTop() {
-        System.out.println("DON'T USE THIS");
+        
         return angleMechanism.atTop();
     }
 
@@ -218,12 +218,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
 
     public double getShooterTopAngleDeg() {
-        System.out.println("DON'T USE THIS");
+        
         return angleMechanism.getTopAngleDeg();
     }
 
     public double getShooterBottomAngleDeg() {
-        System.out.println("DON'T USE THIS");
+        
         return angleMechanism.getBottomAngleDeg();
     }
     
@@ -288,8 +288,4 @@ public class ShooterSubsystem extends SubsystemBase {
         return feederSpeedSetpoints[setpointIndex];
     }
 
-
-    public double angleAverageAcceleration() {
-        return angleMechanism.averageAcceleration();
-    }
 }

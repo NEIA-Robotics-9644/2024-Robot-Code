@@ -77,9 +77,5 @@ public class ShooterAngleMechanism {
     public double getBottomAngleDeg() {
         return shooterAngleIO.getBottomAngleDeg();
     }
-
-    public double averageAcceleration() {
-        return shooterAngleIO.averageAcceleration();
-    }
  
 }

@@ -64,7 +64,7 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
 
 
     public void turnCenter(ChassisSpeeds speed, double timevar, boolean lOrRbool) {
-        System.out.println("Turning Center Called: Not implemented yet");
+        //System.out.println("Turning Center Called: Not implemented yet");
     }
 
     public void xLock() {

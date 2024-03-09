@@ -85,13 +85,7 @@ public class ShooterAngleIOSim implements ShooterAngleIO {
 
     @Override
     public double getVelocityPercent() {
-        System.out.println("Not implemented yet");
-        return 0;
-    }
-
-    @Override
-    public double averageAcceleration() {
-        System.out.println("Not implemented yet");
+        //System.out.println("Not implemented yet");
         return 0;
     }
 }
