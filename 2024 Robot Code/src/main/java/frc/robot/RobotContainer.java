@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -23,6 +24,7 @@ import frc.robot.commands.ClimberCmd;
 import frc.robot.commands.JoystickDriveCmd;
 import frc.robot.commands.MoveShooterToBottomAndResetCmd;
 import frc.robot.commands.MoveShooterToSetpointCmd;
+import frc.robot.commands.MoveToPoseCmd;
 import frc.robot.commands.RunSourceIntakeCmd;
 import frc.robot.commands.ShootWhenReadyCmd;
 import frc.robot.commands.SpinShooterWheelsCmd;
@@ -59,7 +61,7 @@ public class RobotContainer {
   private final SwerveDriveSubsystem drivetrain = DriveConstants.DriveTrain; // My drivetrain
   
   private final ShooterSubsystem shooter;
-  private final String auto;
+  
   
   private final ClimberSubsystem climber;
 
@@ -248,13 +250,17 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    
     return new SequentialCommandGroup(
       new MoveShooterToBottomAndResetCmd(shooter, 1).withTimeout(1.75),
       new MoveShooterToSetpointCmd(shooter, 2).withTimeout(4.0),
       new SpinShooterWheelsCmd(shooter).withTimeout(1.5),
       new ShootWhenReadyCmd(shooter, 0.1, 0.99).withTimeout(1),
-      new JoystickDriveCmd(drivetrain, () -> -1.0, () -> -0.8, () -> 0.0, () -> false, () -> false, () -> true, () -> false).withTimeout(1.75)
+      new JoystickDriveCmd(drivetrain, () -> -1.0, () -> 0.0, () -> 0.0, () -> false, () -> false, () -> true, () -> false).withTimeout(3)
     );
+    
+
+    //return new MoveToPoseCmd(drivetrain, () -> 0.0, () -> 1.0, () -> 1.0, () -> 0.0, () -> true, () -> 0 );
 
     
     

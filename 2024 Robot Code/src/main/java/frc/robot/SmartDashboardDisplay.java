@@ -37,9 +37,9 @@ public class SmartDashboardDisplay extends SubsystemBase {
 
         SmartDashboard.putBoolean("Note Detected", shooter.noteDetected());
         
-        SmartDashboard.putNumber("XCordinate", drive.getState().Pose.getX());
-        SmartDashboard.putNumber("YCordinate", drive.getState().Pose.getY());
-        SmartDashboard.putNumber("Rotation", drive.getState().Pose.getRotation().getDegrees());
+        System.out.println("XCordinate: " +  drive.getState().Pose.getX());
+        System.out.println("YCordinate: " +  drive.getState().Pose.getY());
+        System.out.println("Rotation: " + drive.getState().Pose.getRotation().getDegrees());
 
 
         SmartDashboard.putString("Climber Position", climber.getClimberRotations() + " Rotations");

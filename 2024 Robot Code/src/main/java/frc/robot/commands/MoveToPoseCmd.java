@@ -27,9 +27,9 @@ public class MoveToPoseCmd extends Command {
     private final Supplier<Integer> indexSupplier;
 
     private final SwerveRequest.FieldCentric fieldCentric = new SwerveRequest.FieldCentric();
-    private final PIDController xPID = new PIDController(0.1, 0.0, 0.0);
-    private final PIDController yPID = new PIDController(0.1, 0.0, 0.0);
-    private final PIDController rotationPID = new PIDController(0.1, 0.0, 0.0);
+    private final PIDController xPID = new PIDController(4, 0.001, 0.0);
+    private final PIDController yPID = new PIDController(4, 0.001, 0.0);
+    private final PIDController rotationPID = new PIDController(4, 0.001, 0.0);
 
 
     public MoveToPoseCmd(
@@ -58,17 +58,22 @@ public class MoveToPoseCmd extends Command {
         double y = yPID.calculate(swerveDriveSubsystem.getState().Pose.getY(), yCord.get());
         double rotation = rotationPID.calculate(swerveDriveSubsystem.getState().Pose.getRotation().getDegrees(), rotationSupplier.get());
 
+        x = Math.min(x, speedPercentage.get());
+        y = Math.min(y, speedPercentage.get());
+        rotation = Math.min(rotation, speedPercentage.get());
+
+
         // Apply request
-        swerveDriveSubsystem.setControl(fieldCentric.withVelocityX(x * speedPercentage.get())
-            .withVelocityY(y * speedPercentage.get())
-            .withRotationalRate(rotation * speedPercentage.get())
+        swerveDriveSubsystem.setControl(fieldCentric.withVelocityX(x)
+            .withVelocityY(y)
+            .withRotationalRate(rotation)
         );   
     }
     @Override
     public boolean isFinished() {
-        if(swerveDriveSubsystem.getState().Pose.getX() == xCord.get()
-         && swerveDriveSubsystem.getState().Pose.getY() == yCord.get()
-         && swerveDriveSubsystem.getState().Pose.getRotation().getDegrees() == rotationSupplier.get())
+        if((Math.abs(swerveDriveSubsystem.getState().Pose.getX() - xCord.get()) < 0.05)
+         && (Math.abs(swerveDriveSubsystem.getState().Pose.getY() - yCord.get()) < 0.05)
+         && (Math.abs(swerveDriveSubsystem.getState().Pose.getRotation().getDegrees() - rotationSupplier.get()) < 2))
         {
             return true;
         }
