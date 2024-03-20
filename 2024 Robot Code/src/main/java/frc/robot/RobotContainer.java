@@ -38,8 +38,9 @@ import frc.robot.subsystems.shooter.NoteSensorIORoboRio;
 import frc.robot.subsystems.shooter.ShooterAngleIOSparkMax;
 import frc.robot.subsystems.shooter.ShooterAngleMechanism;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
-
 import frc.robot.subsystems.shooter.ShooterWheelIOSparkMax;
+import frc.robot.subsystems.vision.VisionSubsystem;
+import frc.robot.subsystems.vision.VisionSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -66,6 +67,8 @@ public class RobotContainer {
   
   
   private final ClimberSubsystem climber;
+
+  private final VisionSubsystem vision;
 
   //private final IntakeSubsystem intake;
 
@@ -108,6 +111,8 @@ public class RobotContainer {
           new frc.robot.subsystems.climber.ClimberMotorIOSparkMax(26),
           new frc.robot.subsystems.climber.ClimberMotorIOSparkMax(27)
       );
+
+      vision = new VisionSubsystem();
       
 
 
@@ -135,6 +140,7 @@ public class RobotContainer {
           new frc.robot.subsystems.climber.ClimberMotorIOSim()
       );
       
+      vision = new VisionSubsystem();
     }
     
 
@@ -261,8 +267,8 @@ public class RobotContainer {
       new MoveShooterToBottomAndResetCmd(shooter, 1).withTimeout(1.75),
       new MoveShooterToSetpointCmd(shooter, 2).withTimeout(4.0),
       new SpinShooterWheelsCmd(shooter).withTimeout(1.5),
-      new ShootWhenReadyCmd(shooter, 0.1, 0.99).withTimeout(1),
-      new JoystickDriveCmd(drivetrain, () -> -1.0, () -> -0.3, () -> 0.0, () -> false, () -> false, () -> true, () -> false).withTimeout(3)
+      new ShootWhenReadyCmd(shooter, 0.1, 0.99).withTimeout(1)
+      //new JoystickDriveCmd(drivetrain, () -> -1.0, () -> -0.3, () -> 0.0, () -> false, () -> false, () -> true, () -> false).withTimeout(3)
     );
     
 
