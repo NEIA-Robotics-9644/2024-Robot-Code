@@ -10,7 +10,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -23,8 +22,11 @@ import frc.robot.Constants.Modes;
 import frc.robot.commands.ClimberCmd;
 import frc.robot.commands.JoystickDriveCmd;
 import frc.robot.commands.MoveShooterToBottomAndResetCmd;
+<<<<<<< HEAD
 import frc.robot.commands.MoveShooterToSetpointCmd;
 import frc.robot.commands.MoveToPoseCmd;
+=======
+>>>>>>> parent of a0d6f9c (BSU Comp Code Sat)
 import frc.robot.commands.RunSourceIntakeCmd;
 import frc.robot.commands.ShootWhenReadyCmd;
 import frc.robot.commands.SpinShooterWheelsCmd;
@@ -65,8 +67,12 @@ public class RobotContainer {
   
   private final ShooterSubsystem shooter;
   
+<<<<<<< HEAD
   
   private final ClimberSubsystem climber;
+=======
+  //private final ClimberSubsystem climber;
+>>>>>>> parent of a0d6f9c (BSU Comp Code Sat)
 
   private final VisionSubsystem vision;
 
@@ -74,7 +80,7 @@ public class RobotContainer {
 
   
   
-  private final SmartDashboardDisplay display;
+  //private final SmartDashboardDisplay display;
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -95,7 +101,7 @@ public class RobotContainer {
           new FeederWheelIOSparkMax(23),
           new ShooterAngleIOSparkMax(24, 25),
           new NoteSensorIORoboRio(),
-          new double[] { 0, 30, 60, 100},
+          new double[] { 0, 30, 48, 80},
           new double[] { 1, 0.4, 1, 0.4},
           new double[] { 1, 0.4, 1, 0.4}
       );
@@ -105,15 +111,18 @@ public class RobotContainer {
           new frc.robot.subsystems.intake.IntakeExtenderMechanismIOSparkMax(26), 
           new frc.robot.subsystems.intake.IntakeWheelMotorIOSparkMax(27)
       );
-      */
 
       climber = new ClimberSubsystem(
-          new frc.robot.subsystems.climber.ClimberMotorIOSparkMax(26),
-          new frc.robot.subsystems.climber.ClimberMotorIOSparkMax(27)
+          new frc.robot.subsystems.climber.ClimberMotorIOSparkMax(28),
+          new frc.robot.subsystems.climber.ClimberMotorIOSparkMax(29)
       );
+<<<<<<< HEAD
 
       vision = new VisionSubsystem();
       
+=======
+      */
+>>>>>>> parent of a0d6f9c (BSU Comp Code Sat)
 
 
     } else {
@@ -123,7 +132,7 @@ public class RobotContainer {
           new frc.robot.subsystems.shooter.FeederWheelIOSim(),
           new frc.robot.subsystems.shooter.ShooterAngleIOSim(),
           new frc.robot.subsystems.shooter.NoteSensorIOSim(),
-          new double[] { 0, 20, 48, 55},
+          new double[] { 0, 30, 48, 55},
           new double[] { 1, 1, 1, 1},
           new double[] { 1, 1, 1, 1}
       );
@@ -133,14 +142,17 @@ public class RobotContainer {
           new frc.robot.subsystems.intake.IntakeExtenderMechanismIOSim(), 
           new frc.robot.subsystems.intake.IntakeWheelMotorIOSim()
       );
-      */
 
       climber = new ClimberSubsystem(
           new frc.robot.subsystems.climber.ClimberMotorIOSim(),
           new frc.robot.subsystems.climber.ClimberMotorIOSim()
       );
+<<<<<<< HEAD
       
       vision = new VisionSubsystem();
+=======
+      */
+>>>>>>> parent of a0d6f9c (BSU Comp Code Sat)
     }
     
 
@@ -149,8 +161,6 @@ public class RobotContainer {
     
 
     drivetrain.getPigeon2().reset();
-
-    display = new SmartDashboardDisplay(drivetrain, shooter, null, climber);
 
 
     // Configure the trigger bindings
@@ -167,13 +177,9 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-
-    var operatorHID = operatorController.getHID();
-    var driverHID = driverController.getHID();
-    
-    drivetrain.setDefaultCommand(new JoystickDriveCmd(drivetrain, driverHID::getLeftY, driverHID::getLeftX, 
-        driverHID::getRightX, driverHID::getRightBumper, driverHID::getLeftBumper, 
-        () -> !(driverHID.getLeftTriggerAxis() > 0.5), () -> (driverHID.getPOV() == 270)));
+    drivetrain.setDefaultCommand(new JoystickDriveCmd(drivetrain, driverController::getLeftY, driverController::getLeftX, 
+        driverController::getRightX, driverController.rightBumper()::getAsBoolean, driverController.leftBumper()::getAsBoolean, 
+        () -> !driverController.leftTrigger().getAsBoolean(), driverController.povLeft()::getAsBoolean));
     
     
 
@@ -186,67 +192,40 @@ public class RobotContainer {
 
     // SHOOTER COMMANDS
 
-    var oLeftTrigger = new Trigger(() -> operatorHID.getLeftTriggerAxis() > 0.5);
-    oLeftTrigger.whileTrue(new SpinShooterWheelsCmd(shooter));
+    operatorController.leftTrigger().whileTrue(new SpinShooterWheelsCmd(shooter));
 
-    
-    var oLeftBumper = new Trigger(() -> operatorHID.getLeftBumper());
-    oLeftBumper.whileTrue(new ShootWhenReadyCmd(shooter, 0.9, 0.8));
+    operatorController.leftBumper().whileTrue(new ShootWhenReadyCmd(shooter, 0.9, 0.8));
 
     // Bottom
-    var oATrigger = new Trigger(() -> operatorHID.getAButton());
-    oATrigger.onTrue(Commands.runOnce(() -> shooter.goToSetpoint(0)));
+    operatorController.a().onTrue(Commands.runOnce(() -> shooter.goToSetpoint(0)));
     
     // Protected Shot
-    var oBTrigger = new Trigger(() -> operatorHID.getBButton());
-    oBTrigger.onTrue(Commands.runOnce(() -> shooter.goToSetpoint(1)));
+    operatorController.b().onTrue(Commands.runOnce(() -> shooter.goToSetpoint(1)));
     
     // Source Intake
-    var oXTrigger = new Trigger(() -> operatorHID.getXButton());
-    oXTrigger.onTrue(Commands.runOnce(() -> shooter.goToSetpoint(2)));
-
+    operatorController.x().onTrue(Commands.runOnce(() -> shooter.goToSetpoint(2)));
+    
     // Speaker
-    var oYTrigger = new Trigger(() -> operatorHID.getYButton());
-    oYTrigger.onTrue(Commands.runOnce(() -> shooter.goToSetpoint(3)));
-    
-    
+    operatorController.y().onTrue(Commands.runOnce(() -> shooter.goToSetpoint(3)));
 
-    // Reset Shooter Angle
-    var oStartTrigger = new Trigger(() -> operatorHID.getStartButton());
-    oStartTrigger.whileTrue(new MoveShooterToBottomAndResetCmd(shooter, 1));
+    // Find the actual value
+    operatorController.start().whileTrue(new MoveShooterToBottomAndResetCmd(shooter, 1));
 
     // Adjust the shooter angle of this setpoint
     operatorController.povUp().onTrue(Commands.runOnce(() -> shooter.modifyAngleSetpoint(1)));
     operatorController.povDown().onTrue(Commands.runOnce(() -> shooter.modifyAngleSetpoint(-1)));
 
-    var oPOVUpTrigger = new Trigger(() -> operatorHID.getPOV() == 0);
-    oPOVUpTrigger.whileTrue(Commands.runOnce(() -> shooter.modifyAngleSetpoint(1)));
-    
-    var oPOVDownTrigger = new Trigger(() -> operatorHID.getPOV() == 180);
-    oPOVDownTrigger.whileTrue(Commands.runOnce(() -> shooter.modifyAngleSetpoint(-1)));
-    
-
 
     // Adjust the shooter wheel speed of this setpoint
-    
-    var oPOVRightTrigger = new Trigger(() -> operatorHID.getPOV() == 90);
-    oPOVRightTrigger.whileTrue(Commands.runOnce(() -> shooter.modifyShooterSpeedSetpoint(0.05)));
-
-    var oPOVLeftTrigger = new Trigger(() -> operatorHID.getPOV() == 270);
-    oPOVLeftTrigger.whileTrue(Commands.runOnce(() -> shooter.modifyShooterSpeedSetpoint(-0.05)));
+    operatorController.povRight().onTrue(Commands.runOnce(() -> shooter.modifyShooterSpeedSetpoint(0.05)));
+    operatorController.povLeft().onTrue(Commands.runOnce(() -> shooter.modifyShooterSpeedSetpoint(-0.05)));
 
     // INTAKE COMMANDS
-
-    var oRightTriggerTrigger = new Trigger(() -> operatorHID.getRightTriggerAxis() > 0.5);
-    oRightTriggerTrigger.whileTrue(new RunSourceIntakeCmd(shooter));
+    operatorController.rightTrigger().whileTrue(new RunSourceIntakeCmd(shooter));
 
     // CLIMBER COMMANDS
-    
-    var oLeftYAxisUp = new Trigger(() -> operatorHID.getLeftY() > 0.05);
-    oLeftYAxisUp.whileTrue(new ClimberCmd(climber, () -> operatorHID.getLeftY()));
-
-    var oLeftYAxisDown = new Trigger(() -> operatorHID.getLeftY() < -0.05);
-    oLeftYAxisDown.whileTrue(new ClimberCmd(climber, () -> operatorHID.getLeftY()));
+    //operatorController.axisGreaterThan(1, 0.05).whileTrue(new ClimberCmd(climber, operatorController::getLeftY));
+    //operatorController.axisLessThan(1, -0.05).whileTrue(new ClimberCmd(climber, operatorController::getLeftY));
   
     //var oRightYAxisUp = new Trigger(() -> operatorHID.getRightY() > 0.05);
     //oRightYAxisUp.whileTrue(new RClimberCmd(climber, () -> operatorHID.getLeftY()));
@@ -262,6 +241,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+<<<<<<< HEAD
     
     return new SequentialCommandGroup(
       new MoveShooterToBottomAndResetCmd(shooter, 1).withTimeout(1.75),
@@ -278,5 +258,8 @@ public class RobotContainer {
     
     
     
+=======
+    return new JoystickDriveCmd(drivetrain, () -> -1.0, () -> 0.0, () -> 0.0, () -> false, () -> false, () -> true, () -> false).withTimeout(1.5);
+>>>>>>> parent of a0d6f9c (BSU Comp Code Sat)
   }
 }

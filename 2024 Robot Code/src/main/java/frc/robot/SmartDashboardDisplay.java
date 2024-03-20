@@ -42,8 +42,8 @@ public class SmartDashboardDisplay extends SubsystemBase {
         System.out.println("Rotation: " + drive.getState().Pose.getRotation().getDegrees());
 
 
-        SmartDashboard.putString("Climber Position", climber.getClimberRotations() + " Rotations");
-        SmartDashboard.putString("Climber Speed", climber.getClimberSpeed() + " RPM");
+        //SmartDashboard.putString("Climber Position", climber.getClimberRotations() + " Rotations");
+        //SmartDashboard.putString("Climber Speed", climber.getClimberSpeed() + " RPM");
 
 
 
