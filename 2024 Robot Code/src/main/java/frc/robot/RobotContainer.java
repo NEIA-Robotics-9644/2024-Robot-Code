@@ -28,6 +28,8 @@ import frc.robot.commands.MoveToPoseCmd;
 import frc.robot.commands.RunSourceIntakeCmd;
 import frc.robot.commands.ShootWhenReadyCmd;
 import frc.robot.commands.SpinShooterWheelsCmd;
+import frc.robot.commands.LClimberCmd;
+import frc.robot.commands.RClimberCmd;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.drive.SwerveDriveSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -240,7 +242,11 @@ public class RobotContainer {
     var oLeftYAxisDown = new Trigger(() -> operatorHID.getLeftY() < -0.05);
     oLeftYAxisDown.whileTrue(new ClimberCmd(climber, () -> operatorHID.getLeftY()));
   
+    //var oRightYAxisUp = new Trigger(() -> operatorHID.getRightY() > 0.05);
+    //oRightYAxisUp.whileTrue(new RClimberCmd(climber, () -> operatorHID.getLeftY()));
 
+    //var oRightYAxisDown = new Trigger(() -> operatorHID.getRightY() > 0.05);
+    //oRightYAxisDown.whileTrue(new RClimberCmd(climber, () -> operatorHID.getLeftY()));
 
   }
 
@@ -256,7 +262,7 @@ public class RobotContainer {
       new MoveShooterToSetpointCmd(shooter, 2).withTimeout(4.0),
       new SpinShooterWheelsCmd(shooter).withTimeout(1.5),
       new ShootWhenReadyCmd(shooter, 0.1, 0.99).withTimeout(1),
-      new JoystickDriveCmd(drivetrain, () -> -1.0, () -> 0.0, () -> 0.0, () -> false, () -> false, () -> true, () -> false).withTimeout(3)
+      new JoystickDriveCmd(drivetrain, () -> -1.0, () -> -0.3, () -> 0.0, () -> false, () -> false, () -> true, () -> false).withTimeout(3)
     );
     
 

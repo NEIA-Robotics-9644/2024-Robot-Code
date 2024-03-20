@@ -62,4 +62,13 @@ public class ClimberSubsystem extends SubsystemBase{
         }
         return totalVelocity / Climbers.length;
     }
+
+    public void LClimberMove(double normalizedVelocity)
+    {
+        Climbers[0].spinMotor(normalizedVelocity);
+    }
+    public void RClimberMove(double normalizedVelocity)
+    {
+        Climbers[1].spinMotor(normalizedVelocity);
+    }
 }
