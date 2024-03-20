@@ -11,14 +11,15 @@ public class ClimberMotorIOSparkMax implements ClimberMotorIO {
 
     private boolean newInput = false;
 
-    private double normalizedVelocity = 0.0;
+    private double velocity = 0.0;
+
 
     // This depends on the soft limits on the SparkMax being set correctly
 
 
-    private final double bottomLimitRotations = 0;
+    private final double bottomLimitRotations = -10000;
 
-    private final double topLimitRotations = 20;
+    private final double topLimitRotations = 10000;
 
 
     public ClimberMotorIOSparkMax(int canID) {
@@ -28,7 +29,7 @@ public class ClimberMotorIOSparkMax implements ClimberMotorIO {
 
     @Override
     public void spinMotor(double normalizedVelocity) {
-        this.normalizedVelocity = Math.max(-1.0, Math.min(1.0, normalizedVelocity));
+        this.velocity = Math.max(-1.0, Math.min(1.0, normalizedVelocity));
         newInput = true;
     }
 
@@ -40,12 +41,10 @@ public class ClimberMotorIOSparkMax implements ClimberMotorIO {
     @Override
     public void periodic() {
         if (newInput) {
-            if (motor.getEncoder().getPosition() < bottomLimitRotations && normalizedVelocity < 0) {
-                normalizedVelocity = 0;
-            } else if (motor.getEncoder().getPosition() > topLimitRotations && normalizedVelocity > 0) {
-                normalizedVelocity = 0;
-            }
-            motor.set(normalizedVelocity);
+            
+            motor.set(velocity);
+            System.out.println("Motor spinning at " + velocity);
+            System.out.println("Motor position " +   getMotorRotations());
             newInput = false;
         } else {
             motor.set(0.0);

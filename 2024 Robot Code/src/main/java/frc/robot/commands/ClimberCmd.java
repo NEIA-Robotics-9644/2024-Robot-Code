@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 public class ClimberCmd extends Command {
     private final ClimberSubsystem climberSubsystem;
 
-    private final Supplier<Double> velocity; //false for -, true for +
+    private final Supplier<Double> velocity;
     
     public ClimberCmd(ClimberSubsystem climberSubsystem, Supplier<Double> velocity) {
         
@@ -21,7 +21,7 @@ public class ClimberCmd extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        //System.out.println("ClimberCmd initialized");
+        System.out.println("ClimberCmd initialized");
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -29,6 +29,7 @@ public class ClimberCmd extends Command {
     public void execute() {
 
         climberSubsystem.moveClimber(velocity.get());
+        System.out.println("ClimberCmd executed");
 
     }
 

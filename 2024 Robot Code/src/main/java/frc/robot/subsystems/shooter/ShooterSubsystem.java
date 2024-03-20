@@ -1,6 +1,8 @@
 package frc.robot.subsystems.shooter;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -90,7 +92,12 @@ public class ShooterSubsystem extends SubsystemBase {
         rightShooterWheel.periodic();
         feeder.periodic();
         
-        pdh.setSwitchableChannel(noteDetected());
+        // Only do this if the robot is enabled, running teleoperated
+        if (DriverStation.isEnabled()) {
+            pdh.setSwitchableChannel(noteDetected());
+        } else {
+            pdh.setSwitchableChannel(false);
+        }
         
     }
 

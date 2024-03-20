@@ -13,7 +13,7 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
 
     // IMPORTANT: THE SOFT LIMITS ARE NOT SET HERE.  THEY SHOULD BE FOUND IN REV HARDWARE CLIENT AND THEN COPIED HERE
     private final double bottomLimitDeg = 0.0;
-    private final double topLimitDeg = 80.0;
+    private final double topLimitDeg = 100.0;
     
     private final double encoderOffsetDeg = 0.0;
 
