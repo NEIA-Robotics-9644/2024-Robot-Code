@@ -32,7 +32,7 @@ public class ShootWhenReadyCmd extends Command {
 
     @Override
     public void initialize() {
-        System.out.println("Shoot When Ready Cmd Initialized");
+        //System.out.println("Shoot When Ready Cmd Initialized");
     }
 
     @Override
@@ -52,12 +52,12 @@ public class ShootWhenReadyCmd extends Command {
             shooterSubsystem.spinFeederWheel(false);
         }
 
-        System.out.println("Shoot When Ready Cmd Executed" + "   Shooter Wheels at " + speed + "Percent Speed   " + (running ? "Feeder On" : "Feeder Off"));
+        //System.out.println("Shoot When Ready Cmd Executed" + "   Shooter Wheels at " + speed + "Percent Speed   " + (running ? "Feeder On" : "Feeder Off"));
     }
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("Shoot When Ready Cmd " + (interrupted ? "Interrupted" : "Ended"));
+       //System.out.println("Shoot When Ready Cmd " + (interrupted ? "Interrupted" : "Ended"));
     }
 
     @Override

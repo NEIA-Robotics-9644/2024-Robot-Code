@@ -5,12 +5,12 @@ import frc.robot.subsystems.climber.ClimberSubsystem;
 
 import java.util.function.Supplier;
 
-public class ClimberCmd extends Command {
+public class RClimberCmd extends Command {
     private final ClimberSubsystem climberSubsystem;
 
     private final Supplier<Double> velocity;
     
-    public ClimberCmd(ClimberSubsystem climberSubsystem, Supplier<Double> velocity) {
+    public RClimberCmd(ClimberSubsystem climberSubsystem, Supplier<Double> velocity) {
         
         this.climberSubsystem = climberSubsystem;
         this.velocity = velocity;
@@ -28,7 +28,7 @@ public class ClimberCmd extends Command {
     @Override
     public void execute() {
 
-        climberSubsystem.moveClimber(velocity.get());
+        climberSubsystem.RClimberMove(velocity.get());
         System.out.println("ClimberCmd executed");
 
     }

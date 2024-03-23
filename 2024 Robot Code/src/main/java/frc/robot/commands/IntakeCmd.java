@@ -20,7 +20,7 @@ public class IntakeCmd extends Command {
 
     @Override
     public void initialize() {
-        System.out.println("Spin Intake Wheels Cmd Initialized");
+        //System.out.println("Spin Intake Wheels Cmd Initialized");
     }
 
     @Override
@@ -28,13 +28,13 @@ public class IntakeCmd extends Command {
         intakeSubsystem.runFeeder(false);
         intakeSubsystem.setExtended(true);
         shooterSubsystem.spinFeederWheel(false);
-        System.out.println("Spin Intake Wheels Cmd Executed");
+        //System.out.println("Spin Intake Wheels Cmd Executed");
     }
 
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("Spin Intake Wheels Cmd " + (interrupted ? "Interrupted" : "Ended"));
+        //System.out.println("Spin Intake Wheels Cmd " + (interrupted ? "Interrupted" : "Ended"));
         intakeSubsystem.setExtended(false);
     }
 

@@ -1,16 +1,19 @@
 package frc.robot.subsystems.shooter;
 
+import java.util.ArrayList;
+
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ShooterAngleIOSparkMax implements ShooterAngleIO {
 
 
     // IMPORTANT: THE SOFT LIMITS ARE NOT SET HERE.  THEY SHOULD BE FOUND IN REV HARDWARE CLIENT AND THEN COPIED HERE
     private final double bottomLimitDeg = 0.0;
-    private final double topLimitDeg = 50.0;
+    private final double topLimitDeg = 100.0;
     
     private final double encoderOffsetDeg = 0.0;
 
@@ -31,12 +34,13 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
     private double maxSpeedDegPerSec = 5.0;
 
 
+
     private boolean manualControl = false;
 
     
 
-    private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.0, 0.0, 0.0);  // TODO: Tune these
-    private PIDController feedback = new PIDController(0.01, 0.0, 0.0);  // TODO: Tune these
+    private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.0, 0.1, 0.0);  // TODO: Tune these
+    private PIDController feedback = new PIDController(0.008, 0.0, 0.0);  // TODO: Tune these
 
 
     public ShooterAngleIOSparkMax() {
@@ -54,25 +58,21 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
         // Set the right motor to follow the left motor, but keep in mind that they might be reversed
         this.rightAngleMotor.follow(this.leftAngleMotor, leftReversed != rightReversed);
 
-        this.leftAngleMotor.setSmartCurrentLimit(30);
-        this.rightAngleMotor.setSmartCurrentLimit(30);
+        this.leftAngleMotor.setSmartCurrentLimit(10);
+        this.rightAngleMotor.setSmartCurrentLimit(10);
         this.leftAngleMotor.setOpenLoopRampRate(0.5);
         this.rightAngleMotor.setOpenLoopRampRate(0.5);
 
         this.leftAngleMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         this.rightAngleMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
-        // NOTE: We assume that the intake starts down
-        this.leftAngleMotor.getEncoder().setPosition(0.0);
-        this.rightAngleMotor.getEncoder().setPosition(0.0);
         
-
         
 
         this.leftAngleMotor.burnFlash();
         this.rightAngleMotor.burnFlash();
 
-        this.feedback.setTolerance(0.5);
+        this.feedback.setTolerance(0.1);
         
     }
 
@@ -107,7 +107,17 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
 
             // Set the motor output
             leftAngleMotor.set(output);
+
         }
+        
+
+
+        
+    }
+
+    @Override
+    public double getVelocityPercent() {
+        return (leftAngleMotor.getEncoder().getVelocity() * (1/80.0) * (encoderReversed ? -1 : 1) * 360.0 * (1/60.0)) / maxSpeedDegPerSec;
     }
 
 

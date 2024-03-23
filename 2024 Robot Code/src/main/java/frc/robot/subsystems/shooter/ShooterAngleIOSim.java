@@ -82,4 +82,10 @@ public class ShooterAngleIOSim implements ShooterAngleIO {
     public double getBottomAngleDeg() {
         return bottomLimit;
     }
+
+    @Override
+    public double getVelocityPercent() {
+        //System.out.println("Not implemented yet");
+        return 0;
+    }
 }

@@ -25,11 +25,11 @@ public class FeederWheelIOSim implements FeederWheelIO {
         
         if (newInput) {
             velocityRPM = inputVelocity;
-            System.out.println("New Velocity: " + velocityRPM);
+            //System.out.println("New Velocity: " + velocityRPM);
             newInput = false;
         } else {
             velocityRPM = 0.0;
-            System.out.println("Reset Velocity: " + velocityRPM);
+            //System.out.println("Reset Velocity: " + velocityRPM);
         }
 
 

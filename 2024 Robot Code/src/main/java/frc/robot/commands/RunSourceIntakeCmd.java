@@ -18,7 +18,7 @@ public class RunSourceIntakeCmd extends Command {
 
     @Override
     public void initialize() {
-        System.out.println("Run Source Intake Cmd Initialized");
+        //System.out.println("Run Source Intake Cmd Initialized");
     }
 
     @Override
@@ -31,12 +31,12 @@ public class RunSourceIntakeCmd extends Command {
         shooterSubsystem.spinFeederWheel(true);
 
 
-        System.out.println("Run Source Intake Cmd Executed");
+        //System.out.println("Run Source Intake Cmd Executed");
     }
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("Run Source Intake Cmd " + (interrupted ? "Interrupted" : "Ended"));
+        //System.out.println("Run Source Intake Cmd " + (interrupted ? "Interrupted" : "Ended"));
     }
 
     @Override

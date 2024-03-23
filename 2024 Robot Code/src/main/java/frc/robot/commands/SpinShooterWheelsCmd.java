@@ -16,18 +16,18 @@ public class SpinShooterWheelsCmd extends Command {
 
     @Override
     public void initialize() {
-        System.out.println("Spin Shooter Wheels Cmd Initialized");
+        //System.out.println("Spin Shooter Wheels Cmd Initialized");
     }
 
     @Override
     public void execute() {
         shooterSubsystem.spinShooterWheels(false);
-        System.out.println("Spin Shooter Wheels Cmd Executed");
+        //System.out.println("Spin Shooter Wheels Cmd Executed");
     }
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("Spin Shooter Wheels Cmd " + (interrupted ? "Interrupted" : "Ended"));
+        //System.out.println("Spin Shooter Wheels Cmd " + (interrupted ? "Interrupted" : "Ended"));
     }
 
     @Override

@@ -1,28 +1,36 @@
 package frc.robot.subsystems.climber;
 
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 
 public class ClimberMotorIOSparkMax implements ClimberMotorIO {
     
     private final CANSparkMax motor;
-   
+
+    private boolean newInput = false;
+
+    private double velocity = 0.0;
+
+
+    // This depends on the soft limits on the SparkMax being set correctly
+
+
+    private final double bottomLimitRotations = -10000;
+
+    private final double topLimitRotations = 10000;
+
+
     public ClimberMotorIOSparkMax(int canID) {
         this.motor = new CANSparkMax(canID, MotorType.kBrushless);
+        motor.setIdleMode(IdleMode.kBrake);
     }
 
     @Override
     public void spinMotor(double normalizedVelocity) {
-        motor.set(normalizedVelocity);
-    }
-
-    @Override
-    public double getMotorRotations() {
-        return motor.getEncoder().getPosition();
+        this.velocity = Math.max(-1.0, Math.min(1.0, normalizedVelocity));
+        newInput = true;
     }
 
     @Override
@@ -32,6 +40,27 @@ public class ClimberMotorIOSparkMax implements ClimberMotorIO {
 
     @Override
     public void periodic() {
-        // No periodic behavior needed
+        if (newInput) {
+            
+            motor.set(velocity);
+            System.out.println("Motor spinning at " + velocity);
+            System.out.println("Motor position " +   getMotorRotations());
+            newInput = false;
+        } else {
+            motor.set(0.0);
+        }
     }
+
+    @Override
+    public double getMotorRotations() {
+        return motor.getEncoder().getPosition();
+    }
+
+
+    @Override
+    public void setInverted(boolean inverted) {
+        motor.setInverted(inverted);
+    }
+
+
 }

@@ -13,7 +13,7 @@ public class NoteSensorIORoboRio implements NoteSensorIO{
     public boolean noteDetected() {
         // Returns the value of the DigitalInput
         if (input.get()) {
-            System.out.println("Note Detected");
+            //System.out.println("Note Detected");
         }
 
         return input.get();
