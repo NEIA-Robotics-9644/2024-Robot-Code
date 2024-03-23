@@ -1,4 +1,4 @@
-package frc.robot.subsystems.shooter;
+package frc.robot.subsystems.shooter.feederWheel;
 
 public class FeederWheelIOSim implements FeederWheelIO {
     private double velocityRPM = 0.0;

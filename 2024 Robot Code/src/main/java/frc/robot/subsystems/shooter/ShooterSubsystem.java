@@ -2,6 +2,10 @@ package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.shooter.shooterWheel.ShooterWheelIO;
+import frc.robot.subsystems.shooter.feederWheel.FeederWheelIO;
+import frc.robot.subsystems.shooter.shooterAngle.ShooterAngleIO;
+import frc.robot.subsystems.shooter.noteSensor.NoteSensorIO;
 
 public class ShooterSubsystem extends SubsystemBase {
 

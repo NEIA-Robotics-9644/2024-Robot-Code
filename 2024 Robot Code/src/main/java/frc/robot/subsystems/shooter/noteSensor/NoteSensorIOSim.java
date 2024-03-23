@@ -1,4 +1,4 @@
-package frc.robot.subsystems.shooter;
+package frc.robot.subsystems.shooter.noteSensor;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
