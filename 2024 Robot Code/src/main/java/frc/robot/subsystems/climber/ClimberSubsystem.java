@@ -4,9 +4,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ClimberSubsystem extends SubsystemBase{
 
-    private final ClimberMotorIO[] Climbers = new ClimberMotorIO[2];
+    private final ClimberMotorIO leftClimber;
+    private final ClimberMotorIO rightClimber;
 
-    private final boolean[] climberInverted = {false, false};
+    private final boolean leftClimberReversed = false;
+    private final boolean rightClimberReversed = false;
 
     
 
@@ -14,61 +16,50 @@ public class ClimberSubsystem extends SubsystemBase{
         throw new IllegalArgumentException("You must pass in valid hardware for a subsystem to work");
     }
 
-    public ClimberSubsystem(ClimberMotorIO LClimber, ClimberMotorIO RClimber) {
+    public ClimberSubsystem(ClimberMotorIO leftClimber, ClimberMotorIO rightClimber) {
 
-        if (LClimber == null || RClimber == null) {
+        if (leftClimber == null || rightClimber == null) {
             throw new IllegalArgumentException("You must pass in valid hardware for a subsystem to work");
         }
 
-        // Initialize things
-        this.Climbers[0] = LClimber;
-        this.Climbers[1] = RClimber;
+        this.leftClimber = leftClimber;
+        this.rightClimber = rightClimber;
 
-        for (int i = 0; i < Climbers.length; i++) {
-            Climbers[i].setInverted(climberInverted[i]);
-        }
+        this.leftClimber.setInverted(leftClimberReversed);
+        this.rightClimber.setInverted(rightClimberReversed);
 
         
     }
     @Override
     public void periodic() {
         
-        for (ClimberMotorIO climber : Climbers) {
-            climber.periodic();
-        }
+        leftClimber.periodic();
+        rightClimber.periodic();
 
 
     }
 
     
     public void moveClimber(double normalizedVelocity) {
-        for (ClimberMotorIO climber : Climbers) {
-            climber.spinMotor(normalizedVelocity);
-        }
+        leftClimber.spinMotor(normalizedVelocity);
+        rightClimber.spinMotor(normalizedVelocity);
     }
 
     public double getClimberRotations() {
-        double totalRotations = 0;
-        for (ClimberMotorIO climber : Climbers) {
-            totalRotations += climber.getMotorRotations();
-        }
-        return totalRotations / Climbers.length;
+        return (leftClimber.getMotorRotations() + rightClimber.getMotorRotations()) / 2;
     }
 
     public double getClimberSpeed() {
-        double totalVelocity = 0;
-        for (ClimberMotorIO climber : Climbers) {
-            totalVelocity += Math.abs(climber.getMotorVelocityRPM());
-        }
-        return totalVelocity / Climbers.length;
+        return (Math.abs(leftClimber.getMotorVelocityRPM())
+             + Math.abs(rightClimber.getMotorVelocityRPM())
+            ) / 2;
     }
 
-    public void LClimberMove(double normalizedVelocity)
-    {
-        Climbers[0].spinMotor(normalizedVelocity);
+    public void moveLeftClimber(double normalizedVelocity) {
+        leftClimber.spinMotor(normalizedVelocity);
     }
-    public void RClimberMove(double normalizedVelocity)
-    {
-        Climbers[1].spinMotor(normalizedVelocity);
+
+    public void moveRightClimber(double normalizedVelocity) {
+        rightClimber.spinMotor(normalizedVelocity);
     }
 }
