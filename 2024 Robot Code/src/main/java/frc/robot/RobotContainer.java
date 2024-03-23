@@ -25,13 +25,21 @@ import frc.robot.commands.MoveShooterToSetpointCmd;
 import frc.robot.commands.RunSourceIntakeCmd;
 import frc.robot.commands.ShootWhenReadyCmd;
 import frc.robot.commands.SpinShooterWheelsCmd;
+import frc.robot.subsystems.climber.ClimberMotorIOSim;
+import frc.robot.subsystems.climber.ClimberMotorIOSparkMax;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.drive.SwerveDriveSubsystem;
-import frc.robot.subsystems.shooter.FeederWheelIOSparkMax;
-import frc.robot.subsystems.shooter.NoteSensorIORoboRio;
-import frc.robot.subsystems.shooter.ShooterAngleIOSparkMax;
+import frc.robot.subsystems.shooter.feederWheel.FeederWheelIOSim;
+import frc.robot.subsystems.shooter.feederWheel.FeederWheelIOSparkMax;
+import frc.robot.subsystems.shooter.shooterAngle.ShooterAngleIOSparkMax;
+import frc.robot.subsystems.shooter.shooterWheel.ShooterWheelIOSparkMax;
+import frc.robot.subsystems.shooter.shooterWheel.ShooterWheelIOSim;
+import frc.robot.subsystems.shooter.shooterAngle.ShooterAngleIOSim;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
-import frc.robot.subsystems.shooter.ShooterWheelIOSparkMax;
+import frc.robot.subsystems.shooter.noteSensor.NoteSensorIORoboRio;
+import frc.robot.subsystems.shooter.noteSensor.NoteSensorIOSim;
+
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -88,25 +96,25 @@ public class RobotContainer {
       );
 
       climber = new ClimberSubsystem(
-          new frc.robot.subsystems.climber.ClimberMotorIOSparkMax(26),
-          new frc.robot.subsystems.climber.ClimberMotorIOSparkMax(27)
+          new ClimberMotorIOSparkMax(26),
+          new ClimberMotorIOSparkMax(27)
       ); 
 
     } else {
       shooter = new ShooterSubsystem(
-          new frc.robot.subsystems.shooter.ShooterWheelIOSim(),
-          new frc.robot.subsystems.shooter.ShooterWheelIOSim(),
-          new frc.robot.subsystems.shooter.FeederWheelIOSim(),
-          new frc.robot.subsystems.shooter.ShooterAngleIOSim(),
-          new frc.robot.subsystems.shooter.NoteSensorIOSim(),
+          new ShooterWheelIOSim(),
+          new ShooterWheelIOSim(),
+          new FeederWheelIOSim(),
+          new ShooterAngleIOSim(),
+          new NoteSensorIOSim(),
           new double[] { 0, 30, 60, 100},
           new double[] { 1, 0.4, 1, 0.4},
           new double[] { 1, 0.4, 1, 0.4}
       );
 
       climber = new ClimberSubsystem(
-          new frc.robot.subsystems.climber.ClimberMotorIOSim(),
-          new frc.robot.subsystems.climber.ClimberMotorIOSim()
+          new ClimberMotorIOSim(),
+          new ClimberMotorIOSim()
       );
     }
     
