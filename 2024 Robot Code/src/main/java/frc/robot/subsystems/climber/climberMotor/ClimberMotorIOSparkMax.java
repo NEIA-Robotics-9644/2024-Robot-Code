@@ -1,4 +1,4 @@
-package frc.robot.subsystems.climber;
+package frc.robot.subsystems.climber.climberMotor;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -13,13 +13,6 @@ public class ClimberMotorIOSparkMax implements ClimberMotorIO {
 
     private double velocity = 0.0;
 
-
-    // This depends on the soft limits on the SparkMax being set correctly
-
-
-    private final double bottomLimitRotations = -10000;
-
-    private final double topLimitRotations = 10000;
 
 
     public ClimberMotorIOSparkMax(int canID) {
@@ -43,8 +36,6 @@ public class ClimberMotorIOSparkMax implements ClimberMotorIO {
         if (newInput) {
             
             motor.set(velocity);
-            System.out.println("Motor spinning at " + velocity);
-            System.out.println("Motor position " +   getMotorRotations());
             newInput = false;
         } else {
             motor.set(0.0);

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.climber;
+package frc.robot.subsystems.climber.climberMotor;
 
 public class ClimberMotorIOSim implements ClimberMotorIO {
 
@@ -18,6 +18,10 @@ public class ClimberMotorIOSim implements ClimberMotorIO {
 
     private boolean inverted = false;
 
+    private double measuredRPM = 0.0;
+
+    private double lastPosition = 0.0;
+
     public ClimberMotorIOSim() {
 
     }
@@ -33,11 +37,13 @@ public class ClimberMotorIOSim implements ClimberMotorIO {
 
     @Override
     public double getMotorVelocityRPM() {
-        return velocityRPM;
+        return measuredRPM;
     }
 
     @Override
     public void periodic() {
+        lastPosition = positionRotations;
+
         if (newInput) {
             
 
@@ -57,6 +63,8 @@ public class ClimberMotorIOSim implements ClimberMotorIO {
         } else {
             velocityRPM = 0;
         }
+
+        measuredRPM = (positionRotations - lastPosition) / 0.02;
     }
 
     @Override
