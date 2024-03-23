@@ -115,7 +115,7 @@ public class RobotContainer {
     
     drivetrain.getPigeon2().reset();
 
-    display = new SmartDashboardDisplay(drivetrain, shooter, null, climber);
+    display = new SmartDashboardDisplay(drivetrain, shooter, climber);
 
 
     // Configure the trigger bindings
