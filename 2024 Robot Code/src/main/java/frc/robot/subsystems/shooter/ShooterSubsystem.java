@@ -1,9 +1,6 @@
 package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -23,9 +20,6 @@ public class ShooterSubsystem extends SubsystemBase {
     private final double[] feederSpeedSetpoints;
 
     private int setpointIndex = 0;
-
-
-    private final PowerDistribution pdh;
     
     
     private final FeederWheelIO feeder;
@@ -78,8 +72,7 @@ public class ShooterSubsystem extends SubsystemBase {
         // Turn on brake mode for the feeder
         this.feeder.setBrakeMode(true);
 
-        // Initialize the Power Distribution Hub
-        pdh = new PowerDistribution(1, ModuleType.kRev);
+        
     }
 
     @Override
@@ -94,9 +87,9 @@ public class ShooterSubsystem extends SubsystemBase {
         
         // Only do this if the robot is enabled, running teleoperated
         if (DriverStation.isEnabled()) {
-            pdh.setSwitchableChannel(noteDetected());
+            noteSensor.setDisplayLight(noteSensor.noteDetected());
         } else {
-            pdh.setSwitchableChannel(false);
+            noteSensor.setDisplayLight(false);
         }
         
     }

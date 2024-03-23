@@ -19,4 +19,8 @@ public class NoteSensorIOSim implements NoteSensorIO {
         noteDetected = SmartDashboard.getBoolean("Note Detected Sim Input", false);
         return noteDetected;
     }
+
+    public void setDisplayLight(boolean on) {
+        SmartDashboard.putBoolean("Sim Note Detected", on);
+    }
 }
