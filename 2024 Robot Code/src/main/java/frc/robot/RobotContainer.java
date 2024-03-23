@@ -7,14 +7,12 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-import static org.mockito.Mockito.atMost;
 
 import com.ctre.phoenix6.Utils;
 
@@ -24,23 +22,16 @@ import frc.robot.commands.ClimberCmd;
 import frc.robot.commands.JoystickDriveCmd;
 import frc.robot.commands.MoveShooterToBottomAndResetCmd;
 import frc.robot.commands.MoveShooterToSetpointCmd;
-import frc.robot.commands.MoveToPoseCmd;
 import frc.robot.commands.RunSourceIntakeCmd;
 import frc.robot.commands.ShootWhenReadyCmd;
 import frc.robot.commands.SpinShooterWheelsCmd;
-import frc.robot.commands.LClimberCmd;
-import frc.robot.commands.RClimberCmd;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.drive.SwerveDriveSubsystem;
-import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.shooter.FeederWheelIOSparkMax;
 import frc.robot.subsystems.shooter.NoteSensorIORoboRio;
 import frc.robot.subsystems.shooter.ShooterAngleIOSparkMax;
-import frc.robot.subsystems.shooter.ShooterAngleMechanism;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.shooter.ShooterWheelIOSparkMax;
-//import frc.robot.subsystems.vision.VisionSubsystem;
-//import frc.robot.subsystems.vision.VisionSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -67,10 +58,6 @@ public class RobotContainer {
   
   
   private final ClimberSubsystem climber;
-
- // private final VisionSubsystem vision;
-
-  //private final IntakeSubsystem intake;
 
   
   
@@ -100,21 +87,10 @@ public class RobotContainer {
           new double[] { 1, 0.4, 1, 0.4}
       );
 
-      /*
-      intake = new IntakeSubsystem(
-          new frc.robot.subsystems.intake.IntakeExtenderMechanismIOSparkMax(26), 
-          new frc.robot.subsystems.intake.IntakeWheelMotorIOSparkMax(27)
-      );
-      */
-
       climber = new ClimberSubsystem(
           new frc.robot.subsystems.climber.ClimberMotorIOSparkMax(26),
           new frc.robot.subsystems.climber.ClimberMotorIOSparkMax(27)
-      );
-
-      //vision = new VisionSubsystem();
-      
-
+      ); 
 
     } else {
       shooter = new ShooterSubsystem(
@@ -123,31 +99,20 @@ public class RobotContainer {
           new frc.robot.subsystems.shooter.FeederWheelIOSim(),
           new frc.robot.subsystems.shooter.ShooterAngleIOSim(),
           new frc.robot.subsystems.shooter.NoteSensorIOSim(),
-          new double[] { 0, 20, 48, 55},
-          new double[] { 1, 1, 1, 1},
-          new double[] { 1, 1, 1, 1}
+          new double[] { 0, 30, 60, 100},
+          new double[] { 1, 0.4, 1, 0.4},
+          new double[] { 1, 0.4, 1, 0.4}
       );
-        
-      /*
-      intake = new IntakeSubsystem(
-          new frc.robot.subsystems.intake.IntakeExtenderMechanismIOSim(), 
-          new frc.robot.subsystems.intake.IntakeWheelMotorIOSim()
-      );
-      */
 
       climber = new ClimberSubsystem(
           new frc.robot.subsystems.climber.ClimberMotorIOSim(),
           new frc.robot.subsystems.climber.ClimberMotorIOSim()
       );
-      
-      //vision = new VisionSubsystem();
     }
     
 
     
-    // display = new SmartDashboardDisplay(drivetrain, shooter, null, null);
     
-
     drivetrain.getPigeon2().reset();
 
     display = new SmartDashboardDisplay(drivetrain, shooter, null, climber);
@@ -215,6 +180,7 @@ public class RobotContainer {
     var oStartTrigger = new Trigger(() -> operatorHID.getStartButton());
     oStartTrigger.whileTrue(new MoveShooterToBottomAndResetCmd(shooter, 1));
 
+
     // Adjust the shooter angle of this setpoint
     operatorController.povUp().onTrue(Commands.runOnce(() -> shooter.modifyAngleSetpoint(1)));
     operatorController.povDown().onTrue(Commands.runOnce(() -> shooter.modifyAngleSetpoint(-1)));
@@ -235,10 +201,13 @@ public class RobotContainer {
     var oPOVLeftTrigger = new Trigger(() -> operatorHID.getPOV() == 270);
     oPOVLeftTrigger.whileTrue(Commands.runOnce(() -> shooter.modifyShooterSpeedSetpoint(-0.05)));
 
-    // INTAKE COMMANDS
+    // Source Intake
 
     var oRightTriggerTrigger = new Trigger(() -> operatorHID.getRightTriggerAxis() > 0.5);
     oRightTriggerTrigger.whileTrue(new RunSourceIntakeCmd(shooter));
+
+
+
 
     // CLIMBER COMMANDS
     
@@ -247,13 +216,6 @@ public class RobotContainer {
 
     var oLeftYAxisDown = new Trigger(() -> operatorHID.getLeftY() < -0.05);
     oLeftYAxisDown.whileTrue(new ClimberCmd(climber, () -> operatorHID.getLeftY()));
-  
-    //var oRightYAxisUp = new Trigger(() -> operatorHID.getRightY() > 0.05);
-    //oRightYAxisUp.whileTrue(new RClimberCmd(climber, () -> operatorHID.getLeftY()));
-
-    //var oRightYAxisDown = new Trigger(() -> operatorHID.getRightY() > 0.05);
-    //oRightYAxisDown.whileTrue(new RClimberCmd(climber, () -> operatorHID.getLeftY()));
-
   }
 
   /**
@@ -263,17 +225,16 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     
+    // Shoot into the speaker
     return new SequentialCommandGroup(
       new MoveShooterToBottomAndResetCmd(shooter, 1).withTimeout(1.75),
       new MoveShooterToSetpointCmd(shooter, 2).withTimeout(4.0),
       new SpinShooterWheelsCmd(shooter).withTimeout(1.5),
       new ShootWhenReadyCmd(shooter, 0.1, 0.99).withTimeout(1)
-      //new JoystickDriveCmd(drivetrain, () -> -1.0, () -> -0.3, () -> 0.0, () -> false, () -> false, () -> true, () -> false).withTimeout(3)
     );
     
 
-    //return new MoveToPoseCmd(drivetrain, () -> 0.0, () -> 1.0, () -> 1.0, () -> 0.0, () -> true, () -> 0 );
-
+    
     
     
     
