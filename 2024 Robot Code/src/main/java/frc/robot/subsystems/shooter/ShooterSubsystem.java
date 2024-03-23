@@ -11,7 +11,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private final boolean rightShooterWheelReversed = false;
     private final boolean leftShooterWheelReversed = false;
 
-    private final ShooterAngleMechanism angleMechanism;
+    private final ShooterAngleIO angleMechanism;
 
     private final double[] angleSetpoints;
 
@@ -59,7 +59,7 @@ public class ShooterSubsystem extends SubsystemBase {
         this.leftShooterWheel = leftShooter;
         this.rightShooterWheel = rightShooter;
         this.feeder = feeder;
-        this.angleMechanism = new ShooterAngleMechanism(angleMechanism);
+        this.angleMechanism = angleMechanism;
         this.noteSensor = noteSensor;
 
 
