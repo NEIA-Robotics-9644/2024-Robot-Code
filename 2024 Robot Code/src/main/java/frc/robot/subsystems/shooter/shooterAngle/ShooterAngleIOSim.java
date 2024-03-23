@@ -33,11 +33,6 @@ public class ShooterAngleIOSim implements ShooterAngleIO {
         return angle;
     }
 
-    @Override
-    public boolean atSetpoint() {
-        return angleFeedback.atSetpoint();
-    }
-
 
     @Override
     public void setManualControl(boolean enabled) {

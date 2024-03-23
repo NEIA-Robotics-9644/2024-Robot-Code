@@ -13,7 +13,6 @@ public interface ShooterAngleIO {
      */
     public void periodic();
 
-    public boolean atSetpoint();
 
 
     /*

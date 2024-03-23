@@ -156,17 +156,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
 
     /*
-     * Get whether the shooter has satisfactorally converged on the desired angle
-     */
-    public boolean atSetpoint() {
-        return angleMechanism.atSetpoint();
-    }
-
-
-    
-
-
-    /*
      * Enable manual control of the angle mechanism
      * This disables all internal control loops
      * USE WITH CAUTION
@@ -197,38 +186,12 @@ public class ShooterSubsystem extends SubsystemBase {
     }    
 
 
-    /*
-     * Get whether the shooter is at the bottom of its travel
-     */
-    public boolean atBottom() {
-        
-        return angleMechanism.atBottom();
-    }
-
-    /*
-     * Get whether the shooter is at the top of its travel
-     */
-    public boolean atTop() {
-        
-        return angleMechanism.atTop();
-    }
 
     /*
      * Reset the angle of the shooter to the bottom
      */
     public void resetAngleToBottom() {
         angleMechanism.resetAngleToBottom();
-    }
-
-
-    public double getShooterTopAngleDeg() {
-        
-        return angleMechanism.getTopAngleDeg();
-    }
-
-    public double getShooterBottomAngleDeg() {
-        
-        return angleMechanism.getBottomAngleDeg();
     }
     
 

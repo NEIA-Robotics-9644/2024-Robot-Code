@@ -126,10 +126,6 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
         return angle + encoderOffsetDeg;
     }
 
-    @Override
-    public boolean atSetpoint() {
-        return feedback.atSetpoint();
-    }
 
     @Override
     public void setManualControl(boolean enabled) {

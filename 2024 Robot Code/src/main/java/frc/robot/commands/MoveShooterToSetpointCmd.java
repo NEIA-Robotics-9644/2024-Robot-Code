@@ -23,6 +23,6 @@ public class MoveShooterToSetpointCmd extends Command {
     }
 
     public boolean isFinished() {
-        return shooterSubsystem.atSetpoint();
+        return false;
     }
 }
