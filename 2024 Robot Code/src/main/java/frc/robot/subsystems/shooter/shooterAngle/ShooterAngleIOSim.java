@@ -1,4 +1,4 @@
-package frc.robot.subsystems.shooter;
+package frc.robot.subsystems.shooter.shooterAngle;
 
 import edu.wpi.first.math.controller.PIDController;
 
@@ -31,11 +31,6 @@ public class ShooterAngleIOSim implements ShooterAngleIO {
     @Override
     public double getAngleDeg() {
         return angle;
-    }
-
-    @Override
-    public boolean atSetpoint() {
-        return angleFeedback.atSetpoint();
     }
 
 

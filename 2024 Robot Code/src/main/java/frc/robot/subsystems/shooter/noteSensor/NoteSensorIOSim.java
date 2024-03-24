@@ -1,4 +1,4 @@
-package frc.robot.subsystems.shooter;
+package frc.robot.subsystems.shooter.noteSensor;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -18,5 +18,9 @@ public class NoteSensorIOSim implements NoteSensorIO {
         // Read the SmartDashboard input
         noteDetected = SmartDashboard.getBoolean("Note Detected Sim Input", false);
         return noteDetected;
+    }
+
+    public void setDisplayLight(boolean on) {
+        SmartDashboard.putBoolean("Sim Note Detected", on);
     }
 }

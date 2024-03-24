@@ -3,8 +3,6 @@ package frc.robot.commands;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.drive.SwerveDriveSubsystem;
@@ -13,6 +11,7 @@ import java.util.function.Supplier;
 
 /*
  * This is a command that will be used to drive the robot with a joystick
+ * This command originated from the CTRE Phoenix Swerve Drive Generated Code
  */
 public class JoystickDriveCmd extends Command {
 
@@ -52,8 +51,6 @@ public class JoystickDriveCmd extends Command {
         
     
     
-    // X wheel formation lock request
-    
     
     public JoystickDriveCmd(SwerveDriveSubsystem SwerveDriveSubsystem, Supplier<Double> forward, Supplier<Double> sideways, Supplier<Double> rotation, Supplier<Boolean> speedIncrease, Supplier<Boolean> speedDecrease, Supplier<Boolean> fieldOriented, Supplier<Boolean> resetGyro) {
         
@@ -74,12 +71,6 @@ public class JoystickDriveCmd extends Command {
 
     }
 
-    // Called when the command is initially scheduled.
-    @Override
-    public void initialize() {
-        // Set the swerve drive to field relative
-        
-    }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
@@ -140,11 +131,7 @@ public class JoystickDriveCmd extends Command {
         }
     }
 
-    // Called once the command ends or is interrupted.
-    @Override
-    public void end(boolean interrupted) {
-        // Set the swerve drive to field relative
-    }
+    
 
     // Returns true when the command should end.
     @Override

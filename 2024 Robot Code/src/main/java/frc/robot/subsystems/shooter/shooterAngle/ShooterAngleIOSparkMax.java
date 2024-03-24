@@ -1,17 +1,15 @@
-package frc.robot.subsystems.shooter;
+package frc.robot.subsystems.shooter.shooterAngle;
 
-import java.util.ArrayList;
 
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ShooterAngleIOSparkMax implements ShooterAngleIO {
 
 
-    // IMPORTANT: THE SOFT LIMITS ARE NOT SET HERE.  THEY SHOULD BE FOUND IN REV HARDWARE CLIENT AND THEN COPIED HERE
+    
     private final double bottomLimitDeg = 0.0;
     private final double topLimitDeg = 100.0;
     
@@ -128,10 +126,6 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
         return angle + encoderOffsetDeg;
     }
 
-    @Override
-    public boolean atSetpoint() {
-        return feedback.atSetpoint();
-    }
 
     @Override
     public void setManualControl(boolean enabled) {

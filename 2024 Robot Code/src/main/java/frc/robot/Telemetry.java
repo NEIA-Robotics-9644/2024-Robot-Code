@@ -18,6 +18,8 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 
 
 /*
+ * THIS FILE IS CURRENTLY UNUSED.  IT CAME FROM CTRE API GENERATED CODE
+ * 
  * This is for displaying info via NetworkTables and SmartDashboard
  */
 public class Telemetry {

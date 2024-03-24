@@ -1,10 +1,11 @@
 package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.shooter.shooterWheel.ShooterWheelIO;
+import frc.robot.subsystems.shooter.feederWheel.FeederWheelIO;
+import frc.robot.subsystems.shooter.shooterAngle.ShooterAngleIO;
+import frc.robot.subsystems.shooter.noteSensor.NoteSensorIO;
 
 public class ShooterSubsystem extends SubsystemBase {
 
@@ -14,7 +15,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private final boolean rightShooterWheelReversed = false;
     private final boolean leftShooterWheelReversed = false;
 
-    private final ShooterAngleMechanism angleMechanism;
+    private final ShooterAngleIO angleMechanism;
 
     private final double[] angleSetpoints;
 
@@ -23,9 +24,6 @@ public class ShooterSubsystem extends SubsystemBase {
     private final double[] feederSpeedSetpoints;
 
     private int setpointIndex = 0;
-
-
-    private final PowerDistribution pdh;
     
     
     private final FeederWheelIO feeder;
@@ -65,7 +63,7 @@ public class ShooterSubsystem extends SubsystemBase {
         this.leftShooterWheel = leftShooter;
         this.rightShooterWheel = rightShooter;
         this.feeder = feeder;
-        this.angleMechanism = new ShooterAngleMechanism(angleMechanism);
+        this.angleMechanism = angleMechanism;
         this.noteSensor = noteSensor;
 
 
@@ -78,8 +76,7 @@ public class ShooterSubsystem extends SubsystemBase {
         // Turn on brake mode for the feeder
         this.feeder.setBrakeMode(true);
 
-        // Initialize the Power Distribution Hub
-        pdh = new PowerDistribution(1, ModuleType.kRev);
+        
     }
 
     @Override
@@ -94,9 +91,9 @@ public class ShooterSubsystem extends SubsystemBase {
         
         // Only do this if the robot is enabled, running teleoperated
         if (DriverStation.isEnabled()) {
-            pdh.setSwitchableChannel(noteDetected());
+            noteSensor.setDisplayLight(noteSensor.noteDetected());
         } else {
-            pdh.setSwitchableChannel(false);
+            noteSensor.setDisplayLight(false);
         }
         
     }
@@ -159,17 +156,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
 
     /*
-     * Get whether the shooter has satisfactorally converged on the desired angle
-     */
-    public boolean atSetpoint() {
-        return angleMechanism.atSetpoint();
-    }
-
-
-    
-
-
-    /*
      * Enable manual control of the angle mechanism
      * This disables all internal control loops
      * USE WITH CAUTION
@@ -200,38 +186,12 @@ public class ShooterSubsystem extends SubsystemBase {
     }    
 
 
-    /*
-     * Get whether the shooter is at the bottom of its travel
-     */
-    public boolean atBottom() {
-        
-        return angleMechanism.atBottom();
-    }
-
-    /*
-     * Get whether the shooter is at the top of its travel
-     */
-    public boolean atTop() {
-        
-        return angleMechanism.atTop();
-    }
 
     /*
      * Reset the angle of the shooter to the bottom
      */
     public void resetAngleToBottom() {
         angleMechanism.resetAngleToBottom();
-    }
-
-
-    public double getShooterTopAngleDeg() {
-        
-        return angleMechanism.getTopAngleDeg();
-    }
-
-    public double getShooterBottomAngleDeg() {
-        
-        return angleMechanism.getBottomAngleDeg();
     }
     
 

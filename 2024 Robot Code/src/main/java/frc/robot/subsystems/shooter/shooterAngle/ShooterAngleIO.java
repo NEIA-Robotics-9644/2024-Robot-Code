@@ -1,4 +1,4 @@
-package frc.robot.subsystems.shooter;
+package frc.robot.subsystems.shooter.shooterAngle;
 
 public interface ShooterAngleIO {
     
@@ -13,7 +13,6 @@ public interface ShooterAngleIO {
      */
     public void periodic();
 
-    public boolean atSetpoint();
 
 
     /*
