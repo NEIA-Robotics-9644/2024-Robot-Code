@@ -5,6 +5,11 @@ import frc.robot.subsystems.climber.ClimberSubsystem;
 
 import java.util.function.Supplier;
 
+
+/*
+ * Command to move the climber
+ * This command takes in an input and moves the both climber arms at that velocity
+ */
 public class ClimberCmd extends Command {
     private final ClimberSubsystem climberSubsystem;
 
