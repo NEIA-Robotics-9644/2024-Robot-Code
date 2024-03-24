@@ -21,7 +21,7 @@ public class ClimberCmd extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        System.out.println("ClimberCmd initialized");
+        //System.out.println("ClimberCmd initialized");
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -29,12 +29,7 @@ public class ClimberCmd extends Command {
     public void execute() {
 
         climberSubsystem.moveClimber(velocity.get());
-        System.out.println("ClimberCmd executed");
+        //System.out.println("ClimberCmd executed");
 
-    }
-
-    // Called once the command ends or is interrupted.
-    @Override
-    public void end(boolean interrupted) {
     }
 }
