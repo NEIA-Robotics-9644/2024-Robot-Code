@@ -5,8 +5,12 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import frc.robot.subsystems.drive.SwerveDriveSubsystem;
+import frc.robot.subsystems.drive.VisionIO;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
@@ -15,8 +19,14 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -189,8 +199,26 @@ public final class Constants {
                 private static final SwerveModuleConstants BackRight = ConstantCreator.createModuleConstants(
                         kBackRightSteerMotorId, kBackRightDriveMotorId, kBackRightEncoderId, kBackRightEncoderOffset, Units.inchesToMeters(kBackRightXPosInches), Units.inchesToMeters(kBackRightYPosInches), kInvertRightSide);
 
-                public static final SwerveDriveSubsystem DriveTrain = new SwerveDriveSubsystem(DrivetrainConstants, FrontLeft,
+                public static final SwerveDriveSubsystem DriveTrain = new SwerveDriveSubsystem(DrivetrainConstants, new VisionIO(), FrontLeft,
                         FrontRight, BackLeft, BackRight);
+        }
+
+
+        public static class Vision {
+                public static final String kCameraName = "VisionCam";
+                // Cam mounted facing forward, half a meter forward of center, half a meter up from center.
+                // TODO: Configure this
+                public static final Transform3d kRobotToCam =
+                        new Transform3d(new Translation3d(0.3, 0.0, 0.1), new Rotation3d(0, 0, 0));
+
+                // The layout of the AprilTags on the field
+                public static final AprilTagFieldLayout kTagLayout =
+                        AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+
+                // The standard deviations of our vision estimated poses, which affect correction rate
+                // (Fake values. Experiment and determine estimation noise on an actual robot.)
+                public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
+                public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
         }
 
 
