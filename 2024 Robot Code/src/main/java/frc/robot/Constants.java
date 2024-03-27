@@ -58,11 +58,11 @@ public final class Constants {
             new Translation2d(-kTrackWidthMeters / 2.0, -kWheelBaseMeters / 2.0)
         };
 
-    public static final double kWheelRadiusMeters = Math.hypot(kWheelBaseMeters / 2.0, kTrackWidthMeters / 2.0);
+    public static final double kDriveBaseRadiusMeters = Math.hypot(kWheelBaseMeters / 2.0, kTrackWidthMeters / 2.0);
 
     public static final double kMaxLinearSpeedMetersPerSec = Units.feetToMeters(15);
 
-    public static final double kMaxAngularSpeedRadPerSec = kMaxLinearSpeedMetersPerSec / kWheelRadiusMeters;
+    public static final double kMaxAngularSpeedRadPerSec = kMaxLinearSpeedMetersPerSec / kDriveBaseRadiusMeters;
   }
   public static final class KeyPoints {
     //index of name matches with index of Pose2d. coordinates are not final, nor the rotation value
