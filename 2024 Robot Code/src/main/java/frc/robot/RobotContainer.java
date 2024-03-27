@@ -37,6 +37,7 @@ import frc.robot.subsystems.shooter.feederWheel.FeederWheelIOSim;
 import frc.robot.subsystems.shooter.feederWheel.FeederWheelIOSparkMax;
 import frc.robot.subsystems.shooter.shooterAngle.ShooterAngleIOSparkMax;
 import frc.robot.subsystems.shooter.shooterWheel.ShooterWheelIOSparkMax;
+import frc.robot.subsystems.shooter.shooterWheel.ShooterWheelIOTalonFX;
 import frc.robot.subsystems.shooter.shooterWheel.ShooterWheelIOSim;
 import frc.robot.subsystems.shooter.shooterAngle.ShooterAngleIOSim;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -89,8 +90,8 @@ public class RobotContainer {
 
     if (mode == Modes.REAL) {
       shooter = new ShooterSubsystem(
-          new ShooterWheelIOSparkMax(21),
-          new ShooterWheelIOSparkMax(22),
+          new ShooterWheelIOTalonFX(21),
+          new ShooterWheelIOTalonFX(22),
           new FeederWheelIOSparkMax(23),
           new ShooterAngleIOSparkMax(24, 25),
           new NoteSensorIORoboRio(),
