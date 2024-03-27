@@ -58,11 +58,11 @@ public final class Constants {
             new Translation2d(-kTrackWidthMeters / 2.0, -kWheelBaseMeters / 2.0)
         };
 
-    public static final double kWheelRadiusMeters = Math.hypot(kWheelBaseMeters / 2.0, kTrackWidthMeters / 2.0);
+    public static final double kDriveBaseRadiusMeters = Math.hypot(kWheelBaseMeters / 2.0, kTrackWidthMeters / 2.0);
 
     public static final double kMaxLinearSpeedMetersPerSec = Units.feetToMeters(15);
 
-    public static final double kMaxAngularSpeedRadPerSec = kMaxLinearSpeedMetersPerSec / kWheelRadiusMeters;
+    public static final double kMaxAngularSpeedRadPerSec = kMaxLinearSpeedMetersPerSec / kDriveBaseRadiusMeters;
   }
   public static final class KeyPoints {
     //index of name matches with index of Pose2d. coordinates are not final, nor the rotation value
@@ -209,7 +209,7 @@ public final class Constants {
                 // Cam mounted facing forward, half a meter forward of center, half a meter up from center.
                 // TODO: Configure this
                 public static final Transform3d kRobotToCam =
-                        new Transform3d(new Translation3d(0.3, 0.0, 0.1), new Rotation3d(0, 0, 0));
+                        new Transform3d(new Translation3d(Units.inchesToMeters(-4.25), Units.inchesToMeters(-12.125), Units.inchesToMeters(12.25)), new Rotation3d(0, Units.degreesToRadians(180.0 + 45.0), 0));
 
                 // The layout of the AprilTags on the field
                 public static final AprilTagFieldLayout kTagLayout =
