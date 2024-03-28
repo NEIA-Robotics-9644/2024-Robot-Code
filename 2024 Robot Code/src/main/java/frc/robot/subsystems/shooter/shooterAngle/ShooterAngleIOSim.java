@@ -13,6 +13,8 @@ public class ShooterAngleIOSim implements ShooterAngleIO {
 
     private boolean manualControl = false;
 
+    private double maxSpeedDegPerSec;
+
     @Override
     public void setAngleDeg(double setpoint) {
         angleFeedback.setSetpoint(setpoint);
@@ -45,9 +47,9 @@ public class ShooterAngleIOSim implements ShooterAngleIO {
     }
 
     @Override
-    public void setManualVelocityDegPerSec(double velocity) {
+    public void setManualVelocity(double normalizedVelocity) {
         if (manualControl) {
-            double delta = velocity * 0.02;
+            double delta = normalizedVelocity * maxSpeedDegPerSec  * 0.02;
             angle = Math.max(bottomLimit, Math.min(topLimit, angle + delta));
         }
     }

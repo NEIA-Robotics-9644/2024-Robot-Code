@@ -16,9 +16,9 @@ public class MoveShooterToBottomAndResetCmd extends Command {
     private final double speed;
 
 
-    public MoveShooterToBottomAndResetCmd(ShooterSubsystem shooter, double speedDegPerSec) {
+    public MoveShooterToBottomAndResetCmd(ShooterSubsystem shooter, double normalizedSpeed) {
         this.shooter = shooter;
-        this.speed = speedDegPerSec;
+        this.speed = normalizedSpeed;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class MoveShooterToBottomAndResetCmd extends Command {
     @Override
     public void execute() {
         
-        shooter.setManualAngleVelocityDegPerSec(-speed);
+        shooter.setManualAngleVelocity(-speed);
     }
 
     @Override
