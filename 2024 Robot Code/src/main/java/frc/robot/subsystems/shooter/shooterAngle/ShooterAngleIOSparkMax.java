@@ -15,6 +15,8 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
     
     private final double encoderOffsetDeg = 0.0;
 
+    private final double startingOffsetDeg = 75.0;
+
     private final boolean encoderReversed = false;
 
 
@@ -25,11 +27,15 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
     private final boolean leftReversed = false;
     private final boolean rightReversed = true;
 
+
+
     private double setpointDeg = 0.0;
+
+
 
     private double encoderReadingRotationsToAngleDeg = 360.0 / 80.0;
 
-    private double maxSpeedDegPerSec = 100.0;
+    private final double maxSpeedDegPerSec = 50.0;
 
 
 
@@ -56,13 +62,15 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
         // Set the right motor to follow the left motor, but keep in mind that they might be reversed
         this.rightAngleMotor.follow(this.leftAngleMotor, leftReversed != rightReversed);
 
-        this.leftAngleMotor.setSmartCurrentLimit(20);
-        this.rightAngleMotor.setSmartCurrentLimit(20);
+        this.leftAngleMotor.setSmartCurrentLimit(40);
+        this.rightAngleMotor.setSmartCurrentLimit(40);
         this.leftAngleMotor.setOpenLoopRampRate(0.5);
         this.rightAngleMotor.setOpenLoopRampRate(0.5);
 
         this.leftAngleMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         this.rightAngleMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+
+        
 
         
         
@@ -71,6 +79,9 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
         this.rightAngleMotor.burnFlash();
 
         this.feedback.setTolerance(0.1);
+
+
+        leftAngleMotor.getEncoder().setPosition((bottomLimitDeg + encoderOffsetDeg + startingOffsetDeg) / encoderReadingRotationsToAngleDeg);
         
     }
 
@@ -140,9 +151,9 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
     }
 
     @Override
-    public void setManualVelocityDegPerSec(double velocity) {
+    public void setManualVelocity(double normalizedVelocity) {
         if (manualControl) {
-            leftAngleMotor.set(velocity / maxSpeedDegPerSec);
+            leftAngleMotor.set(normalizedVelocity);
         }
     }
 
@@ -163,7 +174,8 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
 
     @Override
     public void resetAngleToBottom() {
-        leftAngleMotor.getEncoder().setPosition((bottomLimitDeg + encoderOffsetDeg) / 360.0);
+        
+        leftAngleMotor.getEncoder().setPosition((bottomLimitDeg + encoderOffsetDeg) / encoderReadingRotationsToAngleDeg);
     }
 
 

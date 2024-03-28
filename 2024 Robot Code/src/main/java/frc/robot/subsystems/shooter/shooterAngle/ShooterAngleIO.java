@@ -23,11 +23,11 @@ public interface ShooterAngleIO {
     public void setManualControl(boolean enabled);
 
     /*
-     * Set the velocity of the mechanism in degrees per second
+     * Set the velocity of the mechanism
      * Negative is always down.
      * This is only used when manual control is enabled
      */
-    public void setManualVelocityDegPerSec(double velocity);
+    public void setManualVelocity(double velocity);
 
 
     /*

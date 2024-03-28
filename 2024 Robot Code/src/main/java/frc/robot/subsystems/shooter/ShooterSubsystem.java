@@ -180,9 +180,9 @@ public class ShooterSubsystem extends SubsystemBase {
      * Set the velocity of the angle mechanism
      * This is only used when manual control is enabled
      */
-    public void setManualAngleVelocityDegPerSec(double velocity) {
+    public void setManualAngleVelocity(double normalizedVelocity) {
         
-        angleMechanism.setManualVelocityDegPerSec(velocity);
+        angleMechanism.setManualVelocity(normalizedVelocity);
     }    
 
 
