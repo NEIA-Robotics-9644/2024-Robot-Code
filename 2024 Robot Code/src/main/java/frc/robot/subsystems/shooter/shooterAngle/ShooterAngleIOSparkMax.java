@@ -15,7 +15,7 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
     
     private final double encoderOffsetDeg = 0.0;
 
-    private final double startingOffsetDeg = 75.0;
+    private final double startingOffsetDeg = 69.75;
 
     private final boolean encoderReversed = false;
 

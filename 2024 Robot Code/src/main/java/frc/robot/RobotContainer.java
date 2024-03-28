@@ -95,7 +95,7 @@ public class RobotContainer {
           new FeederWheelIOSparkMax(23),
           new ShooterAngleIOSparkMax(24, 25),
           new NoteSensorIORoboRio(),
-          new double[] { 0, 30, 60, 100},
+          new double[] { 0, 25, 55, 70},
           new double[] { 1, 0.4, 1, 0.4},
           new double[] { 1, 0.4, 1, 0.4}
       );
@@ -114,7 +114,7 @@ public class RobotContainer {
           new FeederWheelIOSim(),
           new ShooterAngleIOSim(),
           new NoteSensorIOSim(),
-          new double[] { 0, 30, 60, 100},
+          new double[] { 0, 25, 55, 70},
           new double[] { 1, 0.4, 1, 0.4},
           new double[] { 1, 0.4, 1, 0.4}
       );
@@ -190,7 +190,7 @@ public class RobotContainer {
 
     // Speaker
     var oYTrigger = new Trigger(() -> operatorHID.getYButton());
-    oYTrigger.onTrue(Commands.runOnce(() -> shooter.goToSetpoint(3)));
+    //oYTrigger.onTrue(Commands.runOnce(() -> shooter.goToSetpoint(3)));
     
     
 
@@ -237,10 +237,10 @@ public class RobotContainer {
 
     // HOOK COMMANDS
     var oRightAxisRight = new Trigger(() -> operatorHID.getRightX() > 0.05);
-    oRightAxisRight.whileTrue(Commands.runOnce(() -> hook.moveHook(0.5)));
+    oRightAxisRight.whileTrue(Commands.run(() -> hook.moveHook(0.1)));
 
     var oRightAxisLeft = new Trigger(() -> operatorHID.getRightX() < -0.05);
-    oRightAxisLeft.whileTrue(Commands.runOnce(() -> hook.moveHook(-0.5)));
+    oRightAxisLeft.whileTrue(Commands.run(() -> hook.moveHook(-0.1)));
   }
 
   /**
