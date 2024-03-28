@@ -7,8 +7,6 @@ public class HookSubsystem extends SubsystemBase{
 
     private final HookMotorIO hook;
 
-    private final boolean hookReversed = false;
-
     public HookSubsystem() {
         throw new IllegalArgumentException("You must pass in valid hardware for a subsystem to work");
     }
@@ -20,8 +18,6 @@ public class HookSubsystem extends SubsystemBase{
         }
 
         this.hook = hook;
-
-        this.hook.setInverted(hookReversed);
 
         
     }

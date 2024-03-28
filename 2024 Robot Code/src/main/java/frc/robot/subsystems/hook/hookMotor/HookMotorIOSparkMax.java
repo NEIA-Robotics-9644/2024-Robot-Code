@@ -46,12 +46,4 @@ public class HookMotorIOSparkMax implements HookMotorIO {
     public double getMotorRotations() {
         return motor.getEncoder().getPosition();
     }
-
-
-    @Override
-    public void setInverted(boolean inverted) {
-        motor.setInverted(inverted);
-    }
-
-
 }

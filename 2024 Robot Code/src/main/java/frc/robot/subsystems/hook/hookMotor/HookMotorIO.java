@@ -9,6 +9,4 @@ public interface HookMotorIO {
     public double getMotorVelocityRPM();
 
     public void periodic();
-
-    public void setInverted(boolean inverted);
 }

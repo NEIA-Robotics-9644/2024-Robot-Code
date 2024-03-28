@@ -71,9 +71,4 @@ public class HookMotorIOSim implements HookMotorIO {
     public double getMotorRotations() {
         return positionRotations;
     }
-    
-    @Override
-    public void setInverted(boolean inverted) {
-        this.inverted = inverted;
-    }
 }

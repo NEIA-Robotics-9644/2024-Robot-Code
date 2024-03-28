@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-
 import com.ctre.phoenix6.Utils;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
@@ -37,6 +36,10 @@ import frc.robot.subsystems.shooter.shooterAngle.ShooterAngleIOSim;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.shooter.noteSensor.NoteSensorIORoboRio;
 import frc.robot.subsystems.shooter.noteSensor.NoteSensorIOSim;
+import frc.robot.subsystems.hook.HookSubsystem;
+import frc.robot.subsystems.hook.hookMotor.HookMotorIOSim;
+import frc.robot.subsystems.hook.hookMotor.HookMotorIOSparkMax;
+
 
 
 
@@ -65,7 +68,8 @@ public class RobotContainer {
   
   
   private final ClimberSubsystem climber;
-
+ 
+  private final HookSubsystem hook;
   
   
   private final SmartDashboardDisplay display;
@@ -99,6 +103,8 @@ public class RobotContainer {
           new ClimberMotorIOSparkMax(27)
       ); 
 
+      hook = new HookSubsystem(new HookMotorIOSparkMax(28));
+
     } else {
       shooter = new ShooterSubsystem(
           new ShooterWheelIOSim(),
@@ -115,6 +121,8 @@ public class RobotContainer {
           new ClimberMotorIOSim(),
           new ClimberMotorIOSim()
       );
+
+      hook = new HookSubsystem(new HookMotorIOSim());
     }
     
 
@@ -186,7 +194,7 @@ public class RobotContainer {
 
     // Reset Shooter Angle
     var oStartTrigger = new Trigger(() -> operatorHID.getStartButton());
-    oStartTrigger.whileTrue(new MoveShooterToBottomAndResetCmd(shooter, 0.05));
+    oStartTrigger.whileTrue(new MoveShooterToBottomAndResetCmd(shooter, 1));
 
 
     // Adjust the shooter angle of this setpoint
@@ -224,6 +232,13 @@ public class RobotContainer {
 
     var oLeftYAxisDown = new Trigger(() -> operatorHID.getLeftY() < -0.05);
     oLeftYAxisDown.whileTrue(new ClimberCmd(climber, () -> operatorHID.getLeftY()));
+
+    // HOOK COMMANDS
+    var oRightAxisRight = new Trigger(() -> operatorHID.getRightX() > 0.05);
+    oRightAxisRight.whileTrue(Commands.runOnce(() -> hook.moveHook(0.5)));
+
+    var oRightAxisLeft = new Trigger(() -> operatorHID.getRightX() < -0.05);
+    oRightAxisLeft.whileTrue(Commands.runOnce(() -> hook.moveHook(-0.5)));
   }
 
   /**
