@@ -61,6 +61,7 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
         this.leftAngleMotor.setOpenLoopRampRate(0.5);
         this.rightAngleMotor.setOpenLoopRampRate(0.5);
 
+
         this.leftAngleMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         this.rightAngleMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
