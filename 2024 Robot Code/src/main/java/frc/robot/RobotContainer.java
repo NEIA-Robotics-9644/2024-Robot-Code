@@ -7,17 +7,13 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 
 import com.ctre.phoenix6.Utils;
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import frc.robot.Constants.DriveConstants;
@@ -25,7 +21,6 @@ import frc.robot.Constants.Modes;
 import frc.robot.commands.ClimberCmd;
 import frc.robot.commands.JoystickDriveCmd;
 import frc.robot.commands.MoveShooterToBottomAndResetCmd;
-import frc.robot.commands.MoveShooterToSetpointCmd;
 import frc.robot.commands.RunSourceIntakeCmd;
 import frc.robot.commands.ShootWhenReadyCmd;
 import frc.robot.commands.SpinShooterWheelsCmd;
@@ -36,7 +31,7 @@ import frc.robot.subsystems.drive.SwerveDriveSubsystem;
 import frc.robot.subsystems.shooter.feederWheel.FeederWheelIOSim;
 import frc.robot.subsystems.shooter.feederWheel.FeederWheelIOSparkMax;
 import frc.robot.subsystems.shooter.shooterAngle.ShooterAngleIOSparkMax;
-import frc.robot.subsystems.shooter.shooterWheel.ShooterWheelIOSparkMax;
+import frc.robot.subsystems.shooter.shooterWheel.ShooterWheelIOTalonFX;
 import frc.robot.subsystems.shooter.shooterWheel.ShooterWheelIOSim;
 import frc.robot.subsystems.shooter.shooterAngle.ShooterAngleIOSim;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -89,8 +84,8 @@ public class RobotContainer {
 
     if (mode == Modes.REAL) {
       shooter = new ShooterSubsystem(
-          new ShooterWheelIOSparkMax(21),
-          new ShooterWheelIOSparkMax(22),
+          new ShooterWheelIOTalonFX(21),
+          new ShooterWheelIOTalonFX(22),
           new FeederWheelIOSparkMax(23),
           new ShooterAngleIOSparkMax(24, 25),
           new NoteSensorIORoboRio(),
