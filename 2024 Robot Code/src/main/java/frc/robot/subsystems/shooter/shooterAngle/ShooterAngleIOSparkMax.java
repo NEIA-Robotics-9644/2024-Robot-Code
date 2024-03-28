@@ -29,7 +29,7 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
 
     private double encoderReadingRotationsToAngleDeg = 360.0 / 80.0;
 
-    private double maxSpeedDegPerSec = 5.0;
+    private double maxSpeedDegPerSec = 100.0;
 
 
 
@@ -56,10 +56,11 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
         // Set the right motor to follow the left motor, but keep in mind that they might be reversed
         this.rightAngleMotor.follow(this.leftAngleMotor, leftReversed != rightReversed);
 
-        this.leftAngleMotor.setSmartCurrentLimit(10);
-        this.rightAngleMotor.setSmartCurrentLimit(10);
-        this.leftAngleMotor.setOpenLoopRampRate(0.01);
-        this.rightAngleMotor.setOpenLoopRampRate(0.01);
+        this.leftAngleMotor.setSmartCurrentLimit(20);
+        this.rightAngleMotor.setSmartCurrentLimit(20);
+        this.leftAngleMotor.setOpenLoopRampRate(0.5);
+        this.rightAngleMotor.setOpenLoopRampRate(0.5);
+
 
         this.leftAngleMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         this.rightAngleMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
@@ -96,12 +97,14 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
 
             double output = feedforwardOutput + feedbackOutput;
 
+            
             // Clamp so it is under the max speed
             if (output > maxSpeedDegPerSec) {
                 output = maxSpeedDegPerSec;
             } else if (output < -maxSpeedDegPerSec) {
                 output = -maxSpeedDegPerSec;
             }
+            
 
             // Set the motor output
             leftAngleMotor.set(output);
