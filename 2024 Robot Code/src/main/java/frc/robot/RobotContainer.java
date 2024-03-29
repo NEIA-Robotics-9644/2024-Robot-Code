@@ -9,12 +9,15 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import com.ctre.phoenix6.Utils;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.Modes;
@@ -22,7 +25,7 @@ import frc.robot.commands.ClimberCmd;
 import frc.robot.commands.JoystickDriveCmd;
 import frc.robot.commands.MoveHookCmd;
 import frc.robot.commands.MoveShooterToBottomAndResetCmd;
-import frc.robot.commands.MoveShooterToSetpointCmd;
+import frc.robot.commands.MoveShooterToManualAngleCmd;
 import frc.robot.commands.RunSourceIntakeCmd;
 import frc.robot.commands.ShootWhenReadyCmd;
 import frc.robot.commands.SpinShooterWheelsCmd;
@@ -262,20 +265,26 @@ public class RobotContainer {
 
     boolean shouldShoot = true;
     boolean shouldDrive = true;
-    int shooterSetpoint = 2;
+    double shooterAngle = 55;
     double angleMoveDuration = 4;
     double spinUpWheelsDuration = 1.5;
     double shootNoteDuration = 1;
-    Command movementPath = Commands.none();
+    Command movementPath = new PathPlannerAuto("TestAuto");
     boolean movementPathTimedMode = true;
     double movementPathDuration = 10;
 
     SequentialCommandGroup autoCommand = new SequentialCommandGroup();
     if (shouldShoot) {
       autoCommand.addCommands(
-        new MoveShooterToSetpointCmd(shooter, shooterSetpoint).withTimeout(angleMoveDuration),
-        new SpinShooterWheelsCmd(shooter).withTimeout(spinUpWheelsDuration),
-        new ShootWhenReadyCmd(shooter, 0.1, 0.99).withTimeout(shootNoteDuration)
+        new MoveShooterToManualAngleCmd(shooter, shooterAngle).withTimeout(angleMoveDuration),
+        new ParallelDeadlineGroup(
+          new SequentialCommandGroup(
+            new WaitCommand(spinUpWheelsDuration),
+            new ShootWhenReadyCmd(shooter, 0.1, 0.99).withTimeout(shootNoteDuration)
+          ),
+          new SpinShooterWheelsCmd(shooter).withTimeout(spinUpWheelsDuration)
+          
+        )
       );
     }
       

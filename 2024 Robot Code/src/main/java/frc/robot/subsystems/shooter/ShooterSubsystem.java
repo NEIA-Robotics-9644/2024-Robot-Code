@@ -32,6 +32,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     private final NoteSensorIO noteSensor;
 
+    private double angleSetpoint = 0.0; 
+
 
     public ShooterSubsystem() {
         throw new IllegalArgumentException("You must pass in valid hardware for a subsystem to work");
@@ -82,7 +84,8 @@ public class ShooterSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
 
-        angleMechanism.setAngleDeg(angleSetpoints[setpointIndex]);
+        angleMechanism.setAngleDeg(angleSetpoint);
+        
         
         angleMechanism.periodic();
         leftShooterWheel.periodic();
@@ -111,6 +114,14 @@ public class ShooterSubsystem extends SubsystemBase {
             leftShooterWheel.spinWheel(leftShooterWheelReversed ? speed : -speed);
             rightShooterWheel.spinWheel(rightShooterWheelReversed ? -speed : speed);
         }
+    }
+
+    public void setPresetAngleSetpoint(int setpoint) {
+        this.angleSetpoint = angleSetpoints[setpoint];
+    }
+
+    public void setManualAngleSetpoint(double angle) {
+        this.angleSetpoint = angle;
     }
 
     /*
@@ -142,6 +153,15 @@ public class ShooterSubsystem extends SubsystemBase {
         } else {
             feeder.spinWheel( feederReversed ? feederSpeedSetpoints[setpointIndex] : -feederSpeedSetpoints[setpointIndex]);
         }
+    }
+
+
+    /*
+     * Spin the feeder wheel manually
+     * This is used when not moving to a specific setpoint
+     */
+    public void spinFeederWheelManual(double normalizedSpeed) {
+        feeder.spinWheel(feederReversed ? -normalizedSpeed : normalizedSpeed);
     }
 
 
