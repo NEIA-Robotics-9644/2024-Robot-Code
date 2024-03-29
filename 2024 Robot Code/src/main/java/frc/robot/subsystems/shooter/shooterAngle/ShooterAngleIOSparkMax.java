@@ -41,8 +41,6 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
 
     private boolean manualControl = false;
 
-    private boolean moveToSetpoint = false;
-
     
 
     private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.0, 0.1, 0.0);  // TODO: Tune these
@@ -101,28 +99,27 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
     @Override
     public void periodic() {
 
-    
+        if (!manualControl) {
 
-    if (!manualControl) {
-        // Calculate the feedforward
-        double feedforwardOutput = feedforward.calculate(setpointDeg);
+            // Calculate the feedforward
+            double feedforwardOutput = feedforward.calculate(setpointDeg);
 
-        // Calculate the feedback
-        double feedbackOutput = feedback.calculate(getAngleDeg());
+            // Calculate the feedback
+            double feedbackOutput = feedback.calculate(getAngleDeg());
 
-        double output = feedforwardOutput + feedbackOutput;
+            double output = feedforwardOutput + feedbackOutput;
 
-        
-        // Clamp so it is under the max speed
-        if (output > maxSpeedDegPerSec) {
-            output = maxSpeedDegPerSec;
-        } else if (output < -maxSpeedDegPerSec) {
-            output = -maxSpeedDegPerSec;
+            
+            // Clamp so it is under the max speed
+            if (output > maxSpeedDegPerSec) {
+                output = maxSpeedDegPerSec;
+            } else if (output < -maxSpeedDegPerSec) {
+                output = -maxSpeedDegPerSec;
+            }
+
+
         }
-
-
-    }
-        
+            
 
 
         

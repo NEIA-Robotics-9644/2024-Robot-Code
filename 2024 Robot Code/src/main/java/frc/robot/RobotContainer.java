@@ -265,7 +265,7 @@ public class RobotContainer {
 
     boolean shouldShoot = true;
     boolean shouldDrive = true;
-    double shooterAngle = 55;
+    double shooterAngle = 25;
     double angleMoveDuration = 4;
     double spinUpWheelsDuration = 1.5;
     double shootNoteDuration = 1;
@@ -276,13 +276,14 @@ public class RobotContainer {
     SequentialCommandGroup autoCommand = new SequentialCommandGroup();
     if (shouldShoot) {
       autoCommand.addCommands(
-        new MoveShooterToManualAngleCmd(shooter, shooterAngle).withTimeout(angleMoveDuration),
+        new MoveShooterToManualAngleCmd(shooter, shooterAngle, 1, 1).withTimeout(angleMoveDuration),
         new ParallelDeadlineGroup(
           new SequentialCommandGroup(
             new WaitCommand(spinUpWheelsDuration),
             new ShootWhenReadyCmd(shooter, 0.1, 0.99).withTimeout(shootNoteDuration)
           ),
-          new SpinShooterWheelsCmd(shooter).withTimeout(spinUpWheelsDuration)
+          new SpinShooterWheelsCmd(shooter).withTimeout(spinUpWheelsDuration),
+          new MoveShooterToBottomAndResetCmd(shooter, 0.05)
           
         )
       );

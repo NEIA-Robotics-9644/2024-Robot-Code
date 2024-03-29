@@ -33,6 +33,8 @@ public class ShooterSubsystem extends SubsystemBase {
     private final NoteSensorIO noteSensor;
 
     private double angleSetpoint = 0.0; 
+    private double wheelSpeedSetpoint = 0.1;
+    private double feederSpeedSetpoint = 0.1;
 
 
     public ShooterSubsystem() {
@@ -118,10 +120,14 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public void setPresetAngleSetpoint(int setpoint) {
         this.angleSetpoint = angleSetpoints[setpoint];
+        this.wheelSpeedSetpoint = wheelSpeedSetpoints[setpoint];
+        this.feederSpeedSetpoint = feederSpeedSetpoints[setpoint];
     }
 
-    public void setManualAngleSetpoint(double angle) {
+    public void setManualAngleSetpoint(double angle, double wheelSpeed, double feederSpeed) {
         this.angleSetpoint = angle;
+        this.wheelSpeedSetpoint = wheelSpeed;
+        this.feederSpeedSetpoint = feederSpeed;
     }
 
     /*
@@ -149,9 +155,9 @@ public class ShooterSubsystem extends SubsystemBase {
      */
     public void spinFeederWheel(boolean reversed) {
         if (reversed) {
-            feeder.spinWheel(feederReversed ? -feederSpeedSetpoints[setpointIndex] : feederSpeedSetpoints[setpointIndex]);
+            feeder.spinWheel(feederReversed ? -feederSpeedSetpoint : feederSpeedSetpoint);
         } else {
-            feeder.spinWheel( feederReversed ? feederSpeedSetpoints[setpointIndex] : -feederSpeedSetpoints[setpointIndex]);
+            feeder.spinWheel( feederReversed ? feederSpeedSetpoint : -feederSpeedSetpoint);
         }
     }
 
@@ -229,7 +235,9 @@ public class ShooterSubsystem extends SubsystemBase {
         if (setpointIndex < 0 || setpointIndex >= angleSetpoints.length) {
             throw new IllegalArgumentException("Invalid setpoint.  Setpoint must be between 0 and " + (angleSetpoints.length - 1) + " inclusive.");
         }
-        this.setpointIndex = setpointIndex;
+        this.angleSetpoint = angleSetpoints[setpointIndex];
+        this.wheelSpeedSetpoint = wheelSpeedSetpoints[setpointIndex];
+        this.feederSpeedSetpoint = feederSpeedSetpoints[setpointIndex];
     }
 
 

@@ -12,10 +12,14 @@ public class MoveShooterToManualAngleCmd extends Command {
 
     private final ShooterSubsystem shooterSubsystem;
     private final double angle;
+    private final double shooterWheelSpeed;
+    private final double feederWheelSpeed;
 
-    public MoveShooterToManualAngleCmd(ShooterSubsystem shooter, double angle) {
+    public MoveShooterToManualAngleCmd(ShooterSubsystem shooter, double angle, double shooterWheelSpeed, double feederWheelSpeed) {
         this.shooterSubsystem = shooter;
         this.angle = angle;
+        this.shooterWheelSpeed = shooterWheelSpeed;
+        this.feederWheelSpeed = feederWheelSpeed;
 
     }
 
@@ -24,7 +28,7 @@ public class MoveShooterToManualAngleCmd extends Command {
     }
 
     public void execute() {
-        shooterSubsystem.setManualAngleSetpoint(angle);
+        shooterSubsystem.setManualAngleSetpoint(angle, shooterWheelSpeed, feederWheelSpeed);
     }
 
     public void end(boolean interrupted) {
