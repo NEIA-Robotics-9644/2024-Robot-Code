@@ -22,13 +22,13 @@ public class HookMotorIOSparkMax implements HookMotorIO {
 
     @Override
     public void spinMotor(double normalizedVelocity) {
-        this.velocity = Math.max(-1.0, Math.min(1.0, normalizedVelocity));
+        this.velocity = Math.max(-1.0, Math.min(1.0, normalizedVelocity * 2));
         newInput = true;
     }
 
     @Override
     public double getMotorVelocityRPM() {
-        return motor.getEncoder().getVelocity();
+        return motor.getEncoder().getVelocity() / 2;
     }
 
     @Override
@@ -44,6 +44,6 @@ public class HookMotorIOSparkMax implements HookMotorIO {
 
     @Override
     public double getMotorRotations() {
-        return motor.getEncoder().getPosition();
+        return motor.getEncoder().getPosition() / 2;
     }
 }

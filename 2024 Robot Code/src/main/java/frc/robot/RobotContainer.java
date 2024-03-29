@@ -20,6 +20,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.Modes;
 import frc.robot.commands.ClimberCmd;
 import frc.robot.commands.JoystickDriveCmd;
+import frc.robot.commands.MoveHookCmd;
 import frc.robot.commands.MoveShooterToBottomAndResetCmd;
 import frc.robot.commands.MoveShooterToSetpointCmd;
 import frc.robot.commands.RunSourceIntakeCmd;
@@ -132,7 +133,7 @@ public class RobotContainer {
     
     drivetrain.getPigeon2().reset();
 
-    display = new SmartDashboardDisplay(drivetrain, shooter, climber);
+    display = new SmartDashboardDisplay(drivetrain, shooter, climber, hook);
 
 
 
@@ -236,11 +237,8 @@ public class RobotContainer {
     oLeftYAxisDown.whileTrue(new ClimberCmd(climber, () -> operatorHID.getLeftY()));
 
     // HOOK COMMANDS
-    var oRightAxisRight = new Trigger(() -> operatorHID.getRightX() > 0.05);
-    oRightAxisRight.whileTrue(Commands.run(() -> hook.moveHook(0.1)));
-
-    var oRightAxisLeft = new Trigger(() -> operatorHID.getRightX() < -0.05);
-    oRightAxisLeft.whileTrue(Commands.run(() -> hook.moveHook(-0.1)));
+    var oRightAxis = new Trigger(() -> Math.abs(operatorHID.getRightX()) > 0.05);
+    oRightAxis.whileTrue(new MoveHookCmd(hook, operatorHID::getRightX));
   }
 
   /**

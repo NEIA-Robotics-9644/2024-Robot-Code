@@ -35,10 +35,10 @@ public class HookSubsystem extends SubsystemBase{
     }
 
     public double getHookRotations() {
-        return (hook.getMotorRotations()) / 2;
+        return (hook.getMotorRotations());
     }
 
     public double getHookSpeed() {
-        return (Math.abs(hook.getMotorVelocityRPM())) / 2;
+        return (Math.abs(hook.getMotorVelocityRPM()));
     }
 }
