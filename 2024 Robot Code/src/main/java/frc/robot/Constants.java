@@ -48,8 +48,8 @@ public final class Constants {
   }
 
   public static final class PhysicalRobotCharacteristics {
-    public static final double kWheelBaseMeters = Units.inchesToMeters(26);
-    public static final double kTrackWidthMeters = Units.inchesToMeters(26);
+    public static final double kWheelBaseMeters = Units.inchesToMeters(22.5);
+    public static final double kTrackWidthMeters = Units.inchesToMeters(22.5);
 
     public static final Translation2d[] moduleTranslations = new Translation2d[] {
             new Translation2d(kTrackWidthMeters / 2.0, kWheelBaseMeters / 2.0),
@@ -159,8 +159,8 @@ public final class Constants {
                 private static final int kFrontLeftEncoderId = 3;
                 private static final double kFrontLeftEncoderOffset = 0.20947265625;
 
-                private static final double kFrontLeftXPosInches = 13;
-                private static final double kFrontLeftYPosInches = 13;
+                private static final double kFrontLeftXPosInches = 11.25;
+                private static final double kFrontLeftYPosInches = 11.25;
 
                 // Front Right
                 private static final int kFrontRightDriveMotorId = 4;
@@ -168,8 +168,8 @@ public final class Constants {
                 private static final int kFrontRightEncoderId = 6;
                 private static final double kFrontRightEncoderOffset = 0.208251953125;
 
-                private static final double kFrontRightXPosInches = 13;
-                private static final double kFrontRightYPosInches = -13;
+                private static final double kFrontRightXPosInches = 11.25;
+                private static final double kFrontRightYPosInches = -11.25;
 
                 // Back Left
                 private static final int kBackLeftDriveMotorId = 7;
@@ -177,8 +177,8 @@ public final class Constants {
                 private static final int kBackLeftEncoderId = 9;
                 private static final double kBackLeftEncoderOffset = -0.205078125;
 
-                private static final double kBackLeftXPosInches = -13;
-                private static final double kBackLeftYPosInches = 13;
+                private static final double kBackLeftXPosInches = -11.25;
+                private static final double kBackLeftYPosInches = 11.25;
 
                 // Back Right
                 private static final int kBackRightDriveMotorId = 10;
@@ -186,8 +186,8 @@ public final class Constants {
                 private static final int kBackRightEncoderId = 12;
                 private static final double kBackRightEncoderOffset = 0.26025390625;
 
-                private static final double kBackRightXPosInches = -13;
-                private static final double kBackRightYPosInches = -13;
+                private static final double kBackRightXPosInches = -11.25;
+                private static final double kBackRightYPosInches = -11.25;
 
 
                 private static final SwerveModuleConstants FrontLeft = ConstantCreator.createModuleConstants(
