@@ -232,6 +232,7 @@ public class ShooterSubsystem extends SubsystemBase {
         this.angleSetpoint = angleSetpoints[setpointIndex];
         this.wheelSpeedSetpoint = wheelSpeedSetpoints[setpointIndex];
         this.feederSpeedSetpoint = feederSpeedSetpoints[setpointIndex];
+        this.setpointIndex = setpointIndex;
     }
 
 
@@ -240,15 +241,18 @@ public class ShooterSubsystem extends SubsystemBase {
      */
     public void modifyAngleSetpoint(double delta) {
         angleSetpoints[setpointIndex] += delta;
+        goToSetpoint(setpointIndex);
     }
     
 
     public void modifyFeederSetpoint(double delta) {
         feederSpeedSetpoints[setpointIndex] += delta;
+        goToSetpoint(setpointIndex);
     }
 
     public void modifyShooterSpeedSetpoint(double delta) {
         wheelSpeedSetpoints[setpointIndex] += delta;
+        goToSetpoint(setpointIndex);
     }
 
     public int getSetpointIndex() {

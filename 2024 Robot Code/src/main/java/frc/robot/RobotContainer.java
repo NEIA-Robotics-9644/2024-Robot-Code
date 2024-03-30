@@ -209,24 +209,21 @@ public class RobotContainer {
 
 
     // Adjust the shooter angle of this setpoint
-    operatorController.povUp().onTrue(Commands.runOnce(() -> shooter.modifyAngleSetpoint(1)));
-    operatorController.povDown().onTrue(Commands.runOnce(() -> shooter.modifyAngleSetpoint(-1)));
-
     var oPOVUpTrigger = new Trigger(() -> operatorHID.getPOV() == 0);
-    oPOVUpTrigger.whileTrue(Commands.runOnce(() -> shooter.modifyAngleSetpoint(1)));
+    oPOVUpTrigger.onTrue(Commands.runOnce(() -> shooter.modifyAngleSetpoint(1)));
     
     var oPOVDownTrigger = new Trigger(() -> operatorHID.getPOV() == 180);
-    oPOVDownTrigger.whileTrue(Commands.runOnce(() -> shooter.modifyAngleSetpoint(-1)));
+    oPOVDownTrigger.onTrue(Commands.runOnce(() -> shooter.modifyAngleSetpoint(-1)));
     
 
 
     // Adjust the shooter wheel speed of this setpoint
     
     var oPOVRightTrigger = new Trigger(() -> operatorHID.getPOV() == 90);
-    oPOVRightTrigger.whileTrue(Commands.runOnce(() -> shooter.modifyShooterSpeedSetpoint(0.05)));
+    oPOVRightTrigger.onTrue(Commands.runOnce(() -> shooter.modifyShooterSpeedSetpoint(0.05)));
 
     var oPOVLeftTrigger = new Trigger(() -> operatorHID.getPOV() == 270);
-    oPOVLeftTrigger.whileTrue(Commands.runOnce(() -> shooter.modifyShooterSpeedSetpoint(-0.05)));
+    oPOVLeftTrigger.onTrue(Commands.runOnce(() -> shooter.modifyShooterSpeedSetpoint(-0.05)));
 
     // Source Intake
 
