@@ -15,9 +15,11 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
     
     private final double encoderOffsetDeg = 0.0;
 
-    private final double startingOffsetDeg = 69.75;
+    private double startingOffsetDeg = 69.75;
 
     private final boolean encoderReversed = false;
+
+    private final double physicalMaxSpeed = 100;
 
 
     
@@ -35,7 +37,7 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
 
     private double encoderReadingRotationsToAngleDeg = 360.0 / 80.0;
 
-    private final double maxSpeedDegPerSec = 50.0;
+    private final double maxSpeedDegPerSec = 10.0;
 
 
 
@@ -43,8 +45,8 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
 
     
 
-    private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.0, 0.1, 0.0);  // TODO: Tune these
-    private PIDController feedback = new PIDController(0.008, 0.0, 0.0);  // TODO: Tune these
+    
+    private PIDController feedback = new PIDController(0.5, 0.0, 0.0);  // TODO: Tune these
 
 
     public ShooterAngleIOSparkMax() {
@@ -82,7 +84,6 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
         this.feedback.setTolerance(0.1);
 
 
-        leftAngleMotor.getEncoder().setPosition((bottomLimitDeg + encoderOffsetDeg + startingOffsetDeg) / encoderReadingRotationsToAngleDeg);
         
     }
 
@@ -94,6 +95,8 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
         // Clamp the setpoint between the higher and lower limits
         double setpointClamped = Math.max(bottomLimitDeg, Math.min(topLimitDeg, setpoint));
         feedback.setSetpoint(setpointClamped);
+        
+        setpointDeg = setpointClamped;
     }
 
     @Override
@@ -101,13 +104,11 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
 
         if (!manualControl) {
 
-            // Calculate the feedforward
-            double feedforwardOutput = feedforward.calculate(setpointDeg);
 
             // Calculate the feedback
             double feedbackOutput = feedback.calculate(getAngleDeg());
 
-            double output = feedforwardOutput + feedbackOutput;
+            double output = feedbackOutput;
 
             
             // Clamp so it is under the max speed
@@ -116,6 +117,8 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
             } else if (output < -maxSpeedDegPerSec) {
                 output = -maxSpeedDegPerSec;
             }
+
+            this.leftAngleMotor.set(output / physicalMaxSpeed);
 
 
         }
@@ -135,7 +138,7 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
     public double getAngleDeg() {
         
         double angle = leftAngleMotor.getEncoder().getPosition() * encoderReadingRotationsToAngleDeg * (encoderReversed ? -1 : 1);
-        return angle + encoderOffsetDeg;
+        return angle + encoderOffsetDeg + startingOffsetDeg;
     }
 
 
@@ -175,6 +178,7 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
     public void resetAngleToBottom() {
         
         leftAngleMotor.getEncoder().setPosition((bottomLimitDeg + encoderOffsetDeg) / encoderReadingRotationsToAngleDeg);
+        startingOffsetDeg = 0.0;
     }
 
 

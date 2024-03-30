@@ -108,7 +108,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * Spin the shooter wheels
      */
     public void spinShooterWheels(boolean reversed) {
-        double speed = wheelSpeedSetpoints[setpointIndex];
+        double speed = wheelSpeedSetpoint;
         if (reversed) {
             leftShooterWheel.spinWheel(leftShooterWheelReversed ? -speed : speed);
             rightShooterWheel.spinWheel(rightShooterWheelReversed ? speed : -speed);
@@ -116,12 +116,6 @@ public class ShooterSubsystem extends SubsystemBase {
             leftShooterWheel.spinWheel(leftShooterWheelReversed ? speed : -speed);
             rightShooterWheel.spinWheel(rightShooterWheelReversed ? -speed : speed);
         }
-    }
-
-    public void setPresetAngleSetpoint(int setpoint) {
-        this.angleSetpoint = angleSetpoints[setpoint];
-        this.wheelSpeedSetpoint = wheelSpeedSetpoints[setpoint];
-        this.feederSpeedSetpoint = feederSpeedSetpoints[setpoint];
     }
 
     public void setManualAngleSetpoint(double angle, double wheelSpeed, double feederSpeed) {
@@ -265,7 +259,7 @@ public class ShooterSubsystem extends SubsystemBase {
      * Degrees
      */
     public double getAngleSetpoint() {
-        return angleSetpoints[setpointIndex];
+        return angleSetpoint;
     }
 
     /*
@@ -273,14 +267,14 @@ public class ShooterSubsystem extends SubsystemBase {
      
      */
     public double getWheelSpeedSetpoint() {
-        return wheelSpeedSetpoints[setpointIndex];
+        return wheelSpeedSetpoint;
     }
 
     /*
      * Normalized feeder speed setpoint
      */
     public double getFeederSpeedSetpoint() {
-        return feederSpeedSetpoints[setpointIndex];
+        return feederSpeedSetpoint;
     }
 
 }

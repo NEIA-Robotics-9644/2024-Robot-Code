@@ -7,25 +7,20 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import com.ctre.phoenix6.Utils;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.PathPlannerPath;
-
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.Modes;
 import frc.robot.commands.ClimberCmd;
 import frc.robot.commands.JoystickDriveCmd;
 import frc.robot.commands.MoveHookCmd;
 import frc.robot.commands.MoveShooterToBottomAndResetCmd;
-import frc.robot.commands.MoveShooterToManualAngleCmd;
 import frc.robot.commands.RunSourceIntakeCmd;
 import frc.robot.commands.ShootWhenReadyCmd;
 import frc.robot.commands.SpinShooterWheelsCmd;
@@ -79,6 +74,12 @@ public class RobotContainer {
   
   
   private final SmartDashboardDisplay display;
+
+  ShuffleboardTab autoTab;
+
+  GenericEntry shouldShoot;
+
+  AutoCreator autoCreator;
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -142,6 +143,10 @@ public class RobotContainer {
 
     // Configure the trigger bindings
     configureBindings();
+
+
+    autoCreator = new AutoCreator(shooter, drivetrain, climber);
+    
   }
 
   /**
@@ -182,15 +187,15 @@ public class RobotContainer {
 
     // Bottom
     var oATrigger = new Trigger(() -> operatorHID.getAButton());
-    oATrigger.onTrue(Commands.runOnce(() -> shooter.goToSetpoint(0)));
+    oATrigger.whileTrue(Commands.run(() -> shooter.goToSetpoint(0)));
     
     // Protected Shot
     var oBTrigger = new Trigger(() -> operatorHID.getBButton());
-    oBTrigger.onTrue(Commands.runOnce(() -> shooter.goToSetpoint(1)));
+    oBTrigger.whileTrue(Commands.run(() -> shooter.goToSetpoint(1)));
     
     // Source Intake
     var oXTrigger = new Trigger(() -> operatorHID.getXButton());
-    oXTrigger.onTrue(Commands.runOnce(() -> shooter.goToSetpoint(2)));
+    oXTrigger.whileTrue(Commands.run(() -> shooter.goToSetpoint(2)));
 
     // Speaker
     var oYTrigger = new Trigger(() -> operatorHID.getYButton());
@@ -263,44 +268,9 @@ public class RobotContainer {
     );
     */
 
-    boolean shouldShoot = true;
-    boolean shouldDrive = true;
-    double shooterAngle = 25;
-    double angleMoveDuration = 4;
-    double spinUpWheelsDuration = 1.5;
-    double shootNoteDuration = 1;
-    Command movementPath = new PathPlannerAuto("TestAuto");
-    boolean movementPathTimedMode = true;
-    double movementPathDuration = 10;
 
-    SequentialCommandGroup autoCommand = new SequentialCommandGroup();
-    if (shouldShoot) {
-      autoCommand.addCommands(
-        new MoveShooterToManualAngleCmd(shooter, shooterAngle, 1, 1).withTimeout(angleMoveDuration),
-        new ParallelDeadlineGroup(
-          new SequentialCommandGroup(
-            new WaitCommand(spinUpWheelsDuration),
-            new ShootWhenReadyCmd(shooter, 0.1, 0.99).withTimeout(shootNoteDuration)
-          ),
-          new SpinShooterWheelsCmd(shooter).withTimeout(spinUpWheelsDuration),
-          new MoveShooterToBottomAndResetCmd(shooter, 0.05)
-          
-        )
-      );
-    }
-      
-    if (shouldDrive) {
-      if (movementPathTimedMode) {
-        autoCommand.addCommands(
-          movementPath.withTimeout(movementPathDuration)
-        );
-      } else {
-        autoCommand.addCommands(
-          movementPath
-        );
-      }
-    }
-
-    return autoCommand;
+    return autoCreator.createAuto();
   }
+
+    
 }
