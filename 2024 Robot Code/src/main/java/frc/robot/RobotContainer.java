@@ -130,9 +130,6 @@ public class RobotContainer {
     }
     
 
-    
-    
-    drivetrain.getPigeon2().reset();
 
     display = new SmartDashboardDisplay(drivetrain, shooter, climber, hook);
 
@@ -251,16 +248,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     
     // Shoot into the speaker
-    /*
-    return new SequentialCommandGroup(
-      
-      new MoveShooterToBottomAndResetCmd(shooter, 1).withTimeout(1.75),
-      new MoveShooterToSetpointCmd(shooter, 2).withTimeout(4.0),
-      new SpinShooterWheelsCmd(shooter).withTimeout(1.5),
-      new ShootWhenReadyCmd(shooter, 0.1, 0.99).withTimeout(1)
-      
-    );
-    */
+
 
 
     return autoCreator.createAuto();

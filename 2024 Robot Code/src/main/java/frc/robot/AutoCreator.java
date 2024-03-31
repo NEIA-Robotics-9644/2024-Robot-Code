@@ -2,20 +2,14 @@ package frc.robot;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.JoystickDriveCmd;
-import frc.robot.commands.MoveShooterToBottomAndResetCmd;
 import frc.robot.commands.MoveShooterToManualAngleCmd;
 import frc.robot.commands.ShootWhenReadyCmd;
 import frc.robot.commands.SpinShooterWheelsCmd;
@@ -50,6 +44,11 @@ public class AutoCreator {
     private final SwerveDriveSubsystem drive;
     private final ClimberSubsystem climber;
     
+
+    /*
+     * Much of this code does not work
+     * The auto that is created is tested, but there is a lot of stuff here that is almost integrated but not quite working yet.
+     */
     public AutoCreator(ShooterSubsystem shooter, SwerveDriveSubsystem drive, ClimberSubsystem climber) {
         autoTab = Shuffleboard.getTab("Auto");
         shouldShoot = autoTab.add("Should Shoot", true).withWidget("Toggle Switch").withPosition(0,0).getEntry();
@@ -58,7 +57,9 @@ public class AutoCreator {
         feederWheelPercentSpeed = autoTab.add("Feeder Wheel Speed %", 1).withSize(2, 1).withPosition(4,0).getEntry();
 
         
-
+        // TODO: Add angles for side and front of speaker
+        // ~50 is good for front, ~47 is good for side
+        // But that's subject to change
         shooterAngle = autoTab.add("Shooter Angle", 46).withSize(1,1).withPosition(3,0).getEntry();
         startDelay = autoTab.add("Start Delay", 0).withSize(1,1).withPosition(0,2).getEntry();
         angleMoveDuration = autoTab.add("Angle Move Time", 4).withSize(2,1).withPosition(1,2).getEntry();
@@ -99,12 +100,12 @@ public class AutoCreator {
         double angleMoveDuration = this.angleMoveDuration.getDouble(4);
         double shootNoteDuration = this.shootNoteDuration.getDouble(1);
         Command movementPath = new PathPlannerAuto(autoChooser.getSelected().getName());
-        System.out.println("NAME:    " +  autoChooser.getSelected().getName());
 
         
 
         SequentialCommandGroup autoCommand = new SequentialCommandGroup();
 
+        /*
         autoCommand.addCommands(
             new Command () {
                 @Override
@@ -121,6 +122,7 @@ public class AutoCreator {
             },
             new WaitCommand(startDelay)
         );
+        */
 
         if (shouldShoot) {
             autoCommand.addCommands(
@@ -148,9 +150,11 @@ public class AutoCreator {
             );
             */
 
+            /*
             autoCommand.addCommands(
                 new JoystickDriveCmd(drive, () -> -1.0, () -> -0.2, () -> 0.0, () -> false, () -> false, () -> true, () -> false).withTimeout(4)
             );
+            */
         
         } else {
             /*
@@ -160,8 +164,7 @@ public class AutoCreator {
             */
         }
 
-        System.out.println(autoChooser.getSelected().getName());
-
+        
 
         return autoCommand;
     }

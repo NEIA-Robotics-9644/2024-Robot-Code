@@ -21,6 +21,7 @@ public class ShooterWheelIOTalonFX implements ShooterWheelIO {
     public ShooterWheelIOTalonFX(int canID) {
         this.motor = new TalonFX(canID);
 
+        // This isn't implemented because we don't currently know the right current limit, and dont want to mess things up
         //motor.getConfigurator().apply(new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).withSupplyCurrentLimit(maxCurrentA).withStatorCurrentLimitEnable(true).withStatorCurrentLimit(maxCurrentA));
         //Shuffleboard.getTab("Current").addDouble("Left Shooter Motor Current", () -> motor.getSupplyCurrent().getValueAsDouble());
         
