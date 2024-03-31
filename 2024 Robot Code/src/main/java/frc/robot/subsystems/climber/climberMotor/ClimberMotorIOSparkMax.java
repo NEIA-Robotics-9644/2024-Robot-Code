@@ -15,11 +15,15 @@ public class ClimberMotorIOSparkMax implements ClimberMotorIO {
 
     private double velocity = 0.0;
 
-
+    private int maxCurrentA = 10;
 
     public ClimberMotorIOSparkMax(int canID) {
         this.motor = new CANSparkMax(canID, MotorType.kBrushless);
         motor.setIdleMode(IdleMode.kBrake);
+        //motor.setSmartCurrentLimit(maxCurrentA);
+
+        //Shuffleboard.getTab("Current").addDouble("Climber Motor Output Current", () -> motor.getOutputCurrent());
+        
     }
 
     @Override
@@ -43,7 +47,6 @@ public class ClimberMotorIOSparkMax implements ClimberMotorIO {
             motor.set(0.0);
         }
 
-        Shuffleboard.getTab("Current").addDouble("Climber Motor Output Current", () -> motor.getOutputCurrent());
         
     }
 

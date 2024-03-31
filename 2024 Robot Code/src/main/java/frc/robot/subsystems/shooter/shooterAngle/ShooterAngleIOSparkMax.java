@@ -65,8 +65,8 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
         // Set the right motor to follow the left motor, but keep in mind that they might be reversed
         this.rightAngleMotor.follow(this.leftAngleMotor, leftReversed != rightReversed);
 
-        this.leftAngleMotor.setSmartCurrentLimit(40);
-        this.rightAngleMotor.setSmartCurrentLimit(40);
+        this.leftAngleMotor.setSmartCurrentLimit(10);
+        this.rightAngleMotor.setSmartCurrentLimit(10);
         this.leftAngleMotor.setOpenLoopRampRate(0.5);
         this.rightAngleMotor.setOpenLoopRampRate(0.5);
 
@@ -84,6 +84,11 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
 
         this.feedback.setTolerance(0.1);
 
+
+        
+        Shuffleboard.getTab("Current").addDouble("Left Angle Motor Output Current", () -> leftAngleMotor.getOutputCurrent());
+        Shuffleboard.getTab("Current").addDouble("Right Angle Motor Output Current", () -> rightAngleMotor.getOutputCurrent());
+         
 
         
     }
@@ -123,10 +128,6 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
 
 
         }
-
-        Shuffleboard.getTab("Current").addDouble("Left Angle Motor Output Current", () -> leftAngleMotor.getOutputCurrent());
-        Shuffleboard.getTab("Current").addDouble("Left Angle Motor Output Current", () -> leftAngleMotor.getOutputCurrent());
-         
 
 
         

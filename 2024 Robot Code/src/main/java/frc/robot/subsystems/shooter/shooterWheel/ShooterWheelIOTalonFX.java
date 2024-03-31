@@ -1,5 +1,7 @@
 package frc.robot.subsystems.shooter.shooterWheel;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -14,9 +16,15 @@ public class ShooterWheelIOTalonFX implements ShooterWheelIO {
 
     private double normalizedVelocity = 0.0;
 
+    private double maxCurrentA = 40;
 
     public ShooterWheelIOTalonFX(int canID) {
         this.motor = new TalonFX(canID);
+
+        //motor.getConfigurator().apply(new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).withSupplyCurrentLimit(maxCurrentA).withStatorCurrentLimitEnable(true).withStatorCurrentLimit(maxCurrentA));
+        //Shuffleboard.getTab("Current").addDouble("Left Shooter Motor Current", () -> motor.getSupplyCurrent().getValueAsDouble());
+        
+
     }
 
     @Override
@@ -50,7 +58,6 @@ public class ShooterWheelIOTalonFX implements ShooterWheelIO {
             motor.set(0.0);
         } 
 
-        Shuffleboard.getTab("Current").addDouble("Left Shooter Motor Current", () -> motor.getSupplyCurrent().getValueAsDouble());
         
     }
 }

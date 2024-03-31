@@ -81,6 +81,11 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
     }
 
     private void setCurrentLimit(double supplyCurrentLimit) {
+
+        for (int i = 0; i < Modules.length; i++) {
+            final int index = i;
+            Shuffleboard.getTab("Current").addDouble("Motor " + i + " Output Current", () -> Modules[index].getDriveMotor().getSupplyCurrent().getValueAsDouble());
+        }
         
         for (SwerveModule module : Modules) {
             module.getDriveMotor().getConfigurator().apply(new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).withSupplyCurrentLimit(supplyCurrentLimit).withStatorCurrentLimitEnable(true).withStatorCurrentLimit(supplyCurrentLimit));
@@ -179,10 +184,7 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
 
         SmartDashboard.putNumber("Gyro Angle (Degrees)", this.getPigeon2().getAngle());
 
-        for (int i = 0; i < Modules.length; i++) {
-            final int index = i;
-            Shuffleboard.getTab("Current").addDouble("Motor " + i + " Output Current", () -> Modules[index].getDriveMotor().getSupplyCurrent().getValueAsDouble());
-        }
+        
 
     }
 

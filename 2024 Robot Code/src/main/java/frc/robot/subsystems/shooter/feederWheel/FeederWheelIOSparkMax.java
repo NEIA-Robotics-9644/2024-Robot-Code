@@ -18,9 +18,14 @@ public class FeederWheelIOSparkMax implements FeederWheelIO {
 
     private double maxSpeedRPM = 5000.0;
 
+    final int maxCurrentA = 40;
+
 
     public FeederWheelIOSparkMax(int canID) {
         this.feederMotor = new CANSparkMax(canID, MotorType.kBrushless);
+        this.feederMotor.setSmartCurrentLimit(maxCurrentA);
+        Shuffleboard.getTab("Current").addDouble("Feeder Motor Output Current", () -> feederMotor.getOutputCurrent());
+        
 
     }
 
@@ -44,7 +49,6 @@ public class FeederWheelIOSparkMax implements FeederWheelIO {
             feederMotor.set(0.0);
         }
 
-        Shuffleboard.getTab("Current").addDouble("Feeder Motor Output Current", () -> feederMotor.getOutputCurrent());
         
     }
 
