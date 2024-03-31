@@ -75,9 +75,6 @@ public class RobotContainer {
   
   private final SmartDashboardDisplay display;
 
-  ShuffleboardTab autoTab;
-
-  GenericEntry shouldShoot;
 
   AutoCreator autoCreator;
 

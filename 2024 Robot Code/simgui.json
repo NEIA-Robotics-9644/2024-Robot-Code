@@ -68,6 +68,7 @@
       "/FMSInfo": "FMSInfo",
       "/Pose": "Field2d",
       "/Shuffleboard/Auto/SendableChooser[0]": "String Chooser",
+      "/Shuffleboard/Auto/SendableChooser[1]": "String Chooser",
       "/SmartDashboard/Module 0": "Mechanism2d",
       "/SmartDashboard/Module 1": "Mechanism2d",
       "/SmartDashboard/Module 2": "Mechanism2d",

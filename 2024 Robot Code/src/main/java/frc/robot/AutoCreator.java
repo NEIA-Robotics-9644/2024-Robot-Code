@@ -38,6 +38,8 @@ public class AutoCreator {
     private final GenericEntry shootNoteDuration;
     private final GenericEntry movementPathDuration;
 
+    private final GenericEntry isRed;
+
     private final SendableChooser<Command> autoChooser;
 
 
@@ -53,12 +55,16 @@ public class AutoCreator {
         shooterWheelPercentSpeed = autoTab.add("Shooter Wheel Speed %", 1).withSize(2, 1).withPosition(6,0).getEntry();
         feederWheelPercentSpeed = autoTab.add("Feeder Wheel Speed %", 1).withSize(2, 1).withPosition(4,0).getEntry();
 
+        
+
         shooterAngle = autoTab.add("Shooter Angle", 49).withSize(1,1).withPosition(3,0).getEntry();
         startDelay = autoTab.add("Start Delay", 0).withSize(1,1).withPosition(0,2).getEntry();
         angleMoveDuration = autoTab.add("Angle Move Time", 4).withSize(2,1).withPosition(1,2).getEntry();
         shootNoteDuration = autoTab.add("Shoot Note Time", 1).withSize(2,1).withPosition(3,2).getEntry();
         driveDelay = autoTab.add("Drive Delay", 0).withSize(1,1).withPosition(5,2).getEntry();
         movementPathDuration = autoTab.add("Movement Path Time", 10).withSize(2,1).withPosition(6,2).getEntry();
+
+        isRed = autoTab.add("Is Red", false).withSize(1, 1).withPosition(6, 1).getEntry();
 
         autoChooser = new SendableChooser<Command>();
         autoChooser.setDefaultOption("Move Forward", new PathPlannerAuto("DriveForward"));
@@ -90,14 +96,26 @@ public class AutoCreator {
         double shooterAngle = this.shooterAngle.getDouble(25);
         double angleMoveDuration = this.angleMoveDuration.getDouble(4);
         double shootNoteDuration = this.shootNoteDuration.getDouble(1);
-        Command movementPath = new PathPlannerAuto("TestAuto");
-        double movementPathDuration = this.movementPathDuration.getDouble(15);
+        Command movementPath = new PathPlannerAuto(autoChooser.getSelected().getName());
+        System.out.println("NAME:    " +  autoChooser.getSelected().getName());
 
         
 
         SequentialCommandGroup autoCommand = new SequentialCommandGroup();
 
         autoCommand.addCommands(
+            new Command () {
+                @Override
+                public void execute() {
+                    drive.setFieldSide(isRed.getBoolean(false));
+                    System.out.println("Field Side: " + isRed.getBoolean(false));
+                }
+
+                @Override
+                public boolean isFinished() {
+                    return true;
+                }
+            },
             new WaitCommand(startDelay)
         );
 
@@ -120,19 +138,17 @@ public class AutoCreator {
         if (shouldDrive) {
              
             autoCommand.addCommands(
-                new ParallelDeadlineGroup(
-                    movementPath.withTimeout(movementPathDuration),
-                    new MoveShooterToBottomAndResetCmd(shooter, 0.05)
-                )
+                    Commands.runOnce(drive::initializePathPlanner),
+                    movementPath,
+                    new MoveShooterToBottomAndResetCmd(shooter, 0.05).withTimeout(5)
+                
             );
         
         } else {
             autoCommand.addCommands(
-                new MoveShooterToBottomAndResetCmd(shooter, 0.05)
+                new MoveShooterToBottomAndResetCmd(shooter, 0.05).withTimeout(5)
             );
         }
-
-        autoCommand.addCommands(new JoystickDriveCmd(drive, () -> 0.4, () -> 0.4, () -> 0.0, () -> false, () -> false, () -> true, () -> false).withTimeout(1));
 
         System.out.println(autoChooser.getSelected().getName());
 

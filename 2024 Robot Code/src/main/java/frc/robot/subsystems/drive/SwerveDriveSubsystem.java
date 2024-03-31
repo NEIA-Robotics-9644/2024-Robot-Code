@@ -1,5 +1,6 @@
 package frc.robot.subsystems.drive;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -19,7 +20,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -35,6 +35,8 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
+
+    private BooleanSupplier isRed = () -> false;
 
     private final VisionIO visionIO;
 
@@ -107,18 +109,11 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
             new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
                     new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
                     new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
-                    4.5, // Max module speed, in m/s
+                    2, // Max module speed, in m/s
                     Constants.PhysicalRobotCharacteristics.kDriveBaseRadiusMeters, // Drive base radius in meters. Distance from robot center to furthest module.
                     new ReplanningConfig() // Default path replanning config. See the API for the options here
             ),
-            () -> {
-              // Boolean supplier that controls when the path will be mirrored for the red alliance
-              // This will flip the path being followed to the red side of the field.
-              // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
-              // TODO: CHANGE THIS
-              return true;
-            },
+            isRed,
             this // Reference to this subsystem to set requirements
         );
     }
@@ -169,6 +164,10 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
 
         SmartDashboard.putNumber("Gyro Angle (Degrees)", this.getPigeon2().getAngle());
 
+    }
+
+    public void setFieldSide(boolean isRed) {
+        this.isRed = () -> isRed;
     }
     
 }
