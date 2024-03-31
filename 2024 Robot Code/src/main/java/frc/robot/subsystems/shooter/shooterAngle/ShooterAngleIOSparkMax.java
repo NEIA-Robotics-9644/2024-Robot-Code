@@ -4,7 +4,6 @@ package frc.robot.subsystems.shooter.shooterAngle;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 public class ShooterAngleIOSparkMax implements ShooterAngleIO {
@@ -32,9 +31,6 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
 
 
 
-    private double setpointDeg = 0.0;
-
-
 
     private double encoderReadingRotationsToAngleDeg = 360.0 / 80.0;
 
@@ -47,7 +43,7 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
     
 
     
-    private PIDController feedback = new PIDController(0.5, 0.0, 0.0);  // TODO: Tune these
+    private PIDController feedback = new PIDController(0.5, 0.0, 0.0);
 
 
     public ShooterAngleIOSparkMax() {
@@ -102,7 +98,6 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
         double setpointClamped = Math.max(bottomLimitDeg, Math.min(topLimitDeg, setpoint));
         feedback.setSetpoint(setpointClamped);
         
-        setpointDeg = setpointClamped;
     }
 
     @Override

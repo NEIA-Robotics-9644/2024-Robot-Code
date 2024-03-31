@@ -7,8 +7,6 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -70,7 +68,7 @@ public class RobotContainer {
   
   private final ClimberSubsystem climber;
  
-private final HookSubsystem hook;
+  private final HookSubsystem hook;
   
   
   private final SmartDashboardDisplay display;
@@ -107,7 +105,7 @@ private final HookSubsystem hook;
           new ClimberMotorIOSparkMax(27)
       ); 
 
-hook = new HookSubsystem(new HookMotorIOSparkMax(28));
+      hook = new HookSubsystem(new HookMotorIOSparkMax(28));
 
     } else {
       shooter = new ShooterSubsystem(
@@ -126,7 +124,7 @@ hook = new HookSubsystem(new HookMotorIOSparkMax(28));
           new ClimberMotorIOSim()
       );
 
-hook = new HookSubsystem(new HookMotorIOSim());
+      hook = new HookSubsystem(new HookMotorIOSim());
     }
     
 
@@ -235,7 +233,7 @@ hook = new HookSubsystem(new HookMotorIOSim());
     var oLeftYAxisDown = new Trigger(() -> operatorHID.getLeftY() < -0.05);
     oLeftYAxisDown.whileTrue(new ClimberCmd(climber, () -> operatorHID.getLeftY()));
 
-// HOOK COMMANDS
+    // HOOK COMMANDS
     var oRightAxis = new Trigger(() -> Math.abs(operatorHID.getRightX()) > 0.05);
     oRightAxis.whileTrue(new MoveHookCmd(hook, operatorHID::getRightX));
   }
@@ -247,9 +245,6 @@ hook = new HookSubsystem(new HookMotorIOSim());
    */
   public Command getAutonomousCommand() {
     
-    // Shoot into the speaker
-
-
 
     return autoCreator.createAuto();
   }
