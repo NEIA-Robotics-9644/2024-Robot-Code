@@ -20,8 +20,9 @@ public class ClimberMotorIOSparkMax implements ClimberMotorIO {
     public ClimberMotorIOSparkMax(int canID) {
         this.motor = new CANSparkMax(canID, MotorType.kBrushless);
         motor.setIdleMode(IdleMode.kBrake);
-        //motor.setSmartCurrentLimit(maxCurrentA);
+        motor.setSmartCurrentLimit(maxCurrentA);
 
+        // This isn't implemented because Shuffleboard doesn't let you add an object of the same name multiple times
         //Shuffleboard.getTab("Current").addDouble("Climber Motor Output Current", () -> motor.getOutputCurrent());
         
     }
