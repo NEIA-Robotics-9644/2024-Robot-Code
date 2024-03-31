@@ -4,8 +4,10 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -51,6 +53,7 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
         initializePathPlanner();
 
         
+        setCurrentLimit(Constants.DriveConstants.kSupplyCurrentA);
     }
     public SwerveDriveSubsystem(SwerveDrivetrainConstants driveTrainConstants, VisionIO visionIO, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
@@ -66,7 +69,14 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
 
         initializePathPlanner();
 
+        setCurrentLimit(Constants.DriveConstants.kSupplyCurrentA);
+    }
+
+    private void setCurrentLimit(double supplyCurrentLimit) {
         
+        for (SwerveModule module : Modules) {
+            module.getDriveMotor().getConfigurator().apply(new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).withSupplyCurrentLimit(supplyCurrentLimit));
+        }
     }
 
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
@@ -138,6 +148,7 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
     }
 
 
+
     @Override
     public void periodic() {
         var visionResult = visionIO.getEstimatedGlobalPose();
@@ -157,7 +168,7 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
         SmartDashboard.putString("Pose", this.m_odometry.getEstimatedPosition().toString());
 
         SmartDashboard.putNumber("Gyro Angle (Degrees)", this.getPigeon2().getAngle());
-    
+
     }
     
 }

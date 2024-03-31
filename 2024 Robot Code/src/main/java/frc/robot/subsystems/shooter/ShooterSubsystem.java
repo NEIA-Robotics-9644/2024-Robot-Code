@@ -81,6 +81,8 @@ public class ShooterSubsystem extends SubsystemBase {
         this.feeder.setBrakeMode(true);
 
         
+
+        
     }
 
     @Override

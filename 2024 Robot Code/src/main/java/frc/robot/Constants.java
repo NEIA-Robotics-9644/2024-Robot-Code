@@ -101,6 +101,7 @@ public final class Constants {
                 // The stator current at which the wheels start to slip;
                 // This needs to be tuned to your individual robot
                 private static final double kSlipCurrentA = 40.0;
+                public static final double kSupplyCurrentA = 40.0;
 
                 // Theoretical free speed (m/s) at 12v applied output;
                 // This needs to be tuned to your individual robot
@@ -152,6 +153,8 @@ public final class Constants {
                         .withCouplingGearRatio(kCoupleRatio)
                         .withSteerMotorInverted(kSteerMotorReversed);
 
+                
+
 
                 // Front Left
                 private static final int kFrontLeftDriveMotorId = 1;
@@ -201,6 +204,8 @@ public final class Constants {
 
                 public static final SwerveDriveSubsystem DriveTrain = new SwerveDriveSubsystem(DrivetrainConstants, new VisionIO(), FrontLeft,
                         FrontRight, BackLeft, BackRight);
+
+                
         }
 
 
