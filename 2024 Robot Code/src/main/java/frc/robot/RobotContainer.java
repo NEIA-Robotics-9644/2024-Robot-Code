@@ -119,7 +119,7 @@ public class RobotContainer {
           new FeederWheelIOSim(),
           new ShooterAngleIOSim(),
           new NoteSensorIOSim(),
-          new double[] { 0, 25, 55, 70},
+          new double[] { 0, 25, 52, 70},
           new double[] { 1, 0.4, 1, 0.4},
           new double[] { 1, 0.4, 1, 0.4}
       );

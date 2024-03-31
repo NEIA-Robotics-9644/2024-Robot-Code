@@ -65,6 +65,8 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
         this.visionIO = visionIO;
 
         initializePathPlanner();
+
+        
     }
 
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
@@ -104,11 +106,8 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
               // This will flip the path being followed to the red side of the field.
               // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-              var alliance = DriverStation.getAlliance();
-              if (alliance.isPresent()) {
-                return alliance.get() == DriverStation.Alliance.Red;
-              }
-              return false;
+              // TODO: CHANGE THIS
+              return true;
             },
             this // Reference to this subsystem to set requirements
         );

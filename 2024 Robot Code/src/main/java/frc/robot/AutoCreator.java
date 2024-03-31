@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.JoystickDriveCmd;
 import frc.robot.commands.MoveShooterToBottomAndResetCmd;
 import frc.robot.commands.MoveShooterToManualAngleCmd;
 import frc.robot.commands.ShootWhenReadyCmd;
@@ -50,9 +51,9 @@ public class AutoCreator {
         shouldShoot = autoTab.add("Should Shoot", true).withWidget("Toggle Switch").withPosition(0,0).getEntry();
         shouldDrive = autoTab.add("Should Drive", true).withWidget("Toggle Switch").withPosition(1,0).getEntry();
         shooterWheelPercentSpeed = autoTab.add("Shooter Wheel Speed %", 1).withSize(2, 1).withPosition(6,0).getEntry();
-        feederWheelPercentSpeed = autoTab.add("Feeder Wheel Speed %", 0.4).withSize(2, 1).withPosition(4,0).getEntry();
+        feederWheelPercentSpeed = autoTab.add("Feeder Wheel Speed %", 1).withSize(2, 1).withPosition(4,0).getEntry();
 
-        shooterAngle = autoTab.add("Shooter Angle", 45).withSize(1,1).withPosition(3,0).getEntry();
+        shooterAngle = autoTab.add("Shooter Angle", 49).withSize(1,1).withPosition(3,0).getEntry();
         startDelay = autoTab.add("Start Delay", 0).withSize(1,1).withPosition(0,2).getEntry();
         angleMoveDuration = autoTab.add("Angle Move Time", 4).withSize(2,1).withPosition(1,2).getEntry();
         shootNoteDuration = autoTab.add("Shoot Note Time", 1).withSize(2,1).withPosition(3,2).getEntry();
@@ -61,6 +62,12 @@ public class AutoCreator {
 
         autoChooser = new SendableChooser<Command>();
         autoChooser.setDefaultOption("Move Forward", new PathPlannerAuto("DriveForward"));
+        autoChooser.addOption("Origin Move Forward", new PathPlannerAuto("OriginDriveForward"));
+        autoChooser.addOption("Move Forward From Speaker Left", new PathPlannerAuto("DriveForwardFromSpeakerLeft"));
+        autoChooser.addOption("Origin Move Forward From Speaker Left", new PathPlannerAuto("OriginDriveForwardFromSpeakerLeft"));
+        autoChooser.addOption("Move Forward From Speaker Right", new PathPlannerAuto("DriveForwardFromSpeakerRight"));
+        autoChooser.addOption("Origin Move Forward From Speaker Right", new PathPlannerAuto("OriginDriveForwardFromSpeakerRight"));
+        
     
 
 
@@ -124,6 +131,8 @@ public class AutoCreator {
                 new MoveShooterToBottomAndResetCmd(shooter, 0.05)
             );
         }
+
+        autoCommand.addCommands(new JoystickDriveCmd(drive, () -> 0.4, () -> 0.4, () -> 0.0, () -> false, () -> false, () -> true, () -> false).withTimeout(1));
 
         System.out.println(autoChooser.getSelected().getName());
 
