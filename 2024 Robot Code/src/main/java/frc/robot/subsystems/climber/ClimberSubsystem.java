@@ -1,5 +1,6 @@
 package frc.robot.subsystems.climber;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.climber.climberMotor.ClimberMotorIO;
 
@@ -36,6 +37,8 @@ public class ClimberSubsystem extends SubsystemBase{
         
         leftClimber.periodic();
         rightClimber.periodic();
+
+        
 
 
     }

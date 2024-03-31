@@ -4,6 +4,8 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+
 
 public class ClimberMotorIOSparkMax implements ClimberMotorIO {
     
@@ -40,6 +42,9 @@ public class ClimberMotorIOSparkMax implements ClimberMotorIO {
         } else {
             motor.set(0.0);
         }
+
+        Shuffleboard.getTab("Current").addDouble("Climber Motor Output Current", () -> motor.getOutputCurrent());
+        
     }
 
     @Override

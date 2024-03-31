@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 public class ShooterAngleIOSparkMax implements ShooterAngleIO {
 
@@ -122,7 +123,10 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
 
 
         }
-            
+
+        Shuffleboard.getTab("Current").addDouble("Left Angle Motor Output Current", () -> leftAngleMotor.getOutputCurrent());
+        Shuffleboard.getTab("Current").addDouble("Left Angle Motor Output Current", () -> leftAngleMotor.getOutputCurrent());
+         
 
 
         

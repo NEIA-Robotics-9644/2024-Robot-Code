@@ -2,6 +2,8 @@ package frc.robot;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -57,7 +59,7 @@ public class AutoCreator {
 
         
 
-        shooterAngle = autoTab.add("Shooter Angle", 49).withSize(1,1).withPosition(3,0).getEntry();
+        shooterAngle = autoTab.add("Shooter Angle", 46).withSize(1,1).withPosition(3,0).getEntry();
         startDelay = autoTab.add("Start Delay", 0).withSize(1,1).withPosition(0,2).getEntry();
         angleMoveDuration = autoTab.add("Angle Move Time", 4).withSize(2,1).withPosition(1,2).getEntry();
         shootNoteDuration = autoTab.add("Shoot Note Time", 1).withSize(2,1).withPosition(3,2).getEntry();
@@ -109,6 +111,7 @@ public class AutoCreator {
                 public void execute() {
                     drive.setFieldSide(isRed.getBoolean(false));
                     System.out.println("Field Side: " + isRed.getBoolean(false));
+                    drive.resetPose(new Pose2d(0, 0, new Rotation2d(0.0)));
                 }
 
                 @Override
@@ -136,18 +139,25 @@ public class AutoCreator {
 
         
         if (shouldDrive) {
-             
+            /*
             autoCommand.addCommands(
                     Commands.runOnce(drive::initializePathPlanner),
-                    movementPath,
+                    movementPath.withTimeout(1),
                     new MoveShooterToBottomAndResetCmd(shooter, 0.05).withTimeout(5)
                 
             );
+            */
+
+            autoCommand.addCommands(
+                new JoystickDriveCmd(drive, () -> -1.0, () -> -0.2, () -> 0.0, () -> false, () -> false, () -> true, () -> false).withTimeout(4)
+            );
         
         } else {
+            /*
             autoCommand.addCommands(
                 new MoveShooterToBottomAndResetCmd(shooter, 0.05).withTimeout(5)
             );
+            */
         }
 
         System.out.println(autoChooser.getSelected().getName());

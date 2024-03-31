@@ -1,6 +1,9 @@
 package frc.robot.subsystems.shooter.feederWheel;
 
 import com.revrobotics.CANSparkMax;
+
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 
@@ -15,8 +18,10 @@ public class FeederWheelIOSparkMax implements FeederWheelIO {
 
     private double maxSpeedRPM = 5000.0;
 
+
     public FeederWheelIOSparkMax(int canID) {
         this.feederMotor = new CANSparkMax(canID, MotorType.kBrushless);
+
     }
 
     @Override
@@ -38,6 +43,9 @@ public class FeederWheelIOSparkMax implements FeederWheelIO {
         } else {
             feederMotor.set(0.0);
         }
+
+        Shuffleboard.getTab("Current").addDouble("Feeder Motor Output Current", () -> feederMotor.getOutputCurrent());
+        
     }
 
     

@@ -2,6 +2,8 @@ package frc.robot.subsystems.shooter.shooterWheel;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+
 public class ShooterWheelIOTalonFX implements ShooterWheelIO {
 
     private final double maxSpeedRPM = 5000;
@@ -11,6 +13,7 @@ public class ShooterWheelIOTalonFX implements ShooterWheelIO {
     private boolean newInput = false;
 
     private double normalizedVelocity = 0.0;
+
 
     public ShooterWheelIOTalonFX(int canID) {
         this.motor = new TalonFX(canID);
@@ -46,5 +49,8 @@ public class ShooterWheelIOTalonFX implements ShooterWheelIO {
         } else {
             motor.set(0.0);
         } 
+
+        Shuffleboard.getTab("Current").addDouble("Left Shooter Motor Current", () -> motor.getSupplyCurrent().getValueAsDouble());
+        
     }
 }

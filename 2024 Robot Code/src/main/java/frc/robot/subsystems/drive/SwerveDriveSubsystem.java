@@ -22,6 +22,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -56,6 +57,8 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
 
         
         setCurrentLimit(Constants.DriveConstants.kSupplyCurrentA);
+
+        resetPose(new Pose2d(0, 0, new Rotation2d(0.0)));
     }
     public SwerveDriveSubsystem(SwerveDrivetrainConstants driveTrainConstants, VisionIO visionIO, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
@@ -72,12 +75,15 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
         initializePathPlanner();
 
         setCurrentLimit(Constants.DriveConstants.kSupplyCurrentA);
+
+        
+        resetPose(new Pose2d(0, 0, new Rotation2d(0.0)));
     }
 
     private void setCurrentLimit(double supplyCurrentLimit) {
         
         for (SwerveModule module : Modules) {
-            module.getDriveMotor().getConfigurator().apply(new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).withSupplyCurrentLimit(supplyCurrentLimit));
+            module.getDriveMotor().getConfigurator().apply(new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).withSupplyCurrentLimit(supplyCurrentLimit).withStatorCurrentLimitEnable(true).withStatorCurrentLimit(supplyCurrentLimit));
         }
     }
 
@@ -123,6 +129,14 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
     }
 
     public Consumer<Pose2d> resetPose(Pose2d pose2d) {
+        this.getPigeon2().reset();
+        this.m_odometry.resetPosition(new Rotation2d(0.0), new SwerveModulePosition[] {
+            new SwerveModulePosition(),
+            new SwerveModulePosition(),
+            new SwerveModulePosition(),
+            new SwerveModulePosition()
+        },
+        pose2d);
         return pose -> this.m_odometry.resetPosition(new Rotation2d(0.0), new SwerveModulePosition[] {
             new SwerveModulePosition(),
             new SwerveModulePosition(),
@@ -144,6 +158,7 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
 
 
 
+    @SuppressWarnings("resource")
     @Override
     public void periodic() {
         var visionResult = visionIO.getEstimatedGlobalPose();
@@ -163,6 +178,11 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
         SmartDashboard.putString("Pose", this.m_odometry.getEstimatedPosition().toString());
 
         SmartDashboard.putNumber("Gyro Angle (Degrees)", this.getPigeon2().getAngle());
+
+        for (int i = 0; i < Modules.length; i++) {
+            final int index = i;
+            Shuffleboard.getTab("Current").addDouble("Motor " + i + " Output Current", () -> Modules[index].getDriveMotor().getSupplyCurrent().getValueAsDouble());
+        }
 
     }
 
