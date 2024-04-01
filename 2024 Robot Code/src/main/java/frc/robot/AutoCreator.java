@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.AutoMoveRobotCentricCmd;
 import frc.robot.commands.JoystickDriveCmd;
 import frc.robot.commands.MoveShooterToBottomAndResetCmd;
 import frc.robot.commands.MoveShooterToManualAngleCmd;
@@ -148,7 +149,7 @@ public class AutoCreator {
             */
 
             autoCommand.addCommands(
-                new JoystickDriveCmd(drive, () -> -1.0, () -> -0.2, () -> 0.0, () -> false, () -> false, () -> true, () -> false).withTimeout(4)
+                new AutoMoveRobotCentricCmd(drive, 0.5, 0, 0).withTimeout(5)
             );
         
         } else {
