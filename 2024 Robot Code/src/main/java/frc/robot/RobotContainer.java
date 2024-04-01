@@ -95,7 +95,7 @@ public class RobotContainer {
           new FeederWheelIOSparkMax(23),
           new ShooterAngleIOSparkMax(24, 25),
           new NoteSensorIORoboRio(),
-          new double[] { 0, 25, 55, 70},
+          new double[] { 0, 25, 52, 70},
           new double[] { 1, 0.4, 1, 0.4},
           new double[] { 1, 0.4, 1, 0.4}
       );
@@ -191,7 +191,7 @@ public class RobotContainer {
 
     // Speaker
     var oYTrigger = new Trigger(() -> operatorHID.getYButton());
-    //oYTrigger.onTrue(Commands.runOnce(() -> shooter.goToSetpoint(3)));
+    oYTrigger.onTrue(Commands.runOnce(() -> shooter.goToSetpoint(3)));
     
     
 
@@ -216,6 +216,14 @@ public class RobotContainer {
 
     var oPOVLeftTrigger = new Trigger(() -> operatorHID.getPOV() == 270);
     oPOVLeftTrigger.onTrue(Commands.runOnce(() -> shooter.modifyShooterSpeedSetpoint(-0.05)));
+
+    // Adjust the feeder wheel speed of this setpoint
+    var oRightUpTrigger = new Trigger(() -> operatorHID.getRightY() > 0.7);
+    oRightUpTrigger.onTrue(Commands.runOnce(() -> shooter.modifyFeederSetpoint(0.05)));
+
+    var oRightDownTrigger = new Trigger(() -> operatorHID.getRightY() < -0.7);
+    oRightDownTrigger.onTrue(Commands.runOnce(() -> shooter.modifyFeederSetpoint(0.05)));
+
 
     // Source Intake
 
