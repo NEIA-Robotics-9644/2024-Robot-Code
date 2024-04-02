@@ -181,7 +181,6 @@ public class AutoCreator {
             );
         }
 
-        System.out.println(pathPlannerAutoChooser.getSelected().getName());
 
 
         return autoCommand;
