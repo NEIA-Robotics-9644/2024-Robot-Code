@@ -7,20 +7,22 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-
-import com.ctre.phoenix6.Utils;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.ctre.phoenix6.Utils;
 
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.Modes;
 import frc.robot.commands.ClimberCmd;
 import frc.robot.commands.JoystickDriveCmd;
 import frc.robot.commands.MoveShooterToBottomAndResetCmd;
+import frc.robot.commands.MoveShooterToSetpointCmd;
 import frc.robot.commands.RunSourceIntakeCmd;
 import frc.robot.commands.ShootWhenReadyCmd;
 import frc.robot.commands.SpinShooterWheelsCmd;
@@ -66,9 +68,10 @@ public class RobotContainer {
   
   private final ClimberSubsystem climber;
 
-  
+  private final SendableChooser<String> autoChooser = new SendableChooser<>();
   
   private final SmartDashboardDisplay display;
+  private final String auto;
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -122,7 +125,7 @@ public class RobotContainer {
     
     drivetrain.getPigeon2().reset();
 
-    display = new SmartDashboardDisplay(drivetrain, shooter, climber);
+    display = new SmartDashboardDisplay(drivetrain, shooter, climber, autoChooser);
 
 
 
@@ -232,28 +235,51 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    
-    // Shoot into the speaker
-    /*
-    return new SequentialCommandGroup(
-      
-      new MoveShooterToBottomAndResetCmd(shooter, 1).withTimeout(1.75),
-      new MoveShooterToSetpointCmd(shooter, 2).withTimeout(4.0),
-      new SpinShooterWheelsCmd(shooter).withTimeout(1.5),
-      new ShootWhenReadyCmd(shooter, 0.1, 0.99).withTimeout(1)
-      
-    );
-    */
 
-    
-    return new PathPlannerAuto("TestAuto");
-    
-    
-
-    
-    
-    
-    
-    
+    auto = autoChooser.getSelected();
+    switch (auto) {
+      case "MoveForward":
+        return new SequentialCommandGroup(
+          new JoystickDriveCmd(drivetrain, 3.0, 0.0, 0.0, false, false, true, false).withTimeout(3)
+        );
+        break;
+      case "MoveBackward":
+        return new SequentialCommandGroup(
+          new JoystickDriveCmd(drivetrain, -3.0, 0.0, 0.0, false, false, true, false).withTimeout(3)
+        );
+        break;
+      case "MoveLeft":
+        return new SequentialCommandGroup(
+          new JoystickDriveCmd(drivetrain, 0, 3, 0, false, false, true, false).withTimeout(3)
+        );
+        break;
+      case "MoveRight":
+        return new SequentialCommandGroup(
+          new JoystickDriveCmd(drivetrain, 0, -3, 0, false, false, true, false).withTimeout(3)
+        );
+        break;
+      case "Shoot":
+      default:
+        return new SequentialCommandGroup(
+          new MoveShooterToBottomAndResetCmd(shooter, 1).withTimeout(1.75),
+          new MoveShooterToSetpointCmd(shooter, 2).withTimeout(4.0),
+          new SpinShooterWheelsCmd(shooter).withTimeout(1.5),
+          new ShootWhenReadyCmd(shooter, 0.1, 0.99).withTimeout(1)
+        );
+        break;
+      case "TestAuto":
+        return new PathPlannerAuto("TestAuto");
+        break;
+      case "EdgeLoopAuto":
+        return new PathPlannerAuto("EdgeLoopAuto");
+        break;
+      case "ShootPlusMoveToNoteIndex2":
+        return new PathPlannerAuto("Shoot+MoveToNote2Auto");
+        break;
+      case "TurnAndShootAuto":
+        return new PathPlannerAuto("TurnAndShootAuto");
+        break;
+    }
+     
   }
 }
