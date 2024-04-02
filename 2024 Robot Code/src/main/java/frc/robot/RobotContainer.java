@@ -175,7 +175,7 @@ public class RobotContainer {
 
     
     var oLeftBumper = new Trigger(() -> operatorHID.getLeftBumper());
-    oLeftBumper.whileTrue(new ShootWhenReadyCmd(shooter, 0.9, 0.8));
+    oLeftBumper.whileTrue(new ShootWhenReadyCmd(shooter, 0.001, 0.0001));
 
     // Bottom
     var oATrigger = new Trigger(() -> operatorHID.getAButton());
@@ -212,17 +212,17 @@ public class RobotContainer {
     // Adjust the shooter wheel speed of this setpoint
     
     var oPOVRightTrigger = new Trigger(() -> operatorHID.getPOV() == 90);
-    oPOVRightTrigger.onTrue(Commands.runOnce(() -> shooter.modifyShooterSpeedSetpoint(0.05)));
+    oPOVRightTrigger.onTrue(Commands.runOnce(() -> shooter.modifyShooterSpeedSetpoint(0.01)));
 
     var oPOVLeftTrigger = new Trigger(() -> operatorHID.getPOV() == 270);
-    oPOVLeftTrigger.onTrue(Commands.runOnce(() -> shooter.modifyShooterSpeedSetpoint(-0.05)));
+    oPOVLeftTrigger.onTrue(Commands.runOnce(() -> shooter.modifyShooterSpeedSetpoint(-0.01)));
 
     // Adjust the feeder wheel speed of this setpoint
     var oRightUpTrigger = new Trigger(() -> operatorHID.getRightY() > 0.7);
-    oRightUpTrigger.onTrue(Commands.runOnce(() -> shooter.modifyFeederSetpoint(0.05)));
+    oRightUpTrigger.onTrue(Commands.runOnce(() -> shooter.modifyFeederSetpoint(-0.01)));
 
     var oRightDownTrigger = new Trigger(() -> operatorHID.getRightY() < -0.7);
-    oRightDownTrigger.onTrue(Commands.runOnce(() -> shooter.modifyFeederSetpoint(0.05)));
+    oRightDownTrigger.onTrue(Commands.runOnce(() -> shooter.modifyFeederSetpoint(0.01)));
 
 
     // Source Intake
