@@ -5,6 +5,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -29,7 +30,8 @@ public class AutoCreator {
     
 
     private final GenericEntry shouldShoot;
-    private final GenericEntry shouldDrive;
+    private final GenericEntry shouldPathPlannerDrive;
+    private final GenericEntry shouldManualDrive;
 
     private final GenericEntry startDelay;
     private final GenericEntry driveDelay;
@@ -38,11 +40,17 @@ public class AutoCreator {
     private final GenericEntry shooterAngle;
     private final GenericEntry angleMoveDuration;
     private final GenericEntry shootNoteDuration;
-    private final GenericEntry movementPathDuration;
+
+    // TODO: Check if this is correct
+    // Forward is the "intake" side, oposite the side we can shoot
+    // Right is the right side of the robot if the intake side is forward
+    private final GenericEntry manualDriveForwardFeetPerSec;
+    private final GenericEntry manualDriveRightFeetPerSec;
+    private final GenericEntry manualDriveDuration;
 
     private final GenericEntry isRed;
 
-    private final SendableChooser<Command> autoChooser;
+    private final SendableChooser<Command> pathPlannerAutoChooser;
 
 
 
@@ -52,34 +60,45 @@ public class AutoCreator {
     
     public AutoCreator(ShooterSubsystem shooter, SwerveDriveSubsystem drive, ClimberSubsystem climber) {
         autoTab = Shuffleboard.getTab("Auto");
-        shouldShoot = autoTab.add("Should Shoot", true).withWidget("Toggle Switch").withPosition(0,0).getEntry();
-        shouldDrive = autoTab.add("Should Drive", true).withWidget("Toggle Switch").withPosition(1,0).getEntry();
-        shooterWheelPercentSpeed = autoTab.add("Shooter Wheel Speed %", 1).withSize(2, 1).withPosition(6,0).getEntry();
-        feederWheelPercentSpeed = autoTab.add("Feeder Wheel Speed %", 1).withSize(2, 1).withPosition(4,0).getEntry();
+        shouldShoot = autoTab.add("Should Shoot", true).withWidget("Toggle Switch").getEntry();
+        shouldPathPlannerDrive = autoTab.add("Should PathPlanner Drive", false).getEntry();
+        shouldManualDrive = autoTab.add("Should Manual Drive", false).getEntry();
+        shooterAngle = autoTab.add("Shooter Angle", 46).getEntry();
+        
+        feederWheelPercentSpeed = autoTab.add("Feeder Wheel Speed %", 1).getEntry();
+        shooterWheelPercentSpeed = autoTab.add("Shooter Wheel Speed %", 1).getEntry();
+        
+        isRed = autoTab.add("Is Red", false).getEntry();
+
+
+        
+        manualDriveForwardFeetPerSec = autoTab.add("Manual Drive Forward Speed (FeetPerSec)", 0.5).getEntry();
+        manualDriveRightFeetPerSec = autoTab.add("Manual Drive Right Speed (FeetPerSec)", 0.5).getEntry();
+        manualDriveDuration = autoTab.add("Manual Drive Duration", 5).getEntry();
 
         
 
-        shooterAngle = autoTab.add("Shooter Angle", 46).withSize(1,1).withPosition(3,0).getEntry();
-        startDelay = autoTab.add("Start Delay", 0).withSize(1,1).withPosition(0,2).getEntry();
-        angleMoveDuration = autoTab.add("Angle Move Time", 4).withSize(2,1).withPosition(1,2).getEntry();
-        shootNoteDuration = autoTab.add("Shoot Note Time", 1).withSize(2,1).withPosition(3,2).getEntry();
-        driveDelay = autoTab.add("Drive Delay", 0).withSize(1,1).withPosition(5,2).getEntry();
-        movementPathDuration = autoTab.add("Movement Path Time", 10).withSize(2,1).withPosition(6,2).getEntry();
+        startDelay = autoTab.add("Start Delay", 0).getEntry();
+        angleMoveDuration = autoTab.add("Angle Move Time", 4).getEntry();
+        shootNoteDuration = autoTab.add("Shoot Note Time", 1).getEntry();
+        driveDelay = autoTab.add("Drive Delay", 0).getEntry();
 
-        isRed = autoTab.add("Is Red", false).withSize(1, 1).withPosition(6, 1).getEntry();
 
-        autoChooser = new SendableChooser<Command>();
-        autoChooser.setDefaultOption("Move Forward", new PathPlannerAuto("DriveForward"));
-        autoChooser.addOption("Origin Move Forward", new PathPlannerAuto("OriginDriveForward"));
-        autoChooser.addOption("Move Forward From Speaker Left", new PathPlannerAuto("DriveForwardFromSpeakerLeft"));
-        autoChooser.addOption("Origin Move Forward From Speaker Left", new PathPlannerAuto("OriginDriveForwardFromSpeakerLeft"));
-        autoChooser.addOption("Move Forward From Speaker Right", new PathPlannerAuto("DriveForwardFromSpeakerRight"));
-        autoChooser.addOption("Origin Move Forward From Speaker Right", new PathPlannerAuto("OriginDriveForwardFromSpeakerRight"));
+        pathPlannerAutoChooser = new SendableChooser<Command>();
+
+
+        pathPlannerAutoChooser.setDefaultOption("Move Forward", new PathPlannerAuto("DriveForward"));
+        pathPlannerAutoChooser.addOption("Origin Move Forward", new PathPlannerAuto("OriginDriveForward"));
+        pathPlannerAutoChooser.addOption("Move Forward From Speaker Left", new PathPlannerAuto("DriveForwardFromSpeakerLeft"));
+        pathPlannerAutoChooser.addOption("Origin Move Forward From Speaker Left", new PathPlannerAuto("OriginDriveForwardFromSpeakerLeft"));
+        pathPlannerAutoChooser.addOption("Move Forward From Speaker Right", new PathPlannerAuto("DriveForwardFromSpeakerRight"));
+        pathPlannerAutoChooser.addOption("Origin Move Forward From Speaker Right", new PathPlannerAuto("OriginDriveForwardFromSpeakerRight"));
         
+
     
 
 
-        autoTab.add(autoChooser).withSize(2, 1).withPosition(0,1);
+        autoTab.add(pathPlannerAutoChooser);
 
         this.shooter = shooter;
         this.drive = drive;
@@ -89,7 +108,8 @@ public class AutoCreator {
 
     public Command createAuto() {
         boolean shouldShoot = this.shouldShoot.getBoolean(true);
-        boolean shouldDrive = this.shouldDrive.getBoolean(true);
+        boolean shouldPathPlannerDrive = this.shouldPathPlannerDrive.getBoolean(false);
+        boolean shouldManualDrive = this.shouldManualDrive.getBoolean(false);
 
         double startDelay = this.startDelay.getDouble(0);
         double driveDelay = this.driveDelay.getDouble(0);
@@ -98,8 +118,12 @@ public class AutoCreator {
         double shooterAngle = this.shooterAngle.getDouble(25);
         double angleMoveDuration = this.angleMoveDuration.getDouble(4);
         double shootNoteDuration = this.shootNoteDuration.getDouble(1);
-        Command movementPath = new PathPlannerAuto(autoChooser.getSelected().getName());
-        System.out.println("NAME:    " +  autoChooser.getSelected().getName());
+        Command movementPath = new PathPlannerAuto(pathPlannerAutoChooser.getSelected().getName());
+        
+
+        double manualDriveForwardFeetPerSec = this.manualDriveForwardFeetPerSec.getDouble(0.5);
+        double manualDriveRightFeetPerSec = this.manualDriveRightFeetPerSec.getDouble(0.5);
+        double manualDriveDuration = this.manualDriveDuration.getDouble(5);
 
         
 
@@ -138,29 +162,26 @@ public class AutoCreator {
         );
 
         
-        if (shouldDrive) {
-            /*
+        if (shouldPathPlannerDrive) {
+            
             autoCommand.addCommands(
                     Commands.runOnce(drive::initializePathPlanner),
-                    movementPath.withTimeout(1),
+                    movementPath,
                     new MoveShooterToBottomAndResetCmd(shooter, 0.05).withTimeout(5)
                 
             );
-            */
+            
 
-            autoCommand.addCommands(
-                new AutoMoveRobotCentricCmd(drive, 0.5, 0, 0).withTimeout(5)
-            );
         
-        } else {
-            /*
+        }
+        
+        if (shouldManualDrive) {
             autoCommand.addCommands(
-                new MoveShooterToBottomAndResetCmd(shooter, 0.05).withTimeout(5)
+                new AutoMoveRobotCentricCmd(drive, manualDriveForwardFeetPerSec, manualDriveRightFeetPerSec, 0).withTimeout(manualDriveDuration)
             );
-            */
         }
 
-        System.out.println(autoChooser.getSelected().getName());
+        System.out.println(pathPlannerAutoChooser.getSelected().getName());
 
 
         return autoCommand;
