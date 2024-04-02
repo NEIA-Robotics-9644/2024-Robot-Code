@@ -52,6 +52,9 @@ public class RunSourceIntakeCmd extends Command {
     @Override
     public boolean isFinished() {
 
+
+        return false;
+        /*
         if (shutoffTimerEnabled) {
             return Timer.getFPGATimestamp() > shutoffTime;
         }
@@ -75,7 +78,7 @@ public class RunSourceIntakeCmd extends Command {
 
         return false;
 
-
+        */
     }
     
 }
