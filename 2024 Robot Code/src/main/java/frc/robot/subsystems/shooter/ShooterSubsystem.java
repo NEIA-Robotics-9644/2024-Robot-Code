@@ -12,7 +12,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private final ShooterWheelIO rightShooterWheel;
     private final ShooterWheelIO leftShooterWheel;
 
-    private final boolean rightShooterWheelReversed = false;
+    private final boolean rightShooterWheelReversed = true;
     private final boolean leftShooterWheelReversed = false;
 
     private final ShooterAngleIO angleMechanism;
