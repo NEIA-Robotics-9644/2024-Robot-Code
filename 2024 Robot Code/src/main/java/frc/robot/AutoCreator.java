@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -158,13 +159,18 @@ public class AutoCreator {
 
         if (shouldShoot) {
             autoCommand.addCommands(
-                new MoveShooterToBottomAndResetCmd(shooter, 0.05).withTimeout(4),
-                new ParallelDeadlineGroup(
-                    new MoveShooterToManualAngleCmd(shooter, shooterAngle, shooterWheelPercentSpeed, feederWheelPercentSpeed).withTimeout(angleMoveDuration),
-                    new SpinShooterWheelsCmd(shooter)
-                ),
-                new ShootWhenReadyCmd(shooter, 0.1, 0.99).withTimeout(shootNoteDuration)
-            
+                new MoveShooterToBottomAndResetCmd(shooter, 0.1).withTimeout(4),
+                new ParallelCommandGroup(
+                    new ParallelDeadlineGroup(
+                        new MoveShooterToManualAngleCmd(shooter, shooterAngle, shooterWheelPercentSpeed, feederWheelPercentSpeed).withTimeout(angleMoveDuration + shootNoteDuration),
+                        new SpinShooterWheelsCmd(shooter)
+                    ),
+
+                    new SequentialCommandGroup(
+                        new WaitCommand(angleMoveDuration),
+                        new ShootWhenReadyCmd(shooter, 0.1, 0.99).withTimeout(shootNoteDuration)
+                    )
+                )
             );
         }
 
