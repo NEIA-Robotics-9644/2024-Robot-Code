@@ -57,7 +57,7 @@ public class AutoMoveRobotCentricCmd extends Command {
         // TODO: make sure these directions are correct
 
         driveSubsystem.setControl(
-                robotCentricDriveRequest.withVelocityX(Units.feetToMeters(-xVelocityFeetPerSec))
+                robotCentricDriveRequest.withVelocityX(Units.feetToMeters(xVelocityFeetPerSec))
                 .withVelocityY(Units.feetToMeters(yVelocityFeetPerSec))
                 .withRotationalRate(Units.degreesToRadians(rotationalRateDegPerSec))
         );

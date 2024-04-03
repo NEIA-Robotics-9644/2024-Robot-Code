@@ -11,6 +11,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.RobotCentric;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -20,9 +21,13 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -38,6 +43,12 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
     private double m_lastSimTime;
 
     private BooleanSupplier isRed = () -> false;
+
+    private boolean useVision = false;
+
+    private ShuffleboardTab autoTab;
+
+    private GenericEntry useVisionInTeleop;
 
     private final VisionIO visionIO;
 
@@ -112,6 +123,10 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
     }
 
     public void initializePathPlanner() {
+
+        autoTab = Shuffleboard.getTab("Auto");
+        useVisionInTeleop = autoTab.add("Use Vision in Teleop", false).getEntry();
+
         AutoBuilder.configureHolonomic(
             this::getPose, // Robot pose supplier
             this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
@@ -162,22 +177,37 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
     }
 
 
+    public void useDataFromVision(boolean enabled) {
+        this.useVision = enabled;
+    }
+
+
 
     @SuppressWarnings("resource")
     @Override
     public void periodic() {
         var visionResult = visionIO.getEstimatedGlobalPose();
 
-
-        if (visionResult.isPresent()) {
-
-            // Make a pose2d from the pose3d
-            var translation = visionResult.get().estimatedPose.getTranslation();
-            var rotation = visionResult.get().estimatedPose.getRotation();
-            var pose = new Pose2d(translation.getX(), translation.getY(), new Rotation2d(rotation.getZ()));
-
-            addVisionMeasurement(pose, visionResult.get().timestampSeconds, visionIO.getEstimationStdDevs(pose));
+        
+        // Only get if teleop is enabled
+        if (DriverStation.isTeleopEnabled()) {
+            useVision = useVisionInTeleop.getBoolean(false);
         }
+
+        if (useVision) {
+
+        
+            if (visionResult.isPresent()) {
+
+                // Make a pose2d from the pose3d
+                var translation = visionResult.get().estimatedPose.getTranslation();
+                var rotation = visionResult.get().estimatedPose.getRotation();
+                var pose = new Pose2d(translation.getX(), translation.getY(), new Rotation2d(rotation.getZ()));
+
+                addVisionMeasurement(pose, visionResult.get().timestampSeconds, visionIO.getEstimationStdDevs(pose));
+            }
+        }
+        
 
 
         SmartDashboard.putString("Pose", this.m_odometry.getEstimatedPosition().toString());

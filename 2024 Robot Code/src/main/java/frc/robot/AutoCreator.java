@@ -50,6 +50,9 @@ public class AutoCreator {
 
     private final GenericEntry isRed;
 
+    private final GenericEntry useVisionInAuto;
+    private final GenericEntry useVisionInTeleop;
+
     private final SendableChooser<Command> pathPlannerAutoChooser;
 
 
@@ -75,6 +78,9 @@ public class AutoCreator {
         manualDriveForwardFeetPerSec = autoTab.add("Manual Drive Forward Speed (FeetPerSec)", 0.5).getEntry();
         manualDriveRightFeetPerSec = autoTab.add("Manual Drive Right Speed (FeetPerSec)", 0.5).getEntry();
         manualDriveDuration = autoTab.add("Manual Drive Duration", 5).getEntry();
+
+        useVisionInAuto = autoTab.add("Use Vision In Auto", false).getEntry();
+        useVisionInTeleop = autoTab.add("Use Vision In Teleop", false).getEntry();
 
         
 
@@ -125,6 +131,9 @@ public class AutoCreator {
         double manualDriveRightFeetPerSec = this.manualDriveRightFeetPerSec.getDouble(0.5);
         double manualDriveDuration = this.manualDriveDuration.getDouble(5);
 
+        boolean useVisionInAuto = this.useVisionInAuto.getBoolean(false);
+        boolean useVisionInTeleop = this.useVisionInTeleop.getBoolean(false);
+
         
 
         SequentialCommandGroup autoCommand = new SequentialCommandGroup();
@@ -133,6 +142,7 @@ public class AutoCreator {
             new Command () {
                 @Override
                 public void execute() {
+                    drive.useDataFromVision(useVisionInAuto);
                     drive.setFieldSide(isRed.getBoolean(false));
                     System.out.println("Field Side: " + isRed.getBoolean(false));
                     drive.resetPose(new Pose2d(0, 0, new Rotation2d(0.0)));
