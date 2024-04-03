@@ -15,7 +15,7 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
     
     private final double encoderOffsetDeg = 0.0;
 
-    private double startingOffsetDeg = 69.75;
+    private double startingOffsetDeg = 0;
 
     private final boolean encoderReversed = false;
 
@@ -177,7 +177,7 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
     @Override
     public void resetAngleToBottom() {
         
-        leftAngleMotor.getEncoder().setPosition((bottomLimitDeg + encoderOffsetDeg) / encoderReadingRotationsToAngleDeg);
+        leftAngleMotor.getEncoder().setPosition(0.0);
         startingOffsetDeg = 0.0;
     }
 

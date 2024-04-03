@@ -158,6 +158,7 @@ public class AutoCreator {
 
         if (shouldShoot) {
             autoCommand.addCommands(
+                new MoveShooterToBottomAndResetCmd(shooter, 0.05).withTimeout(4),
                 new ParallelDeadlineGroup(
                     new MoveShooterToManualAngleCmd(shooter, shooterAngle, shooterWheelPercentSpeed, feederWheelPercentSpeed).withTimeout(angleMoveDuration),
                     new SpinShooterWheelsCmd(shooter)
