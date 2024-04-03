@@ -38,7 +38,7 @@ public class AutoMoveRobotCentricCmd extends Command {
         
         driveSubsystem = SwerveDriveSubsystem;
         this.xVelocityFeetPerSec = forwardFeetPerSec;
-        this.yVelocityFeetPerSec = rightFeetPerSec;
+        this.yVelocityFeetPerSec = -rightFeetPerSec;
         this.rotationalRateDegPerSec = rotationalRateDegPerSec;
 
         
