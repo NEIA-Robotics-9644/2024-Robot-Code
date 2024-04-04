@@ -270,36 +270,36 @@ public class RobotContainer {
     return new SequentialCommandGroup(
       Commands.runOnce(() -> System.out.println("STARTING TEST \nPRESS A TO MOVE TO NEXT TEST")),
       Commands.runOnce(() -> System.out.println("Driving Forward")),
-      new AutoMoveRobotCentricCmd(drivetrain, 1, 0, 0).until(() -> driverController.getAButton() || operatorController.getAButton()),
+      new AutoMoveRobotCentricCmd(drivetrain, 1, 0, 0).until(() -> driverController.a().getAsBoolean() || operatorController.a().getAsBoolean()),
       Commands.runOnce(() -> System.out.println("Turning")),
-      new WaitUntilCommand(!(() -> driverController.getAButton() || operatorController.getAButton())),
-      new AutoMoveRobotCentricCmd(drivetrain, 0, 0, 30).until(() -> driverController.getAButton() || operatorController.getAButton()),
+      new WaitUntilCommand(() -> !driverController.a().getAsBoolean() && !operatorController.a().getAsBoolean()),
+      new AutoMoveRobotCentricCmd(drivetrain, 0, 0, 30).until(() -> driverController.a().getAsBoolean() || operatorController.a().getAsBoolean()),
       Commands.runOnce(() -> System.out.println("Shooter Angle Reset")),
-      new WaitUntilCommand(!(() -> driverController.getAButton() || operatorController.getAButton())),
-      new MoveShooterToBottomAndResetCmd(shooter, 0.05).until(() -> driverController.getAButton() || operatorController.getAButton()),
+      new WaitUntilCommand(() -> !driverController.a().getAsBoolean() && !operatorController.a().getAsBoolean()),
+      new MoveShooterToBottomAndResetCmd(shooter, 0.05).until(() -> driverController.a().getAsBoolean() || operatorController.a().getAsBoolean()),
       Commands.runOnce(() -> System.out.println("Shooter Angle Setpoint 0")),
-      new WaitUntilCommand(!(() -> driverController.getAButton() || operatorController.getAButton())),
-      Commands.run(() -> shooter.goToSetpoint(0)).until(() -> driverController.getAButton() || operatorController.getAButton()),
+      new WaitUntilCommand(() -> !driverController.a().getAsBoolean() && !operatorController.a().getAsBoolean()),
+      Commands.run(() -> shooter.goToSetpoint(0)).until(() -> driverController.a().getAsBoolean() || operatorController.a().getAsBoolean()),
       Commands.runOnce(() -> System.out.println("Shooter Angle Setpoint 1")),
-      new WaitUntilCommand(!(() -> driverController.getAButton() || operatorController.getAButton())),
-      Commands.run(() -> shooter.goToSetpoint(1)).until(() -> driverController.getAButton() || operatorController.getAButton()),
+      new WaitUntilCommand(() -> !driverController.a().getAsBoolean() && !operatorController.a().getAsBoolean()),
+      Commands.run(() -> shooter.goToSetpoint(1)).until(() -> driverController.a().getAsBoolean() || operatorController.a().getAsBoolean()),
       Commands.runOnce(() -> System.out.println("Shooter Angle Setpoint 2")),
-      new WaitUntilCommand(!(() -> driverController.getAButton() || operatorController.getAButton())),
-      Commands.run(() -> shooter.goToSetpoint(2)).until(() -> driverController.getAButton() || operatorController.getAButton()),
+      new WaitUntilCommand(() -> !driverController.a().getAsBoolean() && !operatorController.a().getAsBoolean()),
+      Commands.run(() -> shooter.goToSetpoint(2)).until(() -> driverController.a().getAsBoolean() || operatorController.a().getAsBoolean()),
       Commands.runOnce(() -> System.out.println("Shooter Angle Setpoint 3")),
-      new WaitUntilCommand(!(() -> driverController.getAButton() || operatorController.getAButton())),
-      Commands.run(() -> shooter.goToSetpoint(3)).until(() -> driverController.getAButton() || operatorController.getAButton()),
+      new WaitUntilCommand(() -> !driverController.a().getAsBoolean() && !operatorController.a().getAsBoolean()),
+      Commands.run(() -> shooter.goToSetpoint(3)).until(() -> driverController.a().getAsBoolean() || operatorController.a().getAsBoolean()),
       Commands.runOnce(() -> System.out.println("Spin Feeder Wheel")),
-      new WaitUntilCommand(!(() -> driverController.getAButton() || operatorController.getAButton())),
-      new ShootWhenReadyCmd(shooter, -0.01, -0.1).until(() -> driverController.getAButton() || operatorController.getAButton()),
+      new WaitUntilCommand(() -> !driverController.a().getAsBoolean() && !operatorController.a().getAsBoolean()),
+      new ShootWhenReadyCmd(shooter, -0.01, -0.1).until(() -> driverController.a().getAsBoolean() || operatorController.a().getAsBoolean()),
       Commands.runOnce(() -> System.out.println("Spin Shooter Wheels")),
-      new WaitUntilCommand(!(() -> driverController.getAButton() || operatorController.getAButton())),
-      new SpinShooterWheelsCmd(shooter).until(() -> driverController.getAButton() || operatorController.getAButton()),
+      new WaitUntilCommand(() -> !driverController.a().getAsBoolean() && !operatorController.a().getAsBoolean()),
+      new SpinShooterWheelsCmd(shooter).until(() -> driverController.a().getAsBoolean() || operatorController.a().getAsBoolean()),
       Commands.runOnce(() -> System.out.println("Manually Move Climbers Up and Down")),
-      new ClimberCmd(climber, () -> -operatorController.getLeftY()).until(() -> driverController.getAButton() || operatorController.getAButton())
+      new ClimberCmd(climber, () -> -operatorController.getLeftY()).until(() -> driverController.a().getAsBoolean() || operatorController.a().getAsBoolean())
            
 
-    )
+    );
   }
 
     
