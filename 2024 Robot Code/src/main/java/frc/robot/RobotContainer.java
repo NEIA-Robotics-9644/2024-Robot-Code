@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -173,6 +174,10 @@ public class RobotContainer {
 
     var oLeftTrigger = new Trigger(() -> operatorHID.getLeftTriggerAxis() > 0.5);
     oLeftTrigger.whileTrue(new SpinShooterWheelsCmd(shooter));
+
+    var rumbleWhenReady = new Trigger(() -> shooter.getShooterWheelsSpeedPercent() > 1.0);
+    rumbleWhenReady.whileTrue(Commands.run(() -> operatorHID.setRumble(RumbleType.kLeftRumble, 1.0)));
+    rumbleWhenReady.whileTrue(Commands.run(() -> operatorHID.setRumble(RumbleType.kRightRumble, 1.0)));
 
     
     var oLeftBumper = new Trigger(() -> operatorHID.getLeftBumper());
