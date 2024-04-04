@@ -124,9 +124,7 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
 
     public void initializePathPlanner() {
 
-        autoTab = Shuffleboard.getTab("Auto");
-        useVisionInTeleop = autoTab.add("Use Vision in Teleop", false).getEntry();
-
+        
         AutoBuilder.configureHolonomic(
             this::getPose, // Robot pose supplier
             this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
@@ -186,27 +184,25 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
     @SuppressWarnings("resource")
     @Override
     public void periodic() {
+
+        /*
+        
         var visionResult = visionIO.getEstimatedGlobalPose();
 
-        
-        // Only get if teleop is enabled
-        if (DriverStation.isTeleopEnabled()) {
-            useVision = useVisionInTeleop.getBoolean(false);
-        }
-
-        if (useVision) {
 
         
-            if (visionResult.isPresent()) {
+        if (visionResult.isPresent()) {
 
-                // Make a pose2d from the pose3d
-                var translation = visionResult.get().estimatedPose.getTranslation();
-                var rotation = visionResult.get().estimatedPose.getRotation();
-                var pose = new Pose2d(translation.getX(), translation.getY(), new Rotation2d(rotation.getZ()));
+            // Make a pose2d from the pose3d
+            var translation = visionResult.get().estimatedPose.getTranslation();
+            var rotation = visionResult.get().estimatedPose.getRotation();
+            var pose = new Pose2d(translation.getX(), translation.getY(), new Rotation2d(rotation.getZ()));
 
-                addVisionMeasurement(pose, visionResult.get().timestampSeconds, visionIO.getEstimationStdDevs(pose));
-            }
+            addVisionMeasurement(pose, visionResult.get().timestampSeconds, visionIO.getEstimationStdDevs(pose));
         }
+
+        */
+        
         
 
 

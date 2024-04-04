@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -21,6 +22,7 @@ import frc.robot.commands.MoveShooterToBottomAndResetCmd;
 import frc.robot.commands.MoveShooterToManualAngleCmd;
 import frc.robot.commands.ShootWhenReadyCmd;
 import frc.robot.commands.SpinShooterWheelsCmd;
+import frc.robot.commands.SpinShooterWheelsCmdNoRumble;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.drive.SwerveDriveSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -63,13 +65,20 @@ public class AutoCreator {
     private final ClimberSubsystem climber;
     
     public AutoCreator(ShooterSubsystem shooter, SwerveDriveSubsystem drive, ClimberSubsystem climber) {
+
+
+
+
         autoTab = Shuffleboard.getTab("Auto");
+        
+
+        SmartDashboard.putNumber("Auto/Does this work!!", 999999);
         shouldShoot = autoTab.add("Should Shoot", true).withWidget("Toggle Switch").getEntry();
         shouldPathPlannerDrive = autoTab.add("Should PathPlanner Drive", false).getEntry();
         shouldManualDrive = autoTab.add("Should Manual Drive", false).getEntry();
-        shooterAngle = autoTab.add("Shooter Angle", 46).getEntry();
+        shooterAngle = autoTab.add("Shooter Angle", 49).getEntry();
         
-        feederWheelPercentSpeed = autoTab.add("Feeder Wheel Speed %", 1).getEntry();
+        feederWheelPercentSpeed = autoTab.add("Feeder Wheel Speed %", 0.4).getEntry();
         shooterWheelPercentSpeed = autoTab.add("Shooter Wheel Speed %", 1).getEntry();
         
         isRed = autoTab.add("Is Red", false).getEntry();
@@ -78,7 +87,7 @@ public class AutoCreator {
         
         manualDriveForwardFeetPerSec = autoTab.add("Manual Drive Forward Speed (FeetPerSec)", 0.5).getEntry();
         manualDriveRightFeetPerSec = autoTab.add("Manual Drive Right Speed (FeetPerSec)", 0.5).getEntry();
-        manualDriveDuration = autoTab.add("Manual Drive Duration", 5).getEntry();
+        manualDriveDuration = autoTab.add("Manual Drive Duration", 0).getEntry();
 
         useVisionInAuto = autoTab.add("Use Vision In Auto", false).getEntry();
         useVisionInTeleop = autoTab.add("Use Vision In Teleop", false).getEntry();
@@ -159,11 +168,11 @@ public class AutoCreator {
 
         if (shouldShoot) {
             autoCommand.addCommands(
-                new MoveShooterToBottomAndResetCmd(shooter, 0.1).withTimeout(4),
+                new MoveShooterToBottomAndResetCmd(shooter, 0.1).withTimeout(3),
                 new ParallelCommandGroup(
                     new ParallelDeadlineGroup(
                         new MoveShooterToManualAngleCmd(shooter, shooterAngle, shooterWheelPercentSpeed, feederWheelPercentSpeed).withTimeout(angleMoveDuration + shootNoteDuration),
-                        new SpinShooterWheelsCmd(shooter)
+                        new SpinShooterWheelsCmdNoRumble(shooter)
                     ),
 
                     new SequentialCommandGroup(

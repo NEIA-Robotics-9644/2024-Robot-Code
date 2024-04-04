@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -100,7 +101,7 @@ public class RobotContainer {
           new FeederWheelIOSparkMax(23),
           new ShooterAngleIOSparkMax(24, 25),
           new NoteSensorIORoboRio(),
-          new double[] { 0, 25, 48, 52},
+          new double[] { 0, 25, 52, 48},
           new double[] { 1, 0.4, 1, 1},
           new double[] { 1, 0.4, 1, 0.4}
       );
@@ -176,11 +177,12 @@ public class RobotContainer {
     // SHOOTER COMMANDS
 
     var oLeftTrigger = new Trigger(() -> operatorHID.getLeftTriggerAxis() > 0.5);
-    oLeftTrigger.whileTrue(new SpinShooterWheelsCmd(shooter));
+    oLeftTrigger.whileTrue(new SpinShooterWheelsCmd(shooter, operatorController));
 
-    var rumbleWhenReady = new Trigger(() -> shooter.getShooterWheelsSpeedPercent() > 1.0);
-    rumbleWhenReady.whileTrue(Commands.run(() -> operatorHID.setRumble(RumbleType.kLeftRumble, 1.0)));
-    rumbleWhenReady.whileTrue(Commands.run(() -> operatorHID.setRumble(RumbleType.kRightRumble, 1.0)));
+    /*
+    oLeftTrigger.whileTrue(Commands.run(() -> operatorHID.setRumble(RumbleType.kLeftRumble, 1.0)));
+    oLeftTrigger.whileTrue(Commands.run(() -> operatorHID.setRumble(RumbleType.kRightRumble, 1.0)));
+    */
 
     
     var oLeftBumper = new Trigger(() -> operatorHID.getLeftBumper());
@@ -294,7 +296,7 @@ public class RobotContainer {
       new ShootWhenReadyCmd(shooter, -0.01, -0.1).until(() -> driverController.a().getAsBoolean() || operatorController.a().getAsBoolean()),
       Commands.runOnce(() -> System.out.println("Spin Shooter Wheels")),
       new WaitUntilCommand(() -> !driverController.a().getAsBoolean() && !operatorController.a().getAsBoolean()),
-      new SpinShooterWheelsCmd(shooter).until(() -> driverController.a().getAsBoolean() || operatorController.a().getAsBoolean()),
+      new SpinShooterWheelsCmd(shooter, operatorController).until(() -> driverController.a().getAsBoolean() || operatorController.a().getAsBoolean()),
       Commands.runOnce(() -> System.out.println("Manually Move Climbers Up and Down")),
       new ClimberCmd(climber, () -> -operatorController.getLeftY()).until(() -> driverController.a().getAsBoolean() || operatorController.a().getAsBoolean())
            
@@ -304,3 +306,4 @@ public class RobotContainer {
 
     
 }
+

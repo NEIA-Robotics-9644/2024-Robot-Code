@@ -9,15 +9,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 
-public class SpinShooterWheelsCmd extends Command {
+public class SpinShooterWheelsCmdNoRumble extends Command {
 
     private final ShooterSubsystem shooterSubsystem;
 
-    private final CommandXboxController controller;
-
-    public SpinShooterWheelsCmd(ShooterSubsystem shooterSubsystem, CommandXboxController controller) {
+    public SpinShooterWheelsCmdNoRumble(ShooterSubsystem shooterSubsystem) {
         this.shooterSubsystem = shooterSubsystem;
-        this.controller = controller;
     }
 
     
@@ -31,21 +28,11 @@ public class SpinShooterWheelsCmd extends Command {
     public void execute() {
         shooterSubsystem.spinShooterWheels(false);
         //System.out.println("Spin Shooter Wheels Cmd Executed");
-        if (shooterSubsystem.getShooterWheelsSpeedPercent() > 1.15){
-        controller.getHID().setRumble(RumbleType.kLeftRumble, 1.0);
-        controller.getHID().setRumble(RumbleType.kRightRumble, 1.0);
-    }
-    else {
-        controller.getHID().setRumble(RumbleType.kLeftRumble, 0);
-        controller.getHID().setRumble(RumbleType.kRightRumble, 0);
-    }
     }
 
     @Override
     public void end(boolean interrupted) {
         //System.out.println("Spin Shooter Wheels Cmd " + (interrupted ? "Interrupted" : "Ended"));
-        controller.getHID().setRumble(RumbleType.kLeftRumble, 0);
-        controller.getHID().setRumble(RumbleType.kRightRumble, 0);
     }
 
     @Override
