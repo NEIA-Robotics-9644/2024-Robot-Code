@@ -97,8 +97,8 @@ public class RobotContainer {
           new FeederWheelIOSparkMax(23),
           new ShooterAngleIOSparkMax(24, 25),
           new NoteSensorIORoboRio(),
-          new double[] { 0, 25, 52, 70},
-          new double[] { 1, 0.4, 1, 0.4},
+          new double[] { 0, 25, 48, 52},
+          new double[] { 1, 0.4, 1, 1},
           new double[] { 1, 0.4, 1, 0.4}
       );
 
@@ -116,8 +116,8 @@ public class RobotContainer {
           new FeederWheelIOSim(),
           new ShooterAngleIOSim(),
           new NoteSensorIOSim(),
-          new double[] { 0, 25, 52, 70},
-          new double[] { 1, 0.4, 1, 0.4},
+          new double[] { 0, 25, 48, 52},
+          new double[] { 1, 0.4, 1, 1},
           new double[] { 1, 0.4, 1, 0.4}
       );
 
@@ -261,6 +261,12 @@ public class RobotContainer {
     
 
     return autoCreator.createAuto();
+  }
+
+  public Command getTestCommand() {
+    return Commands.run(() -> {
+      System.out.println("Test Command");
+    });
   }
 
     
