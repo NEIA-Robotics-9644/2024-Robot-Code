@@ -5,6 +5,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -17,12 +18,10 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AutoMoveRobotCentricCmd;
-import frc.robot.commands.JoystickDriveCmd;
 import frc.robot.commands.MoveShooterToBottomAndResetCmd;
 import frc.robot.commands.MoveShooterToManualAngleCmd;
 import frc.robot.commands.ShootWhenReadyCmd;
-import frc.robot.commands.SpinShooterWheelsCmd;
-import frc.robot.commands.SpinShooterWheelsCmdNoRumble;
+import frc.robot.commands.SpinShooterWheelsNoRumbleCmd;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.drive.SwerveDriveSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -70,9 +69,9 @@ public class AutoCreator {
 
 
         autoTab = Shuffleboard.getTab("Auto");
-        
 
-        SmartDashboard.putNumber("Auto/Does this work!!", 999999);
+        SmartDashboard.putNumber("Auto/Does this work?", 999999999);    
+
         shouldShoot = autoTab.add("Should Shoot", true).withWidget("Toggle Switch").getEntry();
         shouldPathPlannerDrive = autoTab.add("Should PathPlanner Drive", false).getEntry();
         shouldManualDrive = autoTab.add("Should Manual Drive", false).getEntry();
@@ -172,7 +171,7 @@ public class AutoCreator {
                 new ParallelCommandGroup(
                     new ParallelDeadlineGroup(
                         new MoveShooterToManualAngleCmd(shooter, shooterAngle, shooterWheelPercentSpeed, feederWheelPercentSpeed).withTimeout(angleMoveDuration + shootNoteDuration),
-                        new SpinShooterWheelsCmdNoRumble(shooter)
+                        new SpinShooterWheelsNoRumbleCmd(shooter)
                     ),
 
                     new SequentialCommandGroup(

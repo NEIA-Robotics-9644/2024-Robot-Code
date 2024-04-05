@@ -1,19 +1,14 @@
 package frc.robot.commands;
 
 
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 
-public class SpinShooterWheelsCmdNoRumble extends Command {
+public class SpinShooterWheelsNoRumbleCmd extends Command {
 
     private final ShooterSubsystem shooterSubsystem;
 
-    public SpinShooterWheelsCmdNoRumble(ShooterSubsystem shooterSubsystem) {
+    public SpinShooterWheelsNoRumbleCmd(ShooterSubsystem shooterSubsystem) {
         this.shooterSubsystem = shooterSubsystem;
     }
 
