@@ -44,7 +44,7 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
 
     private BooleanSupplier isRed = () -> false;
 
-    private boolean useVision = false;
+    private boolean useVision = true;
 
     private ShuffleboardTab autoTab;
 
@@ -185,7 +185,7 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
     @Override
     public void periodic() {
 
-        /*
+        
         
         var visionResult = visionIO.getEstimatedGlobalPose();
 
@@ -201,7 +201,7 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
             addVisionMeasurement(pose, visionResult.get().timestampSeconds, visionIO.getEstimationStdDevs(pose));
         }
 
-        */
+        
         
         
 
