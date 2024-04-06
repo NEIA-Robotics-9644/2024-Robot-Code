@@ -186,7 +186,7 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
     public void periodic() {
 
         
-        
+        /*
         var visionResult = visionIO.getEstimatedGlobalPose();
 
 
@@ -203,13 +203,14 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
 
         
         
+        */
+
+
+        SmartDashboard.putString("Data/Pose", this.m_odometry.getEstimatedPosition().toString());
+
+        SmartDashboard.putNumber("Data/Gyro Angle (Degrees)", this.getPigeon2().getAngle());
+
         
-
-
-        SmartDashboard.putString("Pose", this.m_odometry.getEstimatedPosition().toString());
-
-        SmartDashboard.putNumber("Gyro Angle (Degrees)", this.getPigeon2().getAngle());
-
         
 
     }

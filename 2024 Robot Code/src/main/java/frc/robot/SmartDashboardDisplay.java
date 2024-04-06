@@ -26,21 +26,22 @@ public class SmartDashboardDisplay extends SubsystemBase {
         
 
 
-        SmartDashboard.putString("Shooter Wheels", Math.round(shooter.getShooterWheelsSpeedPercent() * 100.0) + "% Speed");
-        SmartDashboard.putString("Shooter Angle", Math.round(shooter.getShooterAngleDeg() * 100) / 100.0 + "°");
-        SmartDashboard.putString("Feeder Wheels", Math.round(shooter.getFeederVelocityPercent() * 100.0) + "% Velocity");
+        SmartDashboard.putString("Data/Shooter Wheels", Math.round(shooter.getShooterWheelsSpeedPercent() * 100.0) + "% Speed");
+        SmartDashboard.putString("Data/Shooter Angle", Math.round(shooter.getShooterAngleDeg() * 100) / 100.0 + "°");
+        SmartDashboard.putString("Data/Feeder Wheels", Math.round(shooter.getFeederVelocityPercent() * 100.0) + "% Velocity");
 
-        SmartDashboard.putString("Shooter Setpoint", "#" + shooter.getSetpointIndex());
-        SmartDashboard.putString("Shooter Angle Setpoint", shooter.getAngleSetpoint() + "°");
-        SmartDashboard.putString("Shooter Wheel Setpoint", Math.round(shooter.getWheelSpeedSetpoint() * 100.0) + " % Speed");
-        SmartDashboard.putString("Feeder Wheel Setpoint", Math.round(shooter.getFeederSpeedSetpoint() * 100.0) + " % Speed");
+        SmartDashboard.putString("Data/Shooter Setpoint", "#" + shooter.getSetpointIndex());
+        SmartDashboard.putString("Data/Shooter Angle Setpoint", shooter.getAngleSetpoint() + "°");
+        SmartDashboard.putString("Data/Shooter Wheel Setpoint", Math.round(shooter.getWheelSpeedSetpoint() * 100.0) + " % Speed");
+        SmartDashboard.putString("Data/Feeder Wheel Setpoint", Math.round(shooter.getFeederSpeedSetpoint() * 100.0) + " % Speed");
 
-        SmartDashboard.putBoolean("Note Detected", shooter.noteDetected());
+        SmartDashboard.putBoolean("Data/Note Detected", shooter.noteDetected());
+
         
-        SmartDashboard.putString("Climber Position", climber.getClimberRotations() + " Rotations");
-        SmartDashboard.putString("Climber Speed", climber.getClimberSpeed() + " RPM");
+        //SmartDashboard.putString("Climber Position", climber.getClimberRotations() + " Rotations");
+        //SmartDashboard.putString("Climber Speed", climber.getClimberSpeed() + " RPM");
 
-        SmartDashboard.putString("Hook Position", hook.getHookRotations() + " Rotations");
+        //SmartDashboard.putString("Hook Position", hook.getHookRotations() + " Rotations");
     }
     
 }

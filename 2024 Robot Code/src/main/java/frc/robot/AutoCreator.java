@@ -39,15 +39,12 @@ public class AutoCreator {
     
     public AutoCreator(ShooterSubsystem shooter, SwerveDriveSubsystem drive, ClimberSubsystem climber) {
 
+        SmartDashboard.putString("Auto/Config", "Forward setpoint: 52 deg, 100% feeder, 100% shooter.  Side setpoint: 49 deg, 100% feeder, 100% shooter, rotate the robot");
 
 
 
         if (!SmartDashboard.containsKey("Auto/Should Shoot")) {
             SmartDashboard.putBoolean("Auto/Should Shoot", true);
-        }
-
-        if (!SmartDashboard.containsKey("Auto/Should PathPlanner Drive")) {
-            SmartDashboard.putBoolean("Auto/Should PathPlanner Drive", false);
         }
 
         if (!SmartDashboard.containsKey("Auto/Should Manual Drive")) {
@@ -72,6 +69,10 @@ public class AutoCreator {
 
         if (!SmartDashboard.containsKey("Auto/Manual Drive Right Speed (FeetPerSec)")) {
             SmartDashboard.putNumber("Auto/Manual Drive Right Speed (FeetPerSec)", 0.5);
+        }
+
+        if (!SmartDashboard.containsKey("Auto/Manual Drive CCW Rotation (DegPerSec)")) {
+            SmartDashboard.putNumber("Auto/Manual Drive CCW Rotation (DegPerSec)", 0.5);
         }
 
         if (!SmartDashboard.containsKey("Auto/Manual Drive Duration")) {
@@ -126,7 +127,6 @@ public class AutoCreator {
     public Command createAuto() {
         
         boolean shouldShoot = SmartDashboard.getBoolean("Auto/Should Shoot", false);
-        boolean shouldPathPlannerDrive = SmartDashboard.getBoolean("Auto/Should PathPlanner Drive", false);
         boolean shouldManualDrive = SmartDashboard.getBoolean("Auto/Should Manual Drive", false);
 
         double startDelay = SmartDashboard.getNumber("Auto/Start Delay", 0);
@@ -142,6 +142,7 @@ public class AutoCreator {
 
         double manualDriveForwardFeetPerSec = SmartDashboard.getNumber("Auto/Manual Drive Forward Speed (FeetPerSec)", 0.5);
         double manualDriveRightFeetPerSec = SmartDashboard.getNumber("Auto/Manual Drive Right Speed (FeetPerSec)", 0.5);
+        double manualDriveCCWRotationDegPerSec = SmartDashboard.getNumber("Auto/Manual Drive CCW Rotation (DegPerSec)", 0);
         double manualDriveDuration = SmartDashboard.getNumber("Auto/Manual Drive Duration", 5);
         //boolean useVisionInAuto = this.useVisionInAuto.getBoolean(false);
         //boolean useVisionInTeleop = this.useVisionInTeleop.getBoolean(false);
@@ -206,7 +207,7 @@ public class AutoCreator {
         
         if (shouldManualDrive) {
             autoCommand.addCommands(
-                new AutoMoveRobotCentricCmd(drive, manualDriveForwardFeetPerSec, manualDriveRightFeetPerSec, 0).withTimeout(manualDriveDuration)
+                new AutoMoveRobotCentricCmd(drive, manualDriveForwardFeetPerSec, manualDriveRightFeetPerSec, manualDriveCCWRotationDegPerSec).withTimeout(manualDriveDuration)
             );
         }
 

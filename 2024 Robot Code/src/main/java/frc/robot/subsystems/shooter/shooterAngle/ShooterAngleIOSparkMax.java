@@ -34,7 +34,7 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
 
     private double encoderReadingRotationsToAngleDeg = 360.0 / 80.0;
 
-    private final double maxSpeedDegPerSec = 10.0;
+    private final double maxSpeedDegPerSec = 25.0;
 
 
 
@@ -43,7 +43,7 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
     
 
     
-    private PIDController feedback = new PIDController(0.5, 0.0, 0.0);
+    private PIDController feedback = new PIDController(2, 0.0, 0.0);
 
 
     public ShooterAngleIOSparkMax() {

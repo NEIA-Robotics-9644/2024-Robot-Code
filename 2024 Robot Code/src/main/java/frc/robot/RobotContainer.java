@@ -208,7 +208,7 @@ public class RobotContainer {
 
     // Reset Shooter Angle
     var oStartTrigger = new Trigger(() -> operatorHID.getStartButton());
-    oStartTrigger.whileTrue(new MoveShooterToBottomAndResetCmd(shooter, 0.05));
+    oStartTrigger.whileTrue(new MoveShooterToBottomAndResetCmd(shooter, 0.2));
 
 
     // Adjust the shooter angle of this setpoint
