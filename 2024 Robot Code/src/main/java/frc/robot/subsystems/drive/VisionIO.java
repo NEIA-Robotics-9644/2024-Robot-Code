@@ -10,6 +10,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.robot.Robot;
 
+import java.lang.System.Logger;
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
@@ -82,14 +83,8 @@ public class VisionIO {
         double latestTimestamp = camera.getLatestResult().getTimestampSeconds();
         boolean newResult = Math.abs(latestTimestamp - lastEstTimestamp) > 1e-100;
         if (Robot.isSimulation()) {
-            visionEst.ifPresentOrElse(
-                    est ->
-                            getSimDebugField()
-                                    .getObject("VisionEstimation")
-                                    .setPose(est.estimatedPose.toPose2d()),
-                    () -> {
-                        if (newResult) getSimDebugField().getObject("VisionEstimation").setPoses();
-                    });
+            visionEst.ifPresentOrElse(est -> getSimDebugField().getObject("VisionEstimation").setPose(est.estimatedPose.toPose2d()),
+            () -> {if (newResult) getSimDebugField().getObject("VisionEstimation").setPoses();});
         }
         if (newResult) lastEstTimestamp = latestTimestamp;
         return visionEst;

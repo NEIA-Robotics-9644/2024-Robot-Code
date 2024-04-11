@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -40,7 +41,12 @@ import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.shooter.noteSensor.NoteSensorIORoboRio;
 import frc.robot.subsystems.shooter.noteSensor.NoteSensorIOSim;
 
-
+import org.littletonrobotics.junction.LogFileUtil;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -73,6 +79,7 @@ public class RobotContainer {
   private final SmartDashboardDisplay display;
   private final String auto;
 
+  private final PowerDistribution m_power;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -120,7 +127,7 @@ public class RobotContainer {
       );
     }
     
-
+    m_power = new PowerDistribution();
     
     
     drivetrain.getPigeon2().reset();
@@ -150,8 +157,7 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(new JoystickDriveCmd(drivetrain, driverHID::getLeftY, driverHID::getLeftX, 
         driverHID::getRightX, driverHID::getRightBumper, driverHID::getLeftBumper, 
         () -> !(driverHID.getLeftTriggerAxis() > 0.5), () -> (driverHID.getPOV() == 270)));
-    
-    
+    driverHID.getLeftTriggerAxis(Logger.recordInput("Joystick", () -> driverHID.getPOV()));
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
@@ -164,33 +170,37 @@ public class RobotContainer {
 
     var oLeftTrigger = new Trigger(() -> operatorHID.getLeftTriggerAxis() > 0.5);
     oLeftTrigger.whileTrue(new SpinShooterWheelsCmd(shooter));
-
+    oLeftTrigger.whileTrue(Logger.recordInput("Left Trigger", () -> operatorHID.getLeftTriggerAxis() > 0.5));
     
     var oLeftBumper = new Trigger(() -> operatorHID.getLeftBumper());
     oLeftBumper.whileTrue(new ShootWhenReadyCmd(shooter, 0.9, 0.8));
+    oLeftBumper.whileTrue(Logger.recordInput("Left Bumper", () -> operatorHID.getLeftBumper()));
 
     // Bottom
     var oATrigger = new Trigger(() -> operatorHID.getAButton());
     oATrigger.onTrue(Commands.runOnce(() -> shooter.goToSetpoint(0)));
-    
+    oATrigger.onTrue(Logger.recordInput("A Button", () -> operatorHID.getAButton()));
+
     // Protected Shot
     var oBTrigger = new Trigger(() -> operatorHID.getBButton());
     oBTrigger.onTrue(Commands.runOnce(() -> shooter.goToSetpoint(1)));
-    
+    oBTrigger.onTrue(Logger.recordInput("B Button", () -> operatorHID.getBButton()));
+
     // Source Intake
     var oXTrigger = new Trigger(() -> operatorHID.getXButton());
     oXTrigger.onTrue(Commands.runOnce(() -> shooter.goToSetpoint(2)));
+    oXTrigger.onTrue(Logger.recordInput("X Button", () -> operatorHID.getXButton()));
 
     // Speaker
     var oYTrigger = new Trigger(() -> operatorHID.getYButton());
     oYTrigger.onTrue(Commands.runOnce(() -> shooter.goToSetpoint(3)));
-    
+    oYTrigger.onTrue(Logger.recordInput("Y Button", () -> operatorHID.getYButton()));
     
 
     // Reset Shooter Angle
     var oStartTrigger = new Trigger(() -> operatorHID.getStartButton());
     oStartTrigger.whileTrue(new MoveShooterToBottomAndResetCmd(shooter, 1));
-
+    oStartTrigger.whileTrue(Logger.recordInput("Start Button", () -> operatorHID.getStartButton()));
 
     // Adjust the shooter angle of this setpoint
     operatorController.povUp().onTrue(Commands.runOnce(() -> shooter.modifyAngleSetpoint(1)));
@@ -198,25 +208,28 @@ public class RobotContainer {
 
     var oPOVUpTrigger = new Trigger(() -> operatorHID.getPOV() == 0);
     oPOVUpTrigger.whileTrue(Commands.runOnce(() -> shooter.modifyAngleSetpoint(1)));
-    
+    oPOVUpTrigger.whileTrue(Logger.recordInput("DPad Up", () -> operatorHID.getPOV() == 0));
+
     var oPOVDownTrigger = new Trigger(() -> operatorHID.getPOV() == 180);
     oPOVDownTrigger.whileTrue(Commands.runOnce(() -> shooter.modifyAngleSetpoint(-1)));
-    
+    oPOVDownTrigger.whileTrue(Logger.recordInput("DPad Down", () -> operatorHID.getPOV() == 180));
 
 
     // Adjust the shooter wheel speed of this setpoint
     
     var oPOVRightTrigger = new Trigger(() -> operatorHID.getPOV() == 90);
     oPOVRightTrigger.whileTrue(Commands.runOnce(() -> shooter.modifyShooterSpeedSetpoint(0.05)));
+    oPOVRightTrigger.whileTrue(Logger.recordInput("DPad Right", () -> operatorHID.getPOV() == 90));
 
     var oPOVLeftTrigger = new Trigger(() -> operatorHID.getPOV() == 270);
     oPOVLeftTrigger.whileTrue(Commands.runOnce(() -> shooter.modifyShooterSpeedSetpoint(-0.05)));
+    oPOVLeftTrigger.whileTrue(Logger.recordInput("DPad Left", () -> operatorHID.getPOV() == 270));
 
     // Source Intake
 
     var oRightTriggerTrigger = new Trigger(() -> operatorHID.getRightTriggerAxis() > 0.5);
     oRightTriggerTrigger.whileTrue(new RunSourceIntakeCmd(shooter));
-
+    oRightTriggerTrigger.whileTrue(Logger.recordInput("Right Trigger", () -> operatorHID.getRightTriggerAxis() > 0.5));
 
 
 
@@ -224,9 +237,11 @@ public class RobotContainer {
     
     var oLeftYAxisUp = new Trigger(() -> operatorHID.getLeftY() > 0.05);
     oLeftYAxisUp.whileTrue(new ClimberCmd(climber, () -> operatorHID.getLeftY()));
+    oLeftYAxisUp.whileTrue(Logger.recordInput("Left Axis Up", () -> operatorHID.getLeftY() > 0.05));
 
     var oLeftYAxisDown = new Trigger(() -> operatorHID.getLeftY() < -0.05);
     oLeftYAxisDown.whileTrue(new ClimberCmd(climber, () -> operatorHID.getLeftY()));
+    oLeftYAxisDown.whileTrue(Logger.recordInput("Left Axis Down", () -> operatorHID.getLeftY() < -0.05));
   }
 
   /**
@@ -281,5 +296,10 @@ public class RobotContainer {
         break;
     }
      
+  }
+
+  public PowerDistribution getPDH()
+  {
+    return m_power;
   }
 }

@@ -37,7 +37,8 @@ public class ClimberSubsystem extends SubsystemBase{
         leftClimber.periodic();
         rightClimber.periodic();
 
-
+        Logger.recordOutput("Left Climber RPM", leftClimber.getMotorRotations());
+        Logger.recordOutput("Right Climber RPM", rightClimber.getMotorRotations());
     }
 
     

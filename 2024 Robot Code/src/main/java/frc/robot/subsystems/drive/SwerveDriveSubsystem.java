@@ -1,5 +1,6 @@
 package frc.robot.subsystems.drive;
 
+import java.lang.System.Logger;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -24,6 +25,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants;
+
+import org.littletonrobotics.junction.LogFileUtil;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 /**
  * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem
@@ -158,7 +166,8 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
         SmartDashboard.putString("Pose", this.m_odometry.getEstimatedPosition().toString());
 
         SmartDashboard.putNumber("Gyro Angle (Degrees)", this.getPigeon2().getAngle());
-    
+
+        Logger.recordOutput("Robot Pose", getPose());
     }
     
 }

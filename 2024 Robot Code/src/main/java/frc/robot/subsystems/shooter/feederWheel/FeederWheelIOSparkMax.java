@@ -32,6 +32,7 @@ public class FeederWheelIOSparkMax implements FeederWheelIO {
 
     @Override
     public void periodic() {
+        Logger.recordInput("Feeder Wheel" feederMotor.getEncoder().getVelocity() / maxSpeedRPM);
         if (newInput) {
             feederMotor.set(normalizedVelocity);
             newInput = false;

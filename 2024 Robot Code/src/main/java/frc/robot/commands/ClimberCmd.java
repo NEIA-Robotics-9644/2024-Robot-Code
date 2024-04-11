@@ -35,6 +35,5 @@ public class ClimberCmd extends Command {
 
         climberSubsystem.moveClimber(velocity.get());
         //System.out.println("ClimberCmd executed");
-
     }
 }

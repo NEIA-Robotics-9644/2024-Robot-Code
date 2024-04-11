@@ -1,6 +1,8 @@
 package frc.robot.subsystems.shooter.noteSensor;
 
 
+import java.lang.System.Logger;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -21,7 +23,7 @@ public class NoteSensorIORoboRio implements NoteSensorIO{
     public boolean noteDetected() {
         // Returns the value of the DigitalInput
         
-
+        Logger.recordOutput("Note Detected", true);
         return input.get();
     }
 

@@ -1,11 +1,20 @@
 package frc.robot.subsystems.shooter;
 
+import java.lang.System.Logger;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.shooter.shooterWheel.ShooterWheelIO;
 import frc.robot.subsystems.shooter.feederWheel.FeederWheelIO;
 import frc.robot.subsystems.shooter.shooterAngle.ShooterAngleIO;
 import frc.robot.subsystems.shooter.noteSensor.NoteSensorIO;
+
+import org.littletonrobotics.junction.LogFileUtil;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 public class ShooterSubsystem extends SubsystemBase {
 
@@ -95,7 +104,10 @@ public class ShooterSubsystem extends SubsystemBase {
         } else {
             noteSensor.setDisplayLight(false);
         }
-        
+
+        Logger.recordOutput("Left Flywheel Speed", getLeftShooterWheelVelocityPercent());
+        Logger.recordOutput("Right Flywheel Speed", getRightShooterWheelVelocityPercent());
+        Logger.recordOutput("Shooter Angle", getShooterAngleDeg());
     }
 
 
