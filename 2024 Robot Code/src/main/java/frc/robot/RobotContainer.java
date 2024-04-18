@@ -94,7 +94,7 @@ public class RobotContainer {
 
     if (mode == Modes.REAL) {
       shooter = new ShooterSubsystem(
-          new ShooterWheelIOTalonFX(21),
+          new ShooterWheelIOSparkMax(21),
           new ShooterWheelIOTalonFX(22),
           new FeederWheelIOSparkMax(23),
           new ShooterAngleIOSparkMax(24, 25),

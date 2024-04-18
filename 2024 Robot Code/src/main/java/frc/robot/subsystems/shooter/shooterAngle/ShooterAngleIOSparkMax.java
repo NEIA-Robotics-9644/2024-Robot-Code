@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter.shooterAngle;
 
 
 import com.revrobotics.CANSparkMax;
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -111,8 +112,6 @@ public class ShooterAngleIOSparkMax implements ShooterAngleIO {
 
         }
         
-
-
         
     }
 
