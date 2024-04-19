@@ -93,6 +93,7 @@ public class RobotContainer {
     // Constants.DriveConstants.putValues();
 
     if (mode == Modes.REAL) {
+      m_power = new PowerDistributionIORev(1);
       shooter = new ShooterSubsystem(
           new ShooterWheelIOSparkMax(21),
           new ShooterWheelIOTalonFX(22),

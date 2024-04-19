@@ -70,22 +70,22 @@ public class Robot extends LoggedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    Logger.recordOutput("Total Power Drawn", m_pdh.getTotalPower());
-    Logger.recordOutput("Left Flywheel Current", m_pdh.getCurrent(17));
-    Logger.recordOutput("Right Flywheel Current", m_pdh.getCurrent(16));
-    Logger.recordOutput("Feeder Wheel Current", m_pdh.getCurrent(14));
-    Logger.recordOutput("Left Shooter Angler Current", m_pdh.getCurrent(12));
-    Logger.recordOutput("Right Shooter Angler Current", m_pdh.getCurrent(15));
-    Logger.recordOutput("Left Climber", m_pdh.getCurrent(7));
-    Logger.recordOutput("Right Climber", m_pdh.getCurrent(2));
-    Logger.recordOutput("Left Front Drive Current", m_pdh.getCurrent(18));
-    Logger.recordOutput("Left Front Turn Current", m_pdh.getCurrent(19));
-    Logger.recordOutput("Right Front Drive Current", m_pdh.getCurrent(11));
-    Logger.recordOutput("Right Front Turn Current", m_pdh.getCurrent(13));
-    Logger.recordOutput("Left Back Drive Current", m_pdh.getCurrent(0));
-    Logger.recordOutput("Left Back Turn Current", m_pdh.getCurrent(1));
-    Logger.recordOutput("Right Back Drive Current", m_pdh.getCurrent(8));
-    Logger.recordOutput("Right Back Turn Current", m_pdh.getCurrent(9));
+    Logger.recordOutput("Total Power Drawn", m_pdh.totalPower());
+    Logger.recordOutput("Left Flywheel Current", m_pdh.channelCurrent(17));
+    Logger.recordOutput("Right Flywheel Current", m_pdh.channelCurrent(16));
+    Logger.recordOutput("Feeder Wheel Current", m_pdh.channelCurrent(14));
+    Logger.recordOutput("Left Shooter Angler Current", m_pdh.channelCurrent(12));
+    Logger.recordOutput("Right Shooter Angler Current", m_pdh.channelCurrent(15));
+    Logger.recordOutput("Left Climber", m_pdh.channelCurrent(7));
+    Logger.recordOutput("Right Climber", m_pdh.channelCurrent(2));
+    Logger.recordOutput("Left Front Drive Current", m_pdh.channelCurrent(18));
+    Logger.recordOutput("Left Front Turn Current", m_pdh.channelCurrent(19));
+    Logger.recordOutput("Right Front Drive Current", m_pdh.channelCurrent(11));
+    Logger.recordOutput("Right Front Turn Current", m_pdh.channelCurrent(13));
+    Logger.recordOutput("Left Back Drive Current", m_pdh.channelCurrent(0));
+    Logger.recordOutput("Left Back Turn Current", m_pdh.channelCurrent(1));
+    Logger.recordOutput("Right Back Drive Current", m_pdh.channelCurrent(8));
+    Logger.recordOutput("Right Back Turn Current", m_pdh.channelCurrent(9));
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
