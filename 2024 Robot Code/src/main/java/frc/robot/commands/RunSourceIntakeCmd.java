@@ -35,7 +35,7 @@ public class RunSourceIntakeCmd extends Command {
     public void execute() {
 
         // Run the shooter wheels backwards
-        //shooterSubsystem.spinShooterWheels(true);
+        shooterSubsystem.spinShooterWheels(true);
         
         // Run the feeder wheel backwards
         shooterSubsystem.spinFeederWheel(true);

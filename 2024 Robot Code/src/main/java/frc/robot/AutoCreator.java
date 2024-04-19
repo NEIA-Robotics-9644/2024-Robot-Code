@@ -39,7 +39,7 @@ public class AutoCreator {
     
     public AutoCreator(ShooterSubsystem shooter, SwerveDriveSubsystem drive, ClimberSubsystem climber) {
 
-        SmartDashboard.putString("Auto/Config", "Forward setpoint: 52 deg, 100% feeder, 100% shooter.  Side setpoint: 49 deg, 100% feeder, 100% shooter, rotate the robot");
+        SmartDashboard.putString("Auto/Config", "Forward setpoint: 52 deg, 100% feeder, 100% shooter.  Side setpoint: 52 deg, 100% feeder, 100% shooter, rotate the robot");
 
 
 
@@ -52,7 +52,7 @@ public class AutoCreator {
         }
 
         if (!SmartDashboard.containsKey("Auto/Feeder Wheel Speed %")) {
-            SmartDashboard.putNumber("Auto/Feeder Wheel Speed %", 0.4);
+            SmartDashboard.putNumber("Auto/Feeder Wheel Speed %", 1);
         }
 
         if (!SmartDashboard.containsKey("Auto/Shooter Wheel Speed %")) {
@@ -60,7 +60,7 @@ public class AutoCreator {
         }
 
         if (!SmartDashboard.containsKey("Auto/Shooter Angle")) {
-            SmartDashboard.putNumber("Auto/Shooter Angle", 49);
+            SmartDashboard.putNumber("Auto/Shooter Angle", 52);
         }
 
         if (!SmartDashboard.containsKey("Auto/Manual Drive Forward Speed (FeetPerSec)")) {

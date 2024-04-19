@@ -21,6 +21,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.Modes;
 import frc.robot.commands.AutoMoveRobotCentricCmd;
 import frc.robot.commands.ClimberCmd;
+import frc.robot.commands.GoToPositionCmd;
 import frc.robot.commands.JoystickDriveCmd;
 import frc.robot.commands.MoveHookCmd;
 import frc.robot.commands.MoveShooterToBottomAndResetCmd;
@@ -96,14 +97,14 @@ public class RobotContainer {
 
     if (mode == Modes.REAL) {
       shooter = new ShooterSubsystem(
-          new ShooterWheelIOTalonFX(21),
-          new ShooterWheelIOSparkMax(22),
+          new ShooterWheelIOSparkMax(21),
+          new ShooterWheelIOTalonFX(22),
           new FeederWheelIOSparkMax(23),
           new ShooterAngleIOSparkMax(24, 25),
           new NoteSensorIORoboRio(),
-          new double[] { 0, 25, 52, 48},
+          new double[] { 0, 25, 52, 52},
           new double[] { 1, 0.4, 1, 1},
-          new double[] { 1, 0.4, 1, 0.4}
+          new double[] { 1, 0.4, 1, 1}
       );
 
       climber = new ClimberSubsystem(
@@ -161,10 +162,13 @@ public class RobotContainer {
     var operatorHID = operatorController.getHID();
     var driverHID = driverController.getHID();
     
+    
     drivetrain.setDefaultCommand(new JoystickDriveCmd(drivetrain, driverHID::getLeftY, driverHID::getLeftX, 
         driverHID::getRightX, driverHID::getRightBumper, driverHID::getLeftBumper, 
         () -> !(driverHID.getLeftTriggerAxis() > 0.5), () -> (driverHID.getPOV() == 270)));
     
+
+    //drivetrain.setDefaultCommand(new GoToPositionCmd(drivetrain, () -> driverHID.getLeftY() / 20, () -> driverHID.getLeftX() / 20, () -> driverHID.getRightX()));
     
 
     if (Utils.isSimulation()) {
