@@ -36,6 +36,7 @@ import frc.robot.subsystems.shooter.feederWheel.FeederWheelIOSparkMax;
 import frc.robot.subsystems.shooter.shooterAngle.ShooterAngleIOSparkMax;
 import frc.robot.subsystems.shooter.shooterWheel.ShooterWheelIOTalonFX;
 import frc.robot.subsystems.shooter.shooterWheel.ShooterWheelIOSim;
+import frc.robot.subsystems.shooter.shooterWheel.ShooterWheelIOSparkMax;
 import frc.robot.subsystems.shooter.shooterAngle.ShooterAngleIOSim;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.shooter.noteSensor.NoteSensorIORoboRio;
@@ -171,7 +172,7 @@ public class RobotContainer {
 
     var oLeftTrigger = new Trigger(() -> operatorHID.getLeftTriggerAxis() > 0.5);
     oLeftTrigger.whileTrue(new SpinShooterWheelsCmd(shooter));
-    oLeftTrigger.whileTrue(Logger.recordInput("Left Trigger", () -> operatorHID.getLeftTriggerAxis() > 0.5));
+    oLeftTrigger.whileTrue(Logger.processInputs("Left Trigger", () -> operatorHID.getLeftTriggerAxis() > 0.5));
     
     var oLeftBumper = new Trigger(() -> operatorHID.getLeftBumper());
     oLeftBumper.whileTrue(new ShootWhenReadyCmd(shooter, 0.9, 0.8));

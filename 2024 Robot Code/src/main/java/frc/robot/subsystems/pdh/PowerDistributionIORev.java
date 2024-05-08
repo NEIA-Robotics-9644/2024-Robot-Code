@@ -1,4 +1,8 @@
-import frc.robot.subsystems.pdh;
+package frc.robot.subsystems.pdh;
+
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import frc.robot.subsystems.pdh.PowerDistributionIO;
 
 public class PowerDistributionIORev implements PowerDistributionIO{
 
@@ -9,7 +13,7 @@ public class PowerDistributionIORev implements PowerDistributionIO{
     }
 
     public PowerDistributionIORev(int CanID) {
-        this.PDH = new PowerDistribution(CanID);
+        this.PDH = new PowerDistribution(CanID, ModuleType.kRev);
     }
 
     @Override
@@ -20,7 +24,7 @@ public class PowerDistributionIORev implements PowerDistributionIO{
     
     @Override
     public double totalPower()
-    [
+    {
         return PDH.getTotalPower();
-    ]
+    }
 }

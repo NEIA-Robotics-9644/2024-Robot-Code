@@ -1,6 +1,6 @@
 package frc.robot.subsystems.pdh;
 
-public class PowerDistributionIO {
+public interface PowerDistributionIO {
     public double channelCurrent(int Channel);
     public double totalPower();
 }

@@ -1,6 +1,5 @@
 package frc.robot.subsystems.shooter;
 
-import java.lang.System.Logger;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;

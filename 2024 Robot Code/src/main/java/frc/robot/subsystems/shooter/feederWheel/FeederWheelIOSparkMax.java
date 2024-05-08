@@ -1,6 +1,9 @@
 package frc.robot.subsystems.shooter.feederWheel;
 
 import com.revrobotics.CANSparkMax;
+
+import org.littletonrobotics.junction.Logger;
+
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 
@@ -32,7 +35,7 @@ public class FeederWheelIOSparkMax implements FeederWheelIO {
 
     @Override
     public void periodic() {
-        Logger.recordInput("Feeder Wheel" feederMotor.getEncoder().getVelocity() / maxSpeedRPM);
+        Logger.recordOutput("Feeder Wheel", feederMotor.getEncoder().getVelocity() / maxSpeedRPM);
         if (newInput) {
             feederMotor.set(normalizedVelocity);
             newInput = false;

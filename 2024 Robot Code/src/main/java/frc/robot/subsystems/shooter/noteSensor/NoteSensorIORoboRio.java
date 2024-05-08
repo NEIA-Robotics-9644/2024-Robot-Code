@@ -1,7 +1,7 @@
 package frc.robot.subsystems.shooter.noteSensor;
 
 
-import java.lang.System.Logger;
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PowerDistribution;

@@ -1,6 +1,5 @@
 package frc.robot.subsystems.drive;
 
-import java.lang.System.Logger;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
