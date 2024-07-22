@@ -68,7 +68,6 @@ public class RobotContainer {
   
   private final ClimberSubsystem climber;
  
-  private final HookSubsystem hook;
   
   
   private final SmartDashboardDisplay display;
@@ -105,7 +104,6 @@ public class RobotContainer {
           new ClimberMotorIOSparkMax(27)
       ); 
 
-      hook = new HookSubsystem(new HookMotorIOSparkMax(28));
 
     } else {
       shooter = new ShooterSubsystem(
@@ -124,7 +122,6 @@ public class RobotContainer {
           new ClimberMotorIOSim()
       );
 
-      hook = new HookSubsystem(new HookMotorIOSim());
     }
     
 
@@ -233,9 +230,6 @@ public class RobotContainer {
     var oLeftYAxisDown = new Trigger(() -> operatorHID.getLeftY() < -0.05);
     oLeftYAxisDown.whileTrue(new ClimberCmd(climber, () -> operatorHID.getLeftY()));
 
-    // HOOK COMMANDS
-    var oRightAxis = new Trigger(() -> Math.abs(operatorHID.getRightX()) > 0.05);
-    oRightAxis.whileTrue(new MoveHookCmd(hook, operatorHID::getRightX));
   }
 
   /**
@@ -245,6 +239,12 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     
+<<<<<<< HEAD
+=======
+    // Shoot into the speaker
+
+
+>>>>>>> f06e23b10021532ec7ff3f8d5c3e15481310e918
 
     return autoCreator.createAuto();
   }
