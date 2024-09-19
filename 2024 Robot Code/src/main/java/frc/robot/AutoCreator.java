@@ -137,15 +137,12 @@ public class AutoCreator {
         double shooterAngleResetDuration = SmartDashboard.getNumber("Auto/Angle Reset Time", 3);
         double angleMoveDuration = SmartDashboard.getNumber("Auto/Angle Move Time", 4);
         double shootNoteDuration = SmartDashboard.getNumber("Auto/Shoot Note Time", 1);
-        //Command movementPath = new PathPlannerAuto(pathPlannerAutoChooser.getSelected().getName());
         
 
         double manualDriveForwardFeetPerSec = SmartDashboard.getNumber("Auto/Manual Drive Forward Speed (FeetPerSec)", 0.5);
         double manualDriveRightFeetPerSec = SmartDashboard.getNumber("Auto/Manual Drive Right Speed (FeetPerSec)", 0.5);
         double manualDriveCCWRotationDegPerSec = SmartDashboard.getNumber("Auto/Manual Drive CCW Rotation (DegPerSec)", 0);
         double manualDriveDuration = SmartDashboard.getNumber("Auto/Manual Drive Duration", 5);
-        //boolean useVisionInAuto = this.useVisionInAuto.getBoolean(false);
-        //boolean useVisionInTeleop = this.useVisionInTeleop.getBoolean(false);
 
         
 
@@ -190,20 +187,6 @@ public class AutoCreator {
             new WaitCommand(driveDelay)
         );
 
-        /*
-        if (shouldPathPlannerDrive) {
-            
-            autoCommand.addCommands(
-                    Commands.runOnce(drive::initializePathPlanner),
-                    movementPath,
-                    new MoveShooterToBottomAndResetCmd(shooter, 0.05).withTimeout(5)
-                
-            );
-            
-
-        
-        }
-        */
         
         if (shouldManualDrive) {
             autoCommand.addCommands(

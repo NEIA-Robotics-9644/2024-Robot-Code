@@ -10,7 +10,6 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import frc.robot.subsystems.drive.SwerveDriveSubsystem;
-import frc.robot.subsystems.drive.VisionIO;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
@@ -202,7 +201,7 @@ public final class Constants {
                 private static final SwerveModuleConstants BackRight = ConstantCreator.createModuleConstants(
                         kBackRightSteerMotorId, kBackRightDriveMotorId, kBackRightEncoderId, kBackRightEncoderOffset, Units.inchesToMeters(kBackRightXPosInches), Units.inchesToMeters(kBackRightYPosInches), kInvertRightSide);
 
-                public static final SwerveDriveSubsystem DriveTrain = new SwerveDriveSubsystem(DrivetrainConstants, new VisionIO(), FrontLeft,
+                public static final SwerveDriveSubsystem DriveTrain = new SwerveDriveSubsystem(DrivetrainConstants, FrontLeft,
                         FrontRight, BackLeft, BackRight);
 
                 

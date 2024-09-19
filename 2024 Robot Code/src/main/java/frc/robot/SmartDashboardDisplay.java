@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.drive.SwerveDriveSubsystem;
-import frc.robot.subsystems.hook.HookSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 
 public class SmartDashboardDisplay extends SubsystemBase {
@@ -13,14 +12,13 @@ public class SmartDashboardDisplay extends SubsystemBase {
     private final SwerveDriveSubsystem drive;
     private final ShooterSubsystem shooter;
     private final ClimberSubsystem climber;
-    private final HookSubsystem hook;
 
 
-    public SmartDashboardDisplay(SwerveDriveSubsystem swerveDriveSubsystem, ShooterSubsystem shooterSubsystem, ClimberSubsystem climberSubsystem, HookSubsystem hook) {
-        this.drive = swerveDriveSubsystem;
-        this.shooter = shooterSubsystem;
-        this.climber = climberSubsystem;
-        this.hook = hook;
+
+    public SmartDashboardDisplay(SwerveDriveSubsystem swerveDrive, ShooterSubsystem shooter, ClimberSubsystem climber) {    
+        this.drive = swerveDrive;
+        this.shooter = shooter;
+        this.climber = climber;
     }
 
     public void periodic() {

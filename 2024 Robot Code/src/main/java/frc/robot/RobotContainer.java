@@ -7,8 +7,6 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -21,9 +19,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.Modes;
 import frc.robot.commands.AutoMoveRobotCentricCmd;
 import frc.robot.commands.ClimberCmd;
-import frc.robot.commands.GoToPositionCmd;
 import frc.robot.commands.JoystickDriveCmd;
-import frc.robot.commands.MoveHookCmd;
 import frc.robot.commands.MoveShooterToBottomAndResetCmd;
 import frc.robot.commands.RunSourceIntakeCmd;
 import frc.robot.commands.ShootWhenReadyCmd;
@@ -42,9 +38,6 @@ import frc.robot.subsystems.shooter.shooterAngle.ShooterAngleIOSim;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.shooter.noteSensor.NoteSensorIORoboRio;
 import frc.robot.subsystems.shooter.noteSensor.NoteSensorIOSim;
-import frc.robot.subsystems.hook.HookSubsystem;
-import frc.robot.subsystems.hook.hookMotor.HookMotorIOSim;
-import frc.robot.subsystems.hook.hookMotor.HookMotorIOSparkMax;
 
 
 
@@ -75,8 +68,6 @@ public class RobotContainer {
   
   private final ClimberSubsystem climber;
  
-  private final HookSubsystem hook;
-  
   
   private final SmartDashboardDisplay display;
 
@@ -112,7 +103,6 @@ public class RobotContainer {
           new ClimberMotorIOSparkMax(27)
       ); 
 
-      hook = new HookSubsystem(new HookMotorIOSparkMax(28));
 
     } else {
       shooter = new ShooterSubsystem(
@@ -131,16 +121,12 @@ public class RobotContainer {
           new ClimberMotorIOSim()
       );
 
-      hook = new HookSubsystem(new HookMotorIOSim());
     }
     
 
 
-    display = new SmartDashboardDisplay(drivetrain, shooter, climber, hook);
+    display = new SmartDashboardDisplay(drivetrain, shooter, climber);
 
-
-
-    // Configure the trigger bindings
     configureBindings();
 
 
@@ -162,14 +148,13 @@ public class RobotContainer {
     var operatorHID = operatorController.getHID();
     var driverHID = driverController.getHID();
     
+
     
     drivetrain.setDefaultCommand(new JoystickDriveCmd(drivetrain, driverHID::getLeftY, driverHID::getLeftX, 
         driverHID::getRightX, driverHID::getRightBumper, driverHID::getLeftBumper, 
         () -> !(driverHID.getLeftTriggerAxis() > 0.5), () -> (driverHID.getPOV() == 270)));
     
 
-    //drivetrain.setDefaultCommand(new GoToPositionCmd(drivetrain, () -> driverHID.getLeftY() / 20, () -> driverHID.getLeftX() / 20, () -> driverHID.getRightX()));
-    
 
     if (Utils.isSimulation()) {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
@@ -183,12 +168,6 @@ public class RobotContainer {
     var oLeftTrigger = new Trigger(() -> operatorHID.getLeftTriggerAxis() > 0.5);
     oLeftTrigger.whileTrue(new SpinShooterWheelsCmd(shooter, operatorController));
 
-    /*
-    oLeftTrigger.whileTrue(Commands.run(() -> operatorHID.setRumble(RumbleType.kLeftRumble, 1.0)));
-    oLeftTrigger.whileTrue(Commands.run(() -> operatorHID.setRumble(RumbleType.kRightRumble, 1.0)));
-    */
-
-    
     var oLeftBumper = new Trigger(() -> operatorHID.getLeftBumper());
     oLeftBumper.whileTrue(new ShootWhenReadyCmd(shooter, 0.001, 0.0001));
 
@@ -208,12 +187,9 @@ public class RobotContainer {
     var oYTrigger = new Trigger(() -> operatorHID.getYButton());
     oYTrigger.onTrue(Commands.runOnce(() -> shooter.goToSetpoint(3)));
     
-    
-
     // Reset Shooter Angle
     var oStartTrigger = new Trigger(() -> operatorHID.getStartButton());
     oStartTrigger.whileTrue(new MoveShooterToBottomAndResetCmd(shooter, 0.2));
-
 
     // Adjust the shooter angle of this setpoint
     var oPOVUpTrigger = new Trigger(() -> operatorHID.getPOV() == 0);
@@ -255,11 +231,7 @@ public class RobotContainer {
 
     var oLeftYAxisDown = new Trigger(() -> operatorHID.getLeftY() < -0.05);
     oLeftYAxisDown.whileTrue(new ClimberCmd(climber, () -> operatorHID.getLeftY()));
-
-    // HOOK COMMANDS
-    var oRightAxis = new Trigger(() -> Math.abs(operatorHID.getRightX()) > 0.05);
-    oRightAxis.whileTrue(new MoveHookCmd(hook, operatorHID::getRightX));
-  }
+ }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

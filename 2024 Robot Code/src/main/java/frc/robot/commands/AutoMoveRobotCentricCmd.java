@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.drive.SwerveDriveSubsystem;
 
-import java.util.function.Supplier;
 
 /*
  * This is a command that will be used to drive the robot with a joystick

@@ -1,6 +1,5 @@
 package frc.robot.subsystems.drive;
 
-import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -11,24 +10,14 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.RobotCentric;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants;
@@ -42,52 +31,18 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
 
-    private BooleanSupplier isRed = () -> false;
 
-    private boolean useVision = true;
 
-    private ShuffleboardTab autoTab;
 
-    private GenericEntry useVisionInTeleop;
-
-    private final VisionIO visionIO;
-
-    public SwerveDriveSubsystem(SwerveDrivetrainConstants driveTrainConstants, VisionIO visionIO, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
-        super(driveTrainConstants, OdometryUpdateFrequency, modules);
-        if (Utils.isSimulation()) {
-            startSimThread();
-        }
-
-        if (visionIO == null) {
-            throw new IllegalArgumentException("VisionIO cannot be null");
-        }
-
-        this.visionIO = visionIO;
-
-        initializePathPlanner();
-
-        
-        setCurrentLimit(Constants.DriveConstants.kSupplyCurrentA);
-
-        resetPose(new Pose2d(0, 0, new Rotation2d(0.0)));
-    }
-    public SwerveDriveSubsystem(SwerveDrivetrainConstants driveTrainConstants, VisionIO visionIO, SwerveModuleConstants... modules) {
+    public SwerveDriveSubsystem(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
         if (Utils.isSimulation()) {
             startSimThread();
         }
 
-        if (visionIO == null) {
-            throw new IllegalArgumentException("VisionIO cannot be null");
-        }
-
-        this.visionIO = visionIO;
-
-        initializePathPlanner();
-
+        
         setCurrentLimit(Constants.DriveConstants.kSupplyCurrentA);
 
-        
         resetPose(new Pose2d(0, 0, new Rotation2d(0.0)));
     }
 
@@ -122,26 +77,6 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
         m_simNotifier.startPeriodic(kSimLoopPeriod);
     }
 
-    public void initializePathPlanner() {
-
-        
-        AutoBuilder.configureHolonomic(
-            this::getPose, // Robot pose supplier
-            this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-            this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-            this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-            new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                    new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                    new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
-                    2, // Max module speed, in m/s
-                    Constants.PhysicalRobotCharacteristics.kDriveBaseRadiusMeters, // Drive base radius in meters. Distance from robot center to furthest module.
-                    new ReplanningConfig() // Default path replanning config. See the API for the options here
-            ),
-            isRed,
-            this // Reference to this subsystem to set requirements
-        );
-    }
-
     public Pose2d getPose() {
         return this.m_odometry.getEstimatedPosition();
     }
@@ -174,45 +109,5 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
         this.setControl(new SwerveRequest.ApplyChassisSpeeds().withSpeeds(speeds));
     }
 
-
-    public void useDataFromVision(boolean enabled) {
-        this.useVision = enabled;
-    }
-
-
-
-    @SuppressWarnings("resource")
-    @Override
-    public void periodic() {
-
-        /*
-        
-        var visionResult = visionIO.getEstimatedGlobalPose();
-
-
-        
-        if (visionResult.isPresent()) {
-
-            // Make a pose2d from the pose3d
-            var translation = visionResult.get().estimatedPose.getTranslation();
-            var rotation = visionResult.get().estimatedPose.getRotation();
-            var pose = new Pose2d(translation.getX(), translation.getY(), new Rotation2d(rotation.getZ()));
-
-            addVisionMeasurement(pose, visionResult.get().timestampSeconds, visionIO.getEstimationStdDevs(pose));
-        }
-
-        
-        
-        
-
-
-       
-        
-        */
-    }
-
-    public void setFieldSide(boolean isRed) {
-        this.isRed = () -> isRed;
-    }
-    
+   
 }
