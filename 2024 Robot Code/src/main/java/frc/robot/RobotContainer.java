@@ -57,8 +57,8 @@ public class RobotContainer {
   // private double MaxAngularRate = DriveConstants.kMaxAngularSpeedRadPerSec;
 
   /* Setting up bindings for necessary control of the swerve drive platform */
-  private final CommandXboxController driverController = new CommandXboxController(0);
-  private final CommandXboxController operatorController = new CommandXboxController(1);
+  private final CommandXboxController driverController = new CommandXboxController(1);
+  private final CommandXboxController operatorController = new CommandXboxController(0);
 
 
   private final SwerveDriveSubsystem drivetrain = DriveConstants.DriveTrain; // My drivetrain
@@ -93,9 +93,9 @@ public class RobotContainer {
           new FeederWheelIOSparkMax(23),
           new ShooterAngleIOSparkMax(24, 25),
           new NoteSensorIORoboRio(),
-          new double[] { 0, 25, 52, 52},
-          new double[] { 1, 0.4, 1, 1},
-          new double[] { 1, 0.4, 1, 1}
+          new double[] { 0, 25, 60, 52},
+          new double[] { 0.4, 0.4, 1.0, 0.5},
+          new double[] {  0.4, 0.4, 1.0, 0.5}
       );
 
       climber = new ClimberSubsystem(
@@ -168,8 +168,7 @@ public class RobotContainer {
     var oLeftTrigger = new Trigger(() -> operatorHID.getLeftTriggerAxis() > 0.5);
     oLeftTrigger.whileTrue(new SpinShooterWheelsCmd(shooter, operatorController));
 
-    var oLeftBumper = new Trigger(() -> operatorHID.getLeftBumper());
-    oLeftBumper.whileTrue(new ShootWhenReadyCmd(shooter, 0.001, 0.0001));
+    oLeftTrigger.whileTrue(new ShootWhenReadyCmd(shooter, 0.001, 0.0001));
 
     // Bottom
     var oATrigger = new Trigger(() -> operatorHID.getAButton());
@@ -193,27 +192,27 @@ public class RobotContainer {
 
     // Adjust the shooter angle of this setpoint
     var oPOVUpTrigger = new Trigger(() -> operatorHID.getPOV() == 0);
-    oPOVUpTrigger.onTrue(Commands.runOnce(() -> shooter.modifyAngleSetpoint(1)));
+    // oPOVUpTrigger.onTrue(Commands.runOnce(() -> shooter.modifyAngleSetpoint(1)));
     
     var oPOVDownTrigger = new Trigger(() -> operatorHID.getPOV() == 180);
-    oPOVDownTrigger.onTrue(Commands.runOnce(() -> shooter.modifyAngleSetpoint(-1)));
+    // oPOVDownTrigger.onTrue(Commands.runOnce(() -> shooter.modifyAngleSetpoint(-1)));
     
 
 
     // Adjust the shooter wheel speed of this setpoint
     
     var oPOVRightTrigger = new Trigger(() -> operatorHID.getPOV() == 90);
-    oPOVRightTrigger.onTrue(Commands.runOnce(() -> shooter.modifyShooterSpeedSetpoint(0.01)));
+    // oPOVRightTrigger.onTrue(Commands.runOnce(() -> shooter.modifyShooterSpeedSetpoint(0.01)));
 
     var oPOVLeftTrigger = new Trigger(() -> operatorHID.getPOV() == 270);
-    oPOVLeftTrigger.onTrue(Commands.runOnce(() -> shooter.modifyShooterSpeedSetpoint(-0.01)));
+    // oPOVLeftTrigger.onTrue(Commands.runOnce(() -> shooter.modifyShooterSpeedSetpoint(-0.01)));
 
     // Adjust the feeder wheel speed of this setpoint
     var oRightUpTrigger = new Trigger(() -> operatorHID.getRightY() > 0.7);
-    oRightUpTrigger.onTrue(Commands.runOnce(() -> shooter.modifyFeederSetpoint(-0.01)));
+    // oRightUpTrigger.onTrue(Commands.runOnce(() -> shooter.modifyFeederSetpoint(-0.01)));
 
     var oRightDownTrigger = new Trigger(() -> operatorHID.getRightY() < -0.7);
-    oRightDownTrigger.onTrue(Commands.runOnce(() -> shooter.modifyFeederSetpoint(0.01)));
+    // oRightDownTrigger.onTrue(Commands.runOnce(() -> shooter.modifyFeederSetpoint(0.01)));
 
 
     // Source Intake
@@ -227,10 +226,10 @@ public class RobotContainer {
     // CLIMBER COMMANDS
     
     var oLeftYAxisUp = new Trigger(() -> operatorHID.getLeftY() > 0.05);
-    oLeftYAxisUp.whileTrue(new ClimberCmd(climber, () -> operatorHID.getLeftY()));
+    oLeftYAxisUp.whileTrue(new ClimberCmd(climber, () -> operatorHID.getLeftY() / 4.0));
 
     var oLeftYAxisDown = new Trigger(() -> operatorHID.getLeftY() < -0.05);
-    oLeftYAxisDown.whileTrue(new ClimberCmd(climber, () -> operatorHID.getLeftY()));
+    oLeftYAxisDown.whileTrue(new ClimberCmd(climber, () -> operatorHID.getLeftY() / 4.0));
  }
 
   /**

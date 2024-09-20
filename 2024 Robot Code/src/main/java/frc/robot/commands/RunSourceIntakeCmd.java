@@ -7,10 +7,6 @@ public class RunSourceIntakeCmd extends Command {
 
     private final ShooterSubsystem shooterSubsystem;
 
-
-
-
-
     public RunSourceIntakeCmd(ShooterSubsystem shooterSubsystem) {
 
         this.shooterSubsystem = shooterSubsystem;

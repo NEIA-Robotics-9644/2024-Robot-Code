@@ -1,6 +1,5 @@
 package frc.robot.subsystems.shooter;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.shooter.shooterWheel.ShooterWheelIO;
 import frc.robot.subsystems.shooter.feederWheel.FeederWheelIO;
@@ -81,7 +80,10 @@ public class ShooterSubsystem extends SubsystemBase {
         this.feeder.setBrakeMode(true);
 
         
+        // Turn on the lights
+        noteSensor.setDisplayLight(true);
 
+        this.goToSetpoint(0);
         
     }
 
@@ -96,13 +98,7 @@ public class ShooterSubsystem extends SubsystemBase {
         rightShooterWheel.periodic();
         feeder.periodic();
         
-        // Only do this if the robot is enabled, running teleoperated
-        if (DriverStation.isEnabled()) {
-            noteSensor.setDisplayLight(noteSensor.noteDetected());
-        } else {
-            noteSensor.setDisplayLight(false);
-        }
-        
+    
     }
 
 
