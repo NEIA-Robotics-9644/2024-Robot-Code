@@ -1,7 +1,7 @@
-package frc.robot.subsystems.hook.hookMotor;
+package frc.robot.subsystems.testMotorComponent.testMotor;
 
 
-public interface HookMotorIO {
+public interface TestMotorIO {
     public void spinMotor(double normalizedVelocity);
 
     public double getMotorRotations();

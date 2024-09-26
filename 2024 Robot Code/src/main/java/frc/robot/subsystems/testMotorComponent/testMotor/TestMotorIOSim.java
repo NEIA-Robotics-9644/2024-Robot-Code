@@ -1,6 +1,6 @@
-package frc.robot.subsystems.climber.climberMotor;
+package frc.robot.subsystems.testMotorComponent.testMotor;
 
-public class ClimberMotorIOSim implements ClimberMotorIO {
+public class TestMotorIOSim implements TestMotorIO {
 
     private boolean newInput = false;
 
@@ -22,7 +22,7 @@ public class ClimberMotorIOSim implements ClimberMotorIO {
 
     private double lastPosition = 0.0;
 
-    public ClimberMotorIOSim() {
+    public TestMotorIOSim() {
 
     }
 
@@ -70,10 +70,5 @@ public class ClimberMotorIOSim implements ClimberMotorIO {
     @Override
     public double getMotorRotations() {
         return positionRotations;
-    }
-    
-    @Override
-    public void setInverted(boolean inverted) {
-        this.inverted = inverted;
     }
 }
