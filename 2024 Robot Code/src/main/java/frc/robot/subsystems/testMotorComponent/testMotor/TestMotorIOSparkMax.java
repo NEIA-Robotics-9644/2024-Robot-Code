@@ -1,11 +1,12 @@
-package frc.robot.subsystems.hook.hookMotor;
+package frc.robot.subsystems.testMotorComponent.testMotor;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+
 import com.revrobotics.CANSparkMax;
 
 
-public class HookMotorIOSparkMax implements HookMotorIO {
+public class TestMotorIOSparkMax implements TestMotorIO {
     
     private final CANSparkMax motor;
 
@@ -15,7 +16,7 @@ public class HookMotorIOSparkMax implements HookMotorIO {
 
 
 
-    public HookMotorIOSparkMax(int canID) {
+    public TestMotorIOSparkMax(int canID) {
         this.motor = new CANSparkMax(canID, MotorType.kBrushless);
         motor.setIdleMode(IdleMode.kBrake);
     }
