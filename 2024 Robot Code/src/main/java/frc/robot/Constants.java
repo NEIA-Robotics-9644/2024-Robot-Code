@@ -9,6 +9,8 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import frc.robot.subsystems.drive.SwerveDriveSubsystem;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -81,14 +83,23 @@ public final class Constants {
 
                 // The steer motor uses any SwerveModule.SteerRequestType control request with the
                 // output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
-                private static final Slot0Configs steerGains = new Slot0Configs()
-                        .withKP(3).withKI(0).withKD(0.2)
+
+
+                // This controls the PID, although IDK how
+
+                public static Slot0Configs steerGains = new Slot0Configs()
+                        .withKP(5).withKI(0).withKD(0.2)
                         .withKS(0).withKV(2).withKA(0);
+
+
+
                 // When using closed-loop control, the drive motor uses the control
                 // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
-                private static final Slot0Configs driveGains = new Slot0Configs()
+                private static Slot0Configs driveGains = new Slot0Configs()
                         .withKP(3).withKI(0).withKD(0)
                         .withKS(0).withKV(0).withKA(0);
+
+                
 
                 // The closed-loop output type to use for the steer motors;
                 // This affects the PID/FF gains for the steer motors
@@ -131,7 +142,7 @@ public final class Constants {
                 private static final double kDriveFrictionVoltage = 0.25;
 
                 private static final SwerveDrivetrainConstants DrivetrainConstants = new SwerveDrivetrainConstants()
-                        .withPigeon2Id(kPigeonId)
+                        //.withPigeon2Id(kPigeonId)
                         .withCANbusName(kCANbusName);
 
                 private static final SwerveModuleConstantsFactory ConstantCreator = new SwerveModuleConstantsFactory()
@@ -201,28 +212,10 @@ public final class Constants {
                 private static final SwerveModuleConstants BackRight = ConstantCreator.createModuleConstants(
                         kBackRightSteerMotorId, kBackRightDriveMotorId, kBackRightEncoderId, kBackRightEncoderOffset, Units.inchesToMeters(kBackRightXPosInches), Units.inchesToMeters(kBackRightYPosInches), kInvertRightSide);
 
-                public static final SwerveDriveSubsystem DriveTrain = new SwerveDriveSubsystem(DrivetrainConstants, FrontLeft,
+                public static final SwerveDriveSubsystem DriveTrain = new SwerveDriveSubsystem(steerGains, driveGains, DrivetrainConstants, FrontLeft,
                         FrontRight, BackLeft, BackRight);
 
                 
-        }
-
-
-        public static class Vision {
-                public static final String kCameraName = "VisionCam";
-                // Cam mounted facing forward, half a meter forward of center, half a meter up from center.
-                // TODO: Configure this
-                public static final Transform3d kRobotToCam =
-                        new Transform3d(new Translation3d(Units.inchesToMeters(-4.25), Units.inchesToMeters(-12.125), Units.inchesToMeters(12.25)), new Rotation3d(0, Units.degreesToRadians(-30), Units.degreesToRadians(180)));
-
-                // The layout of the AprilTags on the field
-                public static final AprilTagFieldLayout kTagLayout =
-                        AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
-
-                // The standard deviations of our vision estimated poses, which affect correction rate
-                // (Fake values. Experiment and determine estimation noise on an actual robot.)
-                public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
-                public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
         }
 
 

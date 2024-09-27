@@ -69,7 +69,7 @@ public class RobotContainer {
   private final ClimberSubsystem climber;
  
   
-  private final SmartDashboardDisplay display;
+  private final Dashboard dashboard;
 
 
   AutoCreator autoCreator;
@@ -125,7 +125,7 @@ public class RobotContainer {
     
 
 
-    display = new SmartDashboardDisplay(drivetrain, shooter, climber);
+    dashboard = new Dashboard(drivetrain, shooter, climber);
 
     configureBindings();
 
