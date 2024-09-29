@@ -159,7 +159,7 @@ public final class Constants {
                         .withDriveInertia(kDriveInertia)
                         .withSteerFrictionVoltage(kSteerFrictionVoltage)
                         .withDriveFrictionVoltage(kDriveFrictionVoltage)
-                        .withFeedbackSource(SteerFeedbackType.FusedCANcoder)
+                        .withFeedbackSource(SteerFeedbackType.RemoteCANcoder)
                         .withCouplingGearRatio(kCoupleRatio)
                         .withSteerMotorInverted(kSteerMotorReversed);
 

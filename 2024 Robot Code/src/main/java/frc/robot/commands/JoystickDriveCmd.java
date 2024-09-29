@@ -42,12 +42,12 @@ public class JoystickDriveCmd extends Command {
 
     private final SwerveRequest.FieldCentric driveRequest = new SwerveRequest.FieldCentric()
       .withDeadband(MaxSpeed * 0.005).withRotationalDeadband(MaxAngularRate * 0.005) // Add a 0.5% deadband
-      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
+      .withDriveRequestType(DriveRequestType.Velocity); // I want field-centric
                                                                // driving in open loop
 
     private final SwerveRequest.RobotCentric robotCentricDriveRequest = new SwerveRequest.RobotCentric()
         .withDeadband(MaxSpeed * 0.005).withRotationalDeadband(MaxAngularRate * 0.005)
-        .withDriveRequestType(DriveRequestType.OpenLoopVoltage);  
+        .withDriveRequestType(DriveRequestType.Velocity);  
         
     
     
