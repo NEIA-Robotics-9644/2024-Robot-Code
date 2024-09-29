@@ -52,6 +52,11 @@ public class Dashboard extends SubsystemBase {
     }
 
     public void periodic() {
+
+        SmartDashboard.putNumber("Drive/Motor 0 Velocity", drive.getModule(0).getDriveMotor().getVelocity().getValueAsDouble());
+        SmartDashboard.putNumber("Drive/Motor 1 Velocity", drive.getModule(1).getDriveMotor().getVelocity().getValueAsDouble());
+        SmartDashboard.putNumber("Drive/Motor 2 Velocity", drive.getModule(2).getDriveMotor().getVelocity().getValueAsDouble());
+        SmartDashboard.putNumber("Drive/Motor 3 Velocity", drive.getModule(3).getDriveMotor().getVelocity().getValueAsDouble());
         
         SmartDashboard.putString("Data/Shooter Wheels", Math.round(shooter.getShooterWheelsSpeedPercent() * 100.0) + "% Speed");
         SmartDashboard.putString("Data/Shooter Angle", Math.round(shooter.getShooterAngleDeg() * 100) / 100.0 + " deg");
