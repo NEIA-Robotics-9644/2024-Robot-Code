@@ -37,9 +37,6 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
     public Slot0Configs steerConfig;
     public Slot0Configs driveConfig;
 
-    
-
-
     public SwerveDriveSubsystem(Slot0Configs steerConfig, Slot0Configs driveConfig, SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
         if (Utils.isSimulation()) {
@@ -52,6 +49,13 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
 
         this.steerConfig = steerConfig;
         this.driveConfig = driveConfig;
+    }
+
+    public void periodic() {
+        for (SwerveModule module : Modules) {
+            module.getDriveMotor().getConfigurator().apply(driveConfig);
+            module.getSteerMotor().getConfigurator().apply(steerConfig);
+        }
     }
 
     private void setCurrentLimit(double supplyCurrentLimit) {
