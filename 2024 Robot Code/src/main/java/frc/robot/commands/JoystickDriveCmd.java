@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.SteerRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -42,12 +43,12 @@ public class JoystickDriveCmd extends Command {
 
     private final SwerveRequest.FieldCentric driveRequest = new SwerveRequest.FieldCentric()
       .withDeadband(MaxSpeed * 0.005).withRotationalDeadband(MaxAngularRate * 0.005) // Add a 0.5% deadband
-      .withDriveRequestType(DriveRequestType.Velocity); // I want field-centric
+      .withDriveRequestType(DriveRequestType.Velocity).withSteerRequestType(SteerRequestType.MotionMagic); // I want field-centric
                                                                // driving in open loop
 
     private final SwerveRequest.RobotCentric robotCentricDriveRequest = new SwerveRequest.RobotCentric()
         .withDeadband(MaxSpeed * 0.005).withRotationalDeadband(MaxAngularRate * 0.005)
-        .withDriveRequestType(DriveRequestType.Velocity);  
+        .withDriveRequestType(DriveRequestType.Velocity).withSteerRequestType(SteerRequestType.MotionMagic);  
         
     
     

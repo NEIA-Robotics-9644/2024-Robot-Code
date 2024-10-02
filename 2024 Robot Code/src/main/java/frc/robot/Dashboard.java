@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -52,6 +53,12 @@ public class Dashboard extends SubsystemBase {
     }
 
     public void periodic() {
+
+        for (int i = 0; i < 4; i++) {
+            Rotation2d rot = drive.getModule(i).getTargetState().angle.minus(drive.getModule(i).getCurrentState().angle);
+            
+            SmartDashboard.putNumber("Tuning/Motor " + i + " Error", Math.abs(new Rotation2d(rot.getCos(), rot.getSin()).getDegrees()));
+        }
 
         SmartDashboard.putNumber("Drive/Motor 0 Velocity", drive.getModule(0).getDriveMotor().getVelocity().getValueAsDouble());
         SmartDashboard.putNumber("Drive/Motor 1 Velocity", drive.getModule(1).getDriveMotor().getVelocity().getValueAsDouble());

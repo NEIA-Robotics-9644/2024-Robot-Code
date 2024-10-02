@@ -88,16 +88,16 @@ public final class Constants {
                 // This controls the PID, although IDK how
 
                 public static Slot0Configs steerGains = new Slot0Configs()
-                        .withKP(5).withKI(0).withKD(0.2)
-                        .withKS(0).withKV(2).withKA(0);
+                        .withKP(20).withKI(7).withKD(0.6)
+                        .withKS(0.4).withKV(2).withKA(0);
 
 
 
                 // When using closed-loop control, the drive motor uses the control
                 // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
                 private static Slot0Configs driveGains = new Slot0Configs()
-                        .withKP(0.1).withKI(0).withKD(0)
-                        .withKS(0).withKV(0.12).withKA(0);
+                        .withKP(0).withKI(0).withKD(0)
+                        .withKS(0).withKV(0.16).withKA(0);
 
                 
 
@@ -142,7 +142,7 @@ public final class Constants {
                 private static final double kDriveFrictionVoltage = 0.25;
 
                 private static final SwerveDrivetrainConstants DrivetrainConstants = new SwerveDrivetrainConstants()
-                        //.withPigeon2Id(kPigeonId)
+                        .withPigeon2Id(kPigeonId)
                         .withCANbusName(kCANbusName);
 
                 private static final SwerveModuleConstantsFactory ConstantCreator = new SwerveModuleConstantsFactory()
