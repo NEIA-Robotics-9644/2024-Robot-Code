@@ -55,7 +55,16 @@ public class SwerveDriveSubsystem extends SwerveDrivetrain implements Subsystem 
         for (SwerveModule module : Modules) {
             module.getDriveMotor().getConfigurator().apply(driveConfig);
             module.getSteerMotor().getConfigurator().apply(steerConfig);
+
+            
         }
+        
+        
+        var pose = this.getPose();
+        SmartDashboard.putNumberArray("pose", new double[] {pose.getX(), pose.getY(), pose.getRotation().getRadians()});
+
+
+
     }
 
     private void setCurrentLimit(double supplyCurrentLimit) {

@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -78,6 +79,8 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
+
+
     if (Utils.isSimulation()) {
       mode = Modes.SIM;
     } else {
@@ -93,9 +96,9 @@ public class RobotContainer {
           new FeederWheelIOSparkMax(23),
           new ShooterAngleIOSparkMax(24, 25),
           new NoteSensorIORoboRio(),
-          new double[] { 0, 25, 52, 52},
-          new double[] { 1, 0.4, 1, 1},
-          new double[] { 1, 0.4, 1, 1}
+          new double[] { 0, 25, 12, 52},
+          new double[] { 1, 0.4, 1, 0.4},
+          new double[] { 1, 0.4, 0, 1}
       );
 
       climber = new ClimberSubsystem(
