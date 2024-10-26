@@ -262,8 +262,8 @@ public class RobotContainer {
         () -> driver == Driver.MEMBER ? driverHID.getLeftY() : 0,
         () -> driver == Driver.MEMBER ? driverHID.getLeftX() : 0, 
         () -> driver != Driver.CANDY ? 0 : driverHID.getRightX(),
-        () -> false, 
-        () -> false,
+        () -> driver == Driver.MEMBER ? driverHID.getPOV() == 0 : false, 
+        () -> driver == Driver.MEMBER ? driverHID.getPOV() == 180 : true,
         () -> driver == Driver.MEMBER ? driverHID.getLeftTriggerAxis() > 0.5 : false,
         () -> driver == Driver.MEMBER ? driverHID.getPOV() == 270 : false
     ));
@@ -296,6 +296,8 @@ public class RobotContainer {
       }
     } else if (driver == Driver.PUBLIC) {
       // Rotate but don't drive
+
+      
 
       
       // Simple intake and shoot
