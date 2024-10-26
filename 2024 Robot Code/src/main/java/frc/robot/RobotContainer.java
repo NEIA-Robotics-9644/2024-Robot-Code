@@ -268,21 +268,32 @@ public class RobotContainer {
         () -> driver == Driver.MEMBER ? driverHID.getPOV() == 270 : false
     ));
 
+    // Always able to reset gyro
     var oStartTrigger = new Trigger(() -> driverHID.getStartButton());
     oStartTrigger.whileTrue(new MoveShooterToBottomAndResetCmd(shooter, 0.2));
 
  }
 
+ private Driver lastDriver = Driver.CANDY;
 
  public void periodic() {
 
+
     if (permissionController.getLeftTriggerAxis() > 0.5) {
       driver = Driver.MEMBER;
+
+
     } else if (permissionController.getRightTriggerAxis() > 0.5) {
       driver = Driver.PUBLIC;
     } else {
       driver = Driver.CANDY;
     }
+
+    if (lastDriver != driver) {
+      System.out.println("NEW MODE: " + driver);
+    }
+
+    lastDriver = driver;
 
     
     if (driver == Driver.CANDY) {
