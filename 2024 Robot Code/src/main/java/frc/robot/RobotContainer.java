@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -59,7 +60,7 @@ public class RobotContainer {
 
   /* Setting up bindings for necessary control of the swerve drive platform */
   private final CommandXboxController driverController = new CommandXboxController(0);
-  private final CommandXboxController operatorController = new CommandXboxController(1);
+  private final CommandXboxController permissionController = new CommandXboxController(1);
 
 
   private final SwerveDriveSubsystem drivetrain = DriveConstants.DriveTrain; // My drivetrain
@@ -72,6 +73,15 @@ public class RobotContainer {
   
   private final Dashboard dashboard;
 
+  public XboxController driverHID;
+
+  public enum Driver {
+    CANDY,
+    PUBLIC,
+    MEMBER
+  }
+
+  public Driver driver = Driver.CANDY;
 
   AutoCreator autoCreator;
 
@@ -148,12 +158,12 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    var operatorHID = operatorController.getHID();
-    var driverHID = driverController.getHID();
+    // var operatorHID = operatorController.getHID();
+    driverHID = driverController.getHID();
     
 
     
-    drivetrain.setDefaultCommand(new JoystickDriveCmd(drivetrain, driverHID::getLeftY, driverHID::getLeftX, 
+    /* drivetrain.setDefaultCommand(new JoystickDriveCmd(drivetrain, driverHID::getLeftY, driverHID::getLeftX, 
         driverHID::getRightX, driverHID::getRightBumper, driverHID::getLeftBumper, 
         () -> !(driverHID.getLeftTriggerAxis() > 0.5), () -> (driverHID.getPOV() == 270)));
     
@@ -163,10 +173,20 @@ public class RobotContainer {
       drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
 
+    */
+
+
+
+    // Controller Setting
+    
+    
+
 
     
 
     // SHOOTER COMMANDS
+
+    /*
 
     var oLeftTrigger = new Trigger(() -> operatorHID.getLeftTriggerAxis() > 0.5);
     oLeftTrigger.whileTrue(new SpinShooterWheelsCmd(shooter, operatorController));
@@ -230,11 +250,117 @@ public class RobotContainer {
     // CLIMBER COMMANDS
     
     var oLeftYAxisUp = new Trigger(() -> operatorHID.getLeftY() > 0.05);
-    oLeftYAxisUp.whileTrue(new ClimberCmd(climber, () -> operatorHID.getLeftY()));
+    // oLeftYAxisUp.whileTrue(new ClimberCmd(climber, () -> operatorHID.getLeftY()));
 
     var oLeftYAxisDown = new Trigger(() -> operatorHID.getLeftY() < -0.05);
-    oLeftYAxisDown.whileTrue(new ClimberCmd(climber, () -> operatorHID.getLeftY()));
+    // oLeftYAxisDown.whileTrue(new ClimberCmd(climber, () -> operatorHID.getLeftY()));
+
+    */
+
+
+    drivetrain.setDefaultCommand(new JoystickDriveCmd(drivetrain, 
+        () -> driver == Driver.MEMBER ? driverHID.getLeftY() : 0,
+        () -> driver == Driver.MEMBER ? driverHID.getLeftX() : 0, 
+        () -> driver != Driver.CANDY ? 0 : driverHID.getRightX(),
+        () -> false, 
+        () -> false,
+        () -> driver == Driver.MEMBER ? driverHID.getLeftTriggerAxis() > 0.5 : false,
+        () -> driver == Driver.MEMBER ? driverHID.getPOV() == 270 : false
+    ));
+
+    var oStartTrigger = new Trigger(() -> driverHID.getStartButton());
+    oStartTrigger.whileTrue(new MoveShooterToBottomAndResetCmd(shooter, 0.2));
+
  }
+
+
+ public void periodic() {
+
+    if (permissionController.getLeftTriggerAxis() > 0.5) {
+      driver = Driver.MEMBER;
+    } else if (permissionController.getRightTriggerAxis() > 0.5) {
+      driver = Driver.PUBLIC;
+    } else {
+      driver = Driver.CANDY;
+    }
+
+    
+    if (driver == Driver.CANDY) {
+
+      
+      // Cover the candy unless the button is pressed
+      if (driverController.getRightTriggerAxis() > 0.5) {
+        shooter.setManualAngleSetpoint(0, 0, 0);
+      } else {
+        shooter.setManualAngleSetpoint(40, 0, 0);
+      }
+    } else if (driver == Driver.PUBLIC) {
+      // Rotate but don't drive
+
+      
+      // Simple intake and shoot
+
+      if (driverController.getRightTriggerAxis() > 0.5) {
+        // Intake
+
+        shooter.setManualAngleSetpoint(40, 0, 0.2);
+
+        shooter.spinFeederWheel(true);
+      } else if (driverController.getLeftTriggerAxis() > 0.5) {
+
+        // Shoot setpoint
+        shooter.setManualAngleSetpoint(25, 0.3, 0.3);
+
+        shooter.spinShooterWheels(false);
+
+        if (driverController.leftBumper().getAsBoolean()) {
+          shooter.spinFeederWheel(false);
+        }
+
+      } else {
+        // Down setpoint
+        shooter.setManualAngleSetpoint(0, 0, 0);
+      }
+
+      
+    } else if (driver == Driver.MEMBER) {
+      // Full driving
+
+      // Full shooter control
+
+      // Spin up wheels
+      if (driverHID.getLeftTriggerAxis() > 0.5) {
+        shooter.spinShooterWheels(false);
+      }
+
+      // Shoot
+      if (driverHID.getLeftBumper()) {
+        shooter.spinFeederWheel(false);
+      }
+
+      // Intake
+      if (driverHID.getRightTriggerAxis() > 0.5) {
+        shooter.spinFeederWheel(true);
+      }
+
+      // Setpoints
+      if (driverHID.getAButton()) {
+        shooter.goToSetpoint(0);
+      } else if (driverHID.getBButton()) {
+        shooter.goToSetpoint(1);
+      } else if (driverHID.getXButton()) {
+        shooter.goToSetpoint(2);
+      } else if (driverHID.getYButton()) {
+        shooter.goToSetpoint(3);
+      }
+
+      // Reset Shooter Angle is done for everyone
+
+    }
+
+ }
+
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -248,6 +374,8 @@ public class RobotContainer {
   }
 
   public Command getTestCommand() {
+
+    /*
     return new SequentialCommandGroup(
       Commands.runOnce(() -> System.out.println("STARTING TEST \nPRESS A TO MOVE TO NEXT TEST")),
       Commands.runOnce(() -> System.out.println("Driving Forward")),
@@ -279,8 +407,11 @@ public class RobotContainer {
       Commands.runOnce(() -> System.out.println("Manually Move Climbers Up and Down")),
       new ClimberCmd(climber, () -> -operatorController.getLeftY()).until(() -> driverController.a().getAsBoolean() || operatorController.a().getAsBoolean())
            
-
+      
     );
+    */
+
+    return null;
   }
 
     
