@@ -74,6 +74,7 @@ public class RobotContainer {
   private final Dashboard dashboard;
 
   public XboxController driverHID;
+  public XboxController permissionHID;
 
   public enum Driver {
     CANDY,
@@ -84,6 +85,8 @@ public class RobotContainer {
   public Driver driver = Driver.CANDY;
 
   AutoCreator autoCreator;
+
+  public boolean robotOriented = false;
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -160,6 +163,7 @@ public class RobotContainer {
 
     // var operatorHID = operatorController.getHID();
     driverHID = driverController.getHID();
+    permissionHID = permissionController.getHID();
     
 
     
@@ -259,17 +263,16 @@ public class RobotContainer {
 
 
     drivetrain.setDefaultCommand(new JoystickDriveCmd(drivetrain, 
-        () -> driver == Driver.MEMBER ? driverHID.getLeftY() : 0,
-        () -> driver == Driver.MEMBER ? driverHID.getLeftX() : 0, 
-        () -> driver != Driver.CANDY ? 0 : driverHID.getRightX(),
-        () -> driver == Driver.MEMBER ? driverHID.getPOV() == 0 : false, 
-        () -> driver == Driver.MEMBER ? driverHID.getPOV() == 180 : true,
-        () -> driver == Driver.MEMBER ? driverHID.getLeftTriggerAxis() > 0.5 : false,
-        () -> driver == Driver.MEMBER ? driverHID.getPOV() == 270 : false
+        () -> driver == Driver.MEMBER ? permissionHID.getLeftY() : 0,
+        () -> driver == Driver.MEMBER ? permissionHID.getLeftX() : 0, 
+        () -> driver == Driver.CANDY ? 0 : driver == Driver.MEMBER ? permissionHID.getRightX() : driverHID.getRightX(),
+        () -> driver == Driver.MEMBER ? permissionHID.getPOV() == 0 : false, 
+        () -> driver == Driver.MEMBER ? permissionHID.getPOV() == 180 : true,
+        () -> driver == Driver.MEMBER ? permissionHID.getLeftTriggerAxis() > 0.5 : false,
+        () -> driver == Driver.MEMBER ? robotOriented : false
     ));
 
-    // Always able to reset gyro
-    var oStartTrigger = new Trigger(() -> driverHID.getStartButton());
+    var oStartTrigger = new Trigger(() -> permissionHID.getStartButton());
     oStartTrigger.whileTrue(new MoveShooterToBottomAndResetCmd(shooter, 0.2));
 
  }
@@ -279,11 +282,11 @@ public class RobotContainer {
  public void periodic() {
 
 
-    if (permissionController.getLeftTriggerAxis() > 0.5) {
+    if (permissionHID.getLeftTriggerAxis() > 0.5) {
       driver = Driver.MEMBER;
 
 
-    } else if (permissionController.getRightTriggerAxis() > 0.5) {
+    } else if (permissionHID.getRightTriggerAxis() > 0.5) {
       driver = Driver.PUBLIC;
     } else {
       driver = Driver.CANDY;
@@ -300,7 +303,7 @@ public class RobotContainer {
 
       
       // Cover the candy unless the button is pressed
-      if (driverController.getRightTriggerAxis() > 0.5) {
+      if (permissionHID.getLeftY() > 0.1) {
         shooter.setManualAngleSetpoint(0, 0, 0);
       } else {
         shooter.setManualAngleSetpoint(40, 0, 0);
@@ -316,7 +319,7 @@ public class RobotContainer {
       if (driverController.getRightTriggerAxis() > 0.5) {
         // Intake
 
-        shooter.setManualAngleSetpoint(40, 0, 0.2);
+        shooter.setManualAngleSetpoint(35, 0, 0.2);
 
         shooter.spinFeederWheel(true);
       } else if (driverController.getLeftTriggerAxis() > 0.5) {
@@ -326,7 +329,7 @@ public class RobotContainer {
 
         shooter.spinShooterWheels(false);
 
-        if (driverController.leftBumper().getAsBoolean()) {
+        if (driverHID.getLeftBumper()) {
           shooter.spinFeederWheel(false);
         }
 
@@ -341,33 +344,42 @@ public class RobotContainer {
 
       // Full shooter control
 
-      // Spin up wheels
-      if (driverHID.getLeftTriggerAxis() > 0.5) {
-        shooter.spinShooterWheels(false);
-      }
+    
 
       // Shoot
-      if (driverHID.getLeftBumper()) {
+      if (permissionHID.getLeftBumper()) {
+        shooter.spinShooterWheels(false);
         shooter.spinFeederWheel(false);
       }
 
       // Intake
-      if (driverHID.getRightTriggerAxis() > 0.5) {
+      if (permissionHID.getRightBumper()) {
         shooter.spinFeederWheel(true);
       }
 
       // Setpoints
-      if (driverHID.getAButton()) {
+      if (permissionHID.getAButton()) {
         shooter.goToSetpoint(0);
-      } else if (driverHID.getBButton()) {
+      } else if (permissionHID.getBButton()) {
         shooter.goToSetpoint(1);
-      } else if (driverHID.getXButton()) {
+      } else if (permissionHID.getXButton()) {
         shooter.goToSetpoint(2);
-      } else if (driverHID.getYButton()) {
+      } else if (permissionHID.getYButton()) {
         shooter.goToSetpoint(3);
       }
 
       // Reset Shooter Angle is done for everyone
+
+      // Toggle field oriented
+      if (permissionHID.getBackButtonPressed()) {
+        robotOriented = !robotOriented;
+
+        if (robotOriented) {
+          System.out.println("Robot oriented");
+        } else {
+          System.out.println("Field Oriented");
+        }
+      }
 
     }
 
