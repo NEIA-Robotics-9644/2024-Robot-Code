@@ -4,28 +4,16 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import com.ctre.phoenix6.Utils;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.Modes;
-import frc.robot.commands.AutoMoveRobotCentricCmd;
-import frc.robot.commands.ClimberCmd;
 import frc.robot.commands.JoystickDriveCmd;
 import frc.robot.commands.MoveShooterToBottomAndResetCmd;
-import frc.robot.commands.RunSourceIntakeCmd;
-import frc.robot.commands.ShootWhenReadyCmd;
-import frc.robot.commands.SpinShooterWheelsCmd;
 import frc.robot.subsystems.climber.ClimberSubsystem;
 import frc.robot.subsystems.climber.climberMotor.ClimberMotorIOSim;
 import frc.robot.subsystems.climber.climberMotor.ClimberMotorIOSparkMax;
