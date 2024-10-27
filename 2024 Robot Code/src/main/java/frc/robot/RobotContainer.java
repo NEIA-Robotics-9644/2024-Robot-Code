@@ -375,7 +375,7 @@ public class RobotContainer {
         robotOriented = !robotOriented;
 
         if (robotOriented) {
-          System.out.println("Robot oriented");
+          System.out.println("Robot Oriented");
         } else {
           System.out.println("Field Oriented");
         }
