@@ -268,8 +268,8 @@ public class RobotContainer {
         () -> driver == Driver.CANDY ? 0 : driver == Driver.MEMBER ? permissionHID.getRightX() : driverHID.getRightX(),
         () -> driver == Driver.MEMBER ? permissionHID.getPOV() == 0 : false, 
         () -> driver == Driver.MEMBER ? permissionHID.getPOV() == 180 : true,
-        () -> driver == Driver.MEMBER ? permissionHID.getLeftTriggerAxis() > 0.5 : false,
-        () -> driver == Driver.MEMBER ? robotOriented : false
+        () -> driver == Driver.MEMBER ? !robotOriented : true,
+        () -> driver == Driver.MEMBER ? permissionHID.getPOV() == 270 : false        
     ));
 
     var oStartTrigger = new Trigger(() -> permissionHID.getStartButton());
@@ -311,9 +311,6 @@ public class RobotContainer {
     } else if (driver == Driver.PUBLIC) {
       // Rotate but don't drive
 
-      
-
-      
       // Simple intake and shoot
 
       if (driverHID.getRightTriggerAxis() > 0.5) {
@@ -343,8 +340,6 @@ public class RobotContainer {
       // Full driving
 
       // Full shooter control
-
-    
 
       // Shoot
       if (permissionHID.getLeftBumper()) {
