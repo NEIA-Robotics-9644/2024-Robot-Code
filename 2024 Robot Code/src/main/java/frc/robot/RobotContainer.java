@@ -316,13 +316,13 @@ public class RobotContainer {
       
       // Simple intake and shoot
 
-      if (driverController.getRightTriggerAxis() > 0.5) {
+      if (driverHID.getRightTriggerAxis() > 0.5) {
         // Intake
 
         shooter.setManualAngleSetpoint(35, 0, 0.2);
 
         shooter.spinFeederWheel(true);
-      } else if (driverController.getLeftTriggerAxis() > 0.5) {
+      } else if (driverHID.getLeftTriggerAxis() > 0.5) {
 
         // Shoot setpoint
         shooter.setManualAngleSetpoint(25, 0.3, 0.3);
